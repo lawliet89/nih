@@ -1,0 +1,16 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:py="http://genshi.edgewall.org/">
+
+  <head>
+    <title>Spider</title>
+  </head>
+  <body>
+	  ${spider.isAlive()}<br />
+	  <ul>
+		  <?python
+		  	todo = spider.todo()
+			?>
+		  <li py:for="item in todo">${item.url}</li>
+	  </ul>
+  </body>
+</html>

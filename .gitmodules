@@ -1,0 +1,3 @@
+[submodule "jukebox/django-json-rpc"]
+	path = jukebox/django-json-rpc
+	url = git://github.com/palfrey/django-json-rpc.git

@@ -1,0 +1,5 @@
+nih (0.1-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Tom Parker <palfrey@tevp.net>  Sun, 19 Dec 2010 15:41:39 +0000

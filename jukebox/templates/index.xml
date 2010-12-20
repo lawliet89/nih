@@ -88,7 +88,8 @@
       </div>
     </div>
 
-	<a href="/admin">(configuration)</a>
+	<a href="/config">(configuration)</a> <br />
+	<a href="/admin">Admin</a>
 
     <script>Event.observe(window, 'load', initClient);</script>
   </body>

@@ -88,7 +88,9 @@ TEMPLATE_DIRS = (
 )
 
 INSTALLED_APPS = (
+    'django.contrib.auth',
     'django.contrib.admin',
+    'django.contrib.sessions',
     'django.contrib.contenttypes', # only here for the admin
 
 	'jukebox'

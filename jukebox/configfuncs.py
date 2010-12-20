@@ -1,5 +1,6 @@
 from jsonrpc import jsonrpc_method
 from models import *
+from spider import get_spider
 
 @jsonrpc_method("all_roots")
 def all_roots(request):
@@ -15,3 +16,15 @@ def current_rescans(request):
 		if WebPath.objects.filter(checked = False).filter(url__startswith=root.url).count()>0:
 			ret.append(root.url)
 	return ret
+
+@jsonrpc_method("rescan_root")
+def rescan_root(request, root):
+	for x in WebPath.get_root_nodes():
+		if x.url == root:
+			MusicFile.objects.filter(url__startswith=root).delete()
+			WebPath.objects.filter(url__startswith=root).update(checked = False)
+			break
+	else:
+		WebPath.add_root(url=root)
+		
+	get_spider()

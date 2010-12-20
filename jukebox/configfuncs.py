@@ -1,6 +1,7 @@
 from jsonrpc import jsonrpc_method
 from models import *
 from spider import get_spider
+from urllib2 import urlopen, HTTPError
 
 @jsonrpc_method("all_roots")
 def all_roots(request):
@@ -25,6 +26,10 @@ def rescan_root(request, root):
 			WebPath.objects.filter(url__startswith=root).update(checked = False)
 			break
 	else:
+		try:
+			urlopen(root)
+		except:
+			return # crap url
 		WebPath.add_root(url=root)
 		
 	get_spider()

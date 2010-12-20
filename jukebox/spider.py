@@ -51,7 +51,7 @@ class Spider(Thread):
 					continue
 				if resolved[-1] == "/": # directory
 					if len(WebPath.objects.filter(url=resolved)) == 0:
-						current.add_sibling(url=resolved)
+						current.add_child(url=resolved)
 						current = WebPath.objects.get(pk=current.id) # work around treebeard issues
 				else: # file?
 					(_, ext) = splitext(resolved)

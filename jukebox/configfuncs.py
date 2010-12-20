@@ -33,3 +33,13 @@ def rescan_root(request, root):
 		WebPath.add_root(url=root)
 		
 	get_spider()
+
+@jsonrpc_method("remove_root")
+def remove_root(request, root):
+	for x in WebPath.get_root_nodes():
+		if x.url == root:
+			MusicFile.objects.filter(url__startswith=root).delete()
+			WebPath.objects.filter(url__startswith=root).delete()
+			x.delete()
+			break
+

@@ -69,7 +69,6 @@ def chat_history(request, limit):
 def chat(request, username, text):
 	item = ChatItem(what="says", message=text, who=username)
 	item.save()
-	return
 
 @jsonrpc_method('get_history')
 def get_history(request, limit):

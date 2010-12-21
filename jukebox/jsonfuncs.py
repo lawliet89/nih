@@ -3,6 +3,7 @@ from models import *
 from time import mktime
 from urllib import unquote
 from random import sample
+from alsaaudio import Mixer
 
 @jsonrpc_method('get_caller_hostname')
 def hostname(request):
@@ -58,9 +59,33 @@ def dequeue(request):
 def get_queue(request):
 	return status_info(request)
 
+volume_who = ""
+volume_direction = ""
+
+def volume():
+	volume = Mixer().getvolume()
+	return {"volume":volume[0], "who":volume_who, "direction": volume_direction}
+
 @jsonrpc_method('get_volume')
 def get_volume(request):
-	return 100
+	return volume()
+
+@jsonrpc_method('set_volume')
+def set_volume(request, username, value):
+	global volume_who, volume_direction
+	m = Mixer()
+	if value > m.getvolume()[0]:
+		volume_direction = "up"
+		volume_who = username
+	elif value < m.getvolume()[0]:
+		volume_direction = "down"
+	else:
+		return volume() # no change, quit
+	
+	volume_who = username
+	m.setvolume(value)
+	return volume()
+
 
 def chat_history(request, limit):
 	return [{"when":mktime(x.when.timetuple()),"who":x.who, "what":x.what, "message":x.message, "track":x.info} for x in ChatItem.objects.all()[:limit]]

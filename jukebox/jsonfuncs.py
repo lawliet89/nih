@@ -13,16 +13,21 @@ def hostname(request):
 		return request.META["REMOTE_ADDR"]
 
 def status_info(request):
+	items = [{"url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
+	if len(items)>0:
+		first = items[0]
+	else:
+		first = None
 	return {
-			"status":"idle",
-			"entry":None,
-			"info": {},
-			"queue": [x.what.url for x in QueueItem.objects.all()],
-			"queueInfo": [],
-			"paused": True,
-			"elapsedTime": 0,
-			"downloads": []
-		}
+		"status":"idle",
+		"entry":first,
+		"info": None,
+		"queue": items[1:],
+		"queueInfo": [],
+		"paused": True,
+		"elapsedTime": 0,
+		"downloads": []
+	}
 
 @jsonrpc_method('search')
 def search(request, inp):

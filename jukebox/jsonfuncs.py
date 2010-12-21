@@ -13,7 +13,7 @@ def hostname(request):
 		return request.META["REMOTE_ADDR"]
 
 def status_info(request):
-	items = [{"url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
+	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
 	if len(items)>0:
 		first = items[0]
 	else:
@@ -62,6 +62,36 @@ def dequeue(request):
 
 @jsonrpc_method('get_queue')
 def get_queue(request):
+	return status_info(request)
+
+@jsonrpc_method('raise')
+def higher(request, track):
+	queue = list(QueueItem.objects.all())[1:]
+	for (index,item) in enumerate(queue):
+		if item.id == track["id"]:
+			if index > 0:
+				tmp = queue[index-1].index
+				queue[index-1].index = queue[index].index
+				queue[index].index = tmp
+				queue[index].save()
+				queue[index-1].save()
+			break
+
+	return status_info(request)
+
+@jsonrpc_method('lower')
+def lower(request, track):
+	queue = list(QueueItem.objects.all())[1:]
+	for (index,item) in enumerate(queue):
+		if item.id == track["id"]:
+			if index < len(queue)-1:
+				tmp = queue[index+1].index
+				queue[index+1].index = queue[index].index
+				queue[index].index = tmp
+				queue[index].save()
+				queue[index+1].save()
+			break
+
 	return status_info(request)
 
 volume_who = ""

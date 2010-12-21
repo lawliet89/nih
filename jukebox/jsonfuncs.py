@@ -57,8 +57,12 @@ def enqueue(request, username, tracks, atTop):
 	return status_info(request)
 
 @jsonrpc_method('dequeue')
-def dequeue(request):
-	return ""
+def dequeue(request, username, track):
+	queue = list(QueueItem.objects.all())[1:]
+	for item in queue:
+		if item.id == track["id"]:
+			item.delete()
+	return status_info(request)
 
 @jsonrpc_method('get_queue')
 def get_queue(request):

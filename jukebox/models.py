@@ -44,3 +44,8 @@ class QueueItem(models.Model):
 	what = models.ForeignKey('MusicFile')
 	index = models.FloatField()	
 
+	def __unicode__(self):
+		return "<Music item %s>"%str(self.what)
+	
+	class Meta:
+		ordering = ["index"]

@@ -1,5 +1,6 @@
 from django.db import models
 from treebeard.mp_tree import MP_Node
+from hashlib import md5
 
 class WebPath(MP_Node):
 	url = models.URLField()
@@ -28,8 +29,10 @@ class MusicFile(models.Model):
 	artist = models.CharField(max_length=200)
 	album = models.CharField(max_length=200)
 	title = models.CharField(max_length=200)
-	albumArtHash = models.SlugField(blank=True)
 	trackLength = models.IntegerField(blank=True, null=True)
+
+	def hash(self):
+		return md5(self.url).hexdigest()
 
 class ChatItem(models.Model):
 	what = models.CharField(max_length=200)

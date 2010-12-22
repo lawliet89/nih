@@ -4,6 +4,12 @@ from time import mktime
 from urllib import unquote
 from random import sample
 from alsaaudio import Mixer
+import pygst
+pygst.require("0.10")
+import gst
+from enum import Enum
+from cache import *
+from threading import Thread
 
 @jsonrpc_method('get_caller_hostname')
 def hostname(request):
@@ -12,20 +18,39 @@ def hostname(request):
 	else:
 		return request.META["REMOTE_ADDR"]
 
+class Status(Enum):
+	idle = 1
+	playing = 2
+	paused = 3
+	caching = 4
+
+status = Status.idle
+
 def status_info(request):
 	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
 	if len(items)>0:
 		first = items[0]
 	else:
 		first = None
+
+	try:
+		elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
+		elapsed /= gst.SECOND
+		totalTime, format = player.query_duration(gst.Format(gst.FORMAT_TIME), None)
+		totalTime /= gst.SECOND
+	except gst.QueryError, e:
+		print "e",e
+		elapsed = 0
+		totalTime = 0
+
 	return {
-		"status":"idle",
+		"status":status.name(),
 		"entry":first,
-		"info": None,
+		"info": {"totalTime": totalTime},
 		"queue": items[1:],
 		"queueInfo": [],
-		"paused": True,
-		"elapsedTime": 0,
+		"paused": status != Status.playing,
+		"elapsedTime": elapsed,
 		"downloads": []
 	}
 
@@ -138,3 +163,38 @@ def chat(request, username, text):
 def get_history(request, limit):
 	return chat_history(request, limit)
 
+player = gst.element_factory_make("playbin2", "player")
+
+def message_handler(bus, message):
+	t = message.type
+	if t == gst.MESSAGE_EOS:
+		print "end of stream"
+	elif t == gst.MESSAGE_ERROR:
+		err, debug = message.parse_error()
+		print "error: %s"%err, debug
+
+bus = player.get_bus()
+bus.add_signal_watch()
+bus.connect("message", message_handler)
+
+@jsonrpc_method('pause')
+def pause(request, shouldPause):
+	global status
+	if not shouldPause:
+		if status == Status.idle and QueueItem.objects.all().count()>0:
+			toplay = QueueItem.objects.all()[0]
+			f = cached(toplay.what)
+			print "toplay", f
+			player.set_property("uri", "file://"+f)
+			player.set_state(gst.STATE_PLAYING)
+			print "player", player
+			status = Status.playing
+		elif status == Status.paused:
+			player.set_state(gst.STATE_PLAYING)
+			status = Status.playing
+	else:
+		if status == Status.playing:
+			player.set_state(gst.STATE_PAUSED)
+			status = Status.paused
+
+	return status_info(request)

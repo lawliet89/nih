@@ -15,15 +15,13 @@ class Downloader(Thread):
 
 	def run(self):
 		while True:
-			self.queueCondition.acquire()
-			while True:
-				if len(self.queue)>0: # should always be true here, but just in case
-					item = self.queue[0] # don't remove it yet though
-					break
-				else:
-					self.queueCondition.wait()
-
-			self.queueCondition.release()
+			with self.queueCondition:
+				while True:
+					if len(self.queue)>0:
+						item = self.queue[0] # don't remove it yet though (still needs to be marked as "caching")
+						break
+					else:
+						self.queueCondition.wait()
 
 			hash = item.hash()
 			cacheFile = join(cacheFolder, hash)
@@ -31,26 +29,23 @@ class Downloader(Thread):
 			assert exists(cacheFile)
 			cached(item)
 
-			self.queueCondition.acquire()
-			assert len(self.queue)>0
-			assert self.queue[0] == item, (item, self.queue)
-			self.queue = self.queue[1:]
-			self.queueCondition.release()
+			with self.queueCondition:
+				assert len(self.queue)>0
+				assert self.queue[0] == item, (item, self.queue)
+				self.queue = self.queue[1:]
 
 			if QueueItem.current() == item and status == Status.playing:
 				play_current()
 	
 	def downloads(self):
-		self.queueCondition.acquire()
-		ret = list(self.queue)
-		self.queueCondition.release()
-		return ret
+		with self.queueCondition:
+			ret = list(self.queue)
+			return ret
 
 	def new(self, item):
-		self.queueCondition.acquire()
-		self.queue.append(item)
-		self.queueCondition.notify()
-		self.queueCondition.release()
+		with self.queueCondition:
+			self.queue.append(item)
+			self.queueCondition.notify()
 
 downloader = Downloader()
 downloader.setDaemon(True)

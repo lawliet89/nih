@@ -16,14 +16,14 @@ class Downloader(Thread):
 	def run(self):
 		while True:
 			self.queueCondition.acquire()
-			self.queueCondition.wait()
-			if len(self.queue)>0: # should always be true here, but just in case
-				item = self.queue[0] # don't remove it yet though
-			else:
-				item = None
+			while True:
+				if len(self.queue)>0: # should always be true here, but just in case
+					item = self.queue[0] # don't remove it yet though
+					break
+				else:
+					self.queueCondition.wait()
+
 			self.queueCondition.release()
-			if item == None:
-				continue
 
 			hash = item.hash()
 			cacheFile = join(cacheFolder, hash)

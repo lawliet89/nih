@@ -31,9 +31,9 @@ def status_info(request):
 	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
 	itemsMeta = [{"artistName":x.what.artist, "albumTitle":x.what.album, "trackName":x.what.title, "trackNumber":x.what.trackNumber} for x in QueueItem.objects.all()]
 	if len(items)>0:
-		first = items[0]
+		first = (items[0], itemsMeta[0])
 	else:
-		first = None
+		first = (None, None)
 
 	try:
 		elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
@@ -47,8 +47,8 @@ def status_info(request):
 
 	return {
 		"status":status.name(),
-		"entry":first,
-		"info": itemsMeta[0],
+		"entry":first[0],
+		"info": first[1],
 		"queue": items[1:],
 		"queueInfo": itemsMeta[1:],
 		"paused": status != Status.playing,

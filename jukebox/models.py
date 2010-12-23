@@ -46,6 +46,14 @@ class ChatItem(models.Model):
 	class Meta:
 		ordering = ["-when"]
 
+	def __unicode__(self):
+		ret = "<Chat: %s, %s, %s, "%(self.what, self.when, self.who)
+		if self.what == "skip":
+			ret += str(self.info)
+		else:
+			ret += self.message
+		return ret + ">"
+
 class QueueItem(models.Model):
 	who = models.CharField(max_length=200)
 	what = models.ForeignKey('MusicFile')

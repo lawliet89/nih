@@ -199,9 +199,10 @@ def next_track():
 @jsonrpc_method('skip')
 def skip(request, username):
 	current = QueueItem.current()
-	item = ChatItem(what="skip", info = current.what, who=username)
-	item.save()
-	current.delete()
+	if current != None:
+		item = ChatItem(what="skip", info = current.what, who=username)
+		item.save()
+		current.delete()
 	return status_info(request)
 
 def message_handler(bus, message):

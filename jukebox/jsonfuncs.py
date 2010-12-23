@@ -170,6 +170,17 @@ def message_handler(bus, message):
 	t = message.type
 	if t == gst.MESSAGE_EOS:
 		print "end of stream"
+		QueueItem.objects.all()[0].delete() # remove current first item from queue
+		if QueueItem.objects.all().count()>0:
+			toplay = QueueItem.objects.all()[0]
+			f = cached(toplay.what)
+			player.set_property("uri", "file://"+f)
+		else:
+			global status
+			player.set_property("uri", "")
+			player.set_state(gst.STATE_NULL)
+			status = Status.idle
+
 	elif t == gst.MESSAGE_ERROR:
 		err, debug = message.parse_error()
 		print "error: %s"%err, debug

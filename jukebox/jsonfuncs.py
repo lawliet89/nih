@@ -10,6 +10,7 @@ import gst
 from enum import Enum
 from cache import *
 from threading import Thread
+import gobject
 
 @jsonrpc_method('get_caller_hostname')
 def hostname(request):
@@ -172,6 +173,16 @@ def message_handler(bus, message):
 	elif t == gst.MESSAGE_ERROR:
 		err, debug = message.parse_error()
 		print "error: %s"%err, debug
+
+class Looper(Thread):
+	def run(self):
+		loop = gobject.MainLoop()
+		loop.run()
+
+gobject.threads_init()
+loop = Looper()
+loop.setDaemon(True)
+loop.start()
 
 bus = player.get_bus()
 bus.add_signal_watch()

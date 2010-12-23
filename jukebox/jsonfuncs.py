@@ -73,6 +73,7 @@ def search(request, inp):
 @jsonrpc_method('randomtracks')
 def randomtracks(request, count):
 	items = MusicFile.objects.all()
+	count = min(count, items.count())
 	ret = [{"url":items[x].url} for x in sample(range(items.count()),count)]
 	return ret
 

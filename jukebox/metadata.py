@@ -239,7 +239,6 @@ if __name__ == "__main__":
     parser = OptionParser()
     parser.add_option("-d","--debug",help="Write errors out to command line rather than the file for debugging purposes",default=False,dest="debug",action="store_true")
     (opts,args) = parser.parse_args()
-    global debug
     debug = opts.debug
 
     if len(args)!=1:

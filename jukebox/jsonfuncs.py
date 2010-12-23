@@ -193,6 +193,7 @@ def get_history(request, limit):
 player = gst.element_factory_make("playbin2", "player")
 
 def next_track():
+	global status
 	QueueItem.current().delete() # remove current first item from queue
 	if QueueItem.objects.all().count()>0:
 		toplay = QueueItem.current()
@@ -203,11 +204,9 @@ def next_track():
 		if status == Status.playing:
 			player.set_state(gst.STATE_PLAYING)
 	else:
-		global status
 		player.set_property("uri", "")
 		player.set_state(gst.STATE_NULL)
-		if status == Status.playing:
-			status = Status.idle
+		status = Status.idle
 
 @jsonrpc_method('skip')
 def skip(request, username):

@@ -43,6 +43,9 @@ class ChatItem(models.Model):
 	info = models.ForeignKey('MusicFile', null=True, blank=True)
 	message = models.CharField(max_length=1024)
 
+	class Meta:
+		ordering = ["-when"]
+
 class QueueItem(models.Model):
 	who = models.CharField(max_length=200)
 	what = models.ForeignKey('MusicFile')

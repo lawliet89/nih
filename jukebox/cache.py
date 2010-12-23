@@ -15,11 +15,11 @@ def cached(item):
 	
 	if not item.got_metadata:
 		metadata = get_metadata(cacheFile)
-		item.artist = metadata["artistName"]
-		item.album = metadata["albumTitle"]
-		item.title = metadata["trackName"]
-		item.trackLength = metadata["totalTime"]
-		item.trackNumber = metadata["trackNumber"]
+		item.artist = metadata.get("artistName", "")
+		item.album = metadata.get("albumTitle", "")
+		item.title = metadata.get("trackName", "")
+		item.trackLength = metadata.get("totalTime", 0)
+		item.trackNumber = metadata.get("trackNumber", 0)
 		item.got_metadata = True
 		item.save()
 

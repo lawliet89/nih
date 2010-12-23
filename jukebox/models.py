@@ -20,7 +20,7 @@ class MusicFile(models.Model):
 
 	def __unicode__(self):
 		if self.got_metadata:
-			return "Checked url: %s"%self.url
+			return " - ".join([x for x in (self.artist, self.album, self.title) if x!=""])
 		else:
 			return "Unchecked url: %s"%self.url
 

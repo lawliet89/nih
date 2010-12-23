@@ -23,7 +23,6 @@ class Status(Enum):
 	idle = 1
 	playing = 2
 	paused = 3
-	caching = 4
 
 status = Status.idle
 
@@ -52,15 +51,20 @@ def status_info(request):
 			elapsed = 0
 			totalTime = 0
 
+	if QueueItem.current()!=None and QueueItem.current().what in downloader.downloads():
+		state = "caching"
+	else:
+		state = status.name()
+
 	return {
-		"status":status.name(),
+		"status":state,
 		"entry":first[0],
 		"info": first[1],
 		"queue": items[1:],
 		"queueInfo": itemsMeta[1:],
 		"paused": status != Status.playing,
 		"elapsedTime": elapsed,
-		"downloads": []
+		"downloads": [x.url for x in downloader.downloads()]
 	}
 
 @jsonrpc_method('search')
@@ -236,17 +240,21 @@ bus = player.get_bus()
 bus.add_signal_watch()
 bus.connect("message", message_handler)
 
+def play_current():
+	toplay = QueueItem.current()
+	f = cached(toplay.what)
+	print "toplay", f
+	player.set_property("uri", "file://"+f)
+	player.set_state(gst.STATE_PLAYING)
+	print "player", player
+
 @jsonrpc_method('pause')
 def pause(request, shouldPause):
 	global status
 	if not shouldPause:
 		if status == Status.idle and QueueItem.objects.all().count()>0:
-			toplay = QueueItem.current()
-			f = cached(toplay.what)
-			print "toplay", f
-			player.set_property("uri", "file://"+f)
-			player.set_state(gst.STATE_PLAYING)
-			print "player", player
+			if is_cached(QueueItem.current().what):
+				play_current()
 			status = Status.playing
 		elif status == Status.paused:
 			player.set_state(gst.STATE_PLAYING)

@@ -38,15 +38,19 @@ def status_info(request):
 	else:
 		first = (None, None)
 
-	try:
-		elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
-		elapsed /= gst.SECOND
-		totalTime, format = player.query_duration(gst.Format(gst.FORMAT_TIME), None)
-		totalTime /= gst.SECOND
-	except gst.QueryError, e:
-		print "e",e
+	if status == Status.idle:
 		elapsed = 0
 		totalTime = 0
+	else:
+		try:
+			elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
+			elapsed /= gst.SECOND
+			totalTime, format = player.query_duration(gst.Format(gst.FORMAT_TIME), None)
+			totalTime /= gst.SECOND
+		except gst.QueryError, e:
+			print "e",e
+			elapsed = 0
+			totalTime = 0
 
 	return {
 		"status":status.name(),

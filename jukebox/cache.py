@@ -74,7 +74,7 @@ def cached(item):
 		item.album = metadata.get("albumTitle", "")
 		item.title = metadata.get("trackName", "")
 		item.trackLength = metadata.get("totalTime", 0)
-		item.trackNumber = metadata.get("trackNumber", 0)
+		item.trackNumber = metadata.get("trackNumber", "0")
 		item.got_metadata = True
 		item.save()
 

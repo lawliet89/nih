@@ -30,7 +30,7 @@ class MusicFile(models.Model):
 	album = models.CharField(max_length=200)
 	title = models.CharField(max_length=200)
 	trackLength = models.IntegerField(blank=True, null=True)
-	trackNumber = models.IntegerField(blank=True, null=True)
+	trackNumber = models.CharField(max_length=50)
 
 	def hash(self):
 		return md5(self.url).hexdigest()

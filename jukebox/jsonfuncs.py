@@ -27,7 +27,7 @@ class Status(Enum):
 status = Status.idle
 
 def metadata(item):
-	return {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber}
+	return {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
 
 def status_info(request):
 	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
@@ -39,17 +39,13 @@ def status_info(request):
 
 	if status == Status.idle:
 		elapsed = 0
-		totalTime = 0
 	else:
 		try:
 			elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
 			elapsed /= gst.SECOND
-			totalTime, format = player.query_duration(gst.Format(gst.FORMAT_TIME), None)
-			totalTime /= gst.SECOND
 		except gst.QueryError, e:
 			print "e",e
 			elapsed = 0
-			totalTime = 0
 
 	if QueueItem.current()!=None and QueueItem.current().what in downloader.downloads():
 		state = "caching"

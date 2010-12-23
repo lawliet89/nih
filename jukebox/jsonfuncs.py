@@ -27,9 +27,12 @@ class Status(Enum):
 
 status = Status.idle
 
+def metadata(item):
+	return {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber}
+
 def status_info(request):
 	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
-	itemsMeta = [{"artistName":x.what.artist, "albumTitle":x.what.album, "trackName":x.what.title, "trackNumber":x.what.trackNumber} for x in QueueItem.objects.all()]
+	itemsMeta = [metadata(x.what) for x in QueueItem.objects.all()]
 	if len(items)>0:
 		first = (items[0], itemsMeta[0])
 	else:
@@ -154,7 +157,16 @@ def set_volume(request, username, value):
 
 
 def chat_history(request, limit):
-	return [{"when":mktime(x.when.timetuple()),"who":x.who, "what":x.what, "message":x.message, "track":x.info} for x in ChatItem.objects.all()[:limit]]
+	ret = []
+	for item in ChatItem.objects.all()[:limit]:
+		msg = {"when":mktime(item.when.timetuple()),"who":item.who, "what":item.what}
+		if item.what == "skip":
+			msg["track"] = {"url":item.info.url}
+			msg["info"] = metadata(item.info)
+		else:
+			msg["message"] = item.message
+		ret.append(msg)
+	return ret
 
 @jsonrpc_method('chat')
 def chat(request, username, text):
@@ -167,21 +179,33 @@ def get_history(request, limit):
 
 player = gst.element_factory_make("playbin2", "player")
 
+def next_track():
+	QueueItem.objects.all()[0].delete() # remove current first item from queue
+	if QueueItem.objects.all().count()>0:
+		toplay = QueueItem.objects.all()[0]
+		f = cached(toplay.what)
+		player.set_property("uri", "file://"+f)
+	else:
+		global status
+		player.set_property("uri", "")
+		player.set_state(gst.STATE_NULL)
+		if status == Status.playing:
+			status = Status.idle
+
+@jsonrpc_method('skip')
+def skip(request, username):
+	current = QueueItem.objects.all()[0]
+	item = ChatItem(what="skip", info = current.what, who=username)
+	item.save()
+	current.delete()
+	return status_info(request)
+
 def message_handler(bus, message):
 	t = message.type
 	if t == gst.MESSAGE_EOS:
 		print "end of stream"
-		QueueItem.objects.all()[0].delete() # remove current first item from queue
-		if QueueItem.objects.all().count()>0:
-			toplay = QueueItem.objects.all()[0]
-			f = cached(toplay.what)
-			player.set_property("uri", "file://"+f)
-		else:
-			global status
-			player.set_property("uri", "")
-			player.set_state(gst.STATE_NULL)
-			status = Status.idle
-
+		next_track()
+	
 	elif t == gst.MESSAGE_ERROR:
 		err, debug = message.parse_error()
 		print "error: %s"%err, debug

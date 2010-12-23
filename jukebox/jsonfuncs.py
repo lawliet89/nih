@@ -98,6 +98,13 @@ def dequeue(request, username, track):
 			item.delete()
 	return status_info(request)
 
+@jsonrpc_method('clear_queue')
+def clear_queue(request, username):
+	queue = list(QueueItem.objects.all())[1:]
+	for item in queue:
+		item.delete()
+	return status_info(request)
+
 @jsonrpc_method('get_queue')
 def get_queue(request):
 	return status_info(request)

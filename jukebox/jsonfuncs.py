@@ -84,6 +84,7 @@ def randomtracks(request, count):
 def enqueue(request, username, tracks, atTop):
 	for t in tracks:
 		q = QueueItem(who = username, what = MusicFile.objects.get(url=t['url']))
+		cached(q.what)
 		try:
 			if atTop:
 				q.index = QueueItem.objects.all().order_by("index")[0].index - 1

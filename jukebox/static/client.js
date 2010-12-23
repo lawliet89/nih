@@ -84,15 +84,14 @@ function arm_clock_timer() {
 
 function update_time() {
     var s = document.getElementById("statusatom");
-    var pausedString = paused ? ", paused" : "";
     var timeString =
-	state == "playing"
+	(state == "playing" || state == "paused")
 	? (" " + timeFormat(elapsedTime) + " / " + timeFormat(totalTime))
 	: "";
 
     s.innerHTML = "";
     s.appendChild(document.createTextNode("Now playing (" + state + 
-    					  pausedString + timeString + ")"));
+    					  timeString + ")"));
 }
 
 function update_player_status(status) {

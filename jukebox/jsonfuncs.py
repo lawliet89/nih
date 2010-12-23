@@ -184,9 +184,9 @@ def get_history(request, limit):
 player = gst.element_factory_make("playbin2", "player")
 
 def next_track():
-	QueueItem.objects.all()[0].delete() # remove current first item from queue
+	QueueItem.current().delete() # remove current first item from queue
 	if QueueItem.objects.all().count()>0:
-		toplay = QueueItem.objects.all()[0]
+		toplay = QueueItem.current()
 		f = cached(toplay.what)
 		player.set_property("uri", "file://"+f)
 	else:
@@ -198,7 +198,7 @@ def next_track():
 
 @jsonrpc_method('skip')
 def skip(request, username):
-	current = QueueItem.objects.all()[0]
+	current = QueueItem.current()
 	item = ChatItem(what="skip", info = current.what, who=username)
 	item.save()
 	current.delete()
@@ -233,7 +233,7 @@ def pause(request, shouldPause):
 	global status
 	if not shouldPause:
 		if status == Status.idle and QueueItem.objects.all().count()>0:
-			toplay = QueueItem.objects.all()[0]
+			toplay = QueueItem.current()
 			f = cached(toplay.what)
 			print "toplay", f
 			player.set_property("uri", "file://"+f)

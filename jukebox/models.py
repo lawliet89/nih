@@ -48,6 +48,13 @@ class QueueItem(models.Model):
 	what = models.ForeignKey('MusicFile')
 	index = models.FloatField()	
 
+	@staticmethod
+	def current():
+		if QueueItem.objects.all().count() == 0:
+			return None
+		else:
+			return QueueItem.objects.all()[0]
+
 	def __unicode__(self):
 		return "<Music item %s>"%str(self.what)
 	

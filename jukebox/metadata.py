@@ -17,6 +17,9 @@ import magic
 from musicbrainz2.webservice import *
 from urllib2 import urlopen
 
+from PIL import Image
+from StringIO import StringIO
+
 debug = False
 
 class WAV:
@@ -154,25 +157,23 @@ def write_albumart(image_tag, metadata, tags):
             print "issue connecting to Musicbrainz"
             return
 
-    image_file = cache_base + ".orig.jpeg"
-    image_file_scaled = cache_base + ".jpeg"
+    image_file = cache_base + ".jpeg"
 
-    with open(image_file, "w") as image:
-        if type(image_tag) == types.ListType:
-            image_tag = image_tag[0]
-        if isinstance(image_tag, str):
-            image.write(image_tag)
-        else:
-            image.write(image_tag.data)
+    input_image = None
+    
+    if type(image_tag) == types.ListType:
+        image_tag = image_tag[0]
+    if isinstance(image_tag, str):
+        input_image = StringIO(image_tag)
+    else:
+        input_image = StringIO(image_tag.data)
 
-    try:
-        retcode = subprocess.call(["convert", "-resize", "96x96", image_file, image_file_scaled], stderr=open("/dev/null"))
-        if retcode == 0:
-            metadata.write("albumArt\nYes\n")
-    except:
-         pass #It's probably not installed. Do nothing.
+    image = Image.open(input_image)
+    image.thumbnail((96,96), Image.ANTIALIAS)
+    image.save(image_file)
+
+    metadata["albumArt"] = "Yes"
         
-    os.unlink(image_file)           
 
 def get_metadata(music_file):
     global cache_base

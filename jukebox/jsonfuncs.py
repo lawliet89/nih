@@ -27,7 +27,12 @@ class Status(Enum):
 status = Status.idle
 
 def metadata(item):
-	return {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
+	ret = {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
+	album = albumArt(item)
+	if album:
+		ret["albumArt"] = album
+		ret["cacheHash"] = item.hash()
+	return ret
 
 def status_info(request):
 	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]

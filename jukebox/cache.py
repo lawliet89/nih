@@ -75,6 +75,13 @@ def cached(item):
 
 	return abspath(cacheFile)
 
+def albumArt(item):
+	cacheFile = join(cacheFolder, item.hash() + ".jpeg")
+	if exists(cacheFile):
+		return cacheFile
+	else:
+		return None
+
 if not exists(cacheFolder):
 	mkdir(cacheFolder)
 for x in QueueItem.objects.all():

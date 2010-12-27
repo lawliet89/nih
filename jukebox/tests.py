@@ -1,23 +1,36 @@
-"""
-This file demonstrates two different styles of tests (one doctest and one
-unittest). These will both pass when you run "manage.py test".
-
-Replace these with more appropriate tests for your application.
-"""
-
 from django.test import TestCase
+from django.test.client import Client
+from jsonrpc._json import loads, dumps
+from uuid import uuid1
+from jukebox.models import *
 
-class SimpleTest(TestCase):
-    def test_basic_addition(self):
-        """
-        Tests that 1 + 1 always equals 2.
-        """
-        self.failUnlessEqual(1 + 1, 2)
+class JukeboxTest(TestCase):
+	def setUp(self):
+		self.client = Client()
 
-__test__ = {"doctest": """
-Another way to test that 1 + 1 is equal to 2.
+	def _method(self, method, params=[]):
+		req = {
+		  u'version': u'1.1',
+		  u'method': method,
+		  u'params': params,
+		  u'id': u'random_test_id'
+		}
+		return self._call(req)
+	
+	def _call(self, req):
+		return loads(self.client.post("/rpc/jukebox", dumps(req), content_type="application/json").content)
 
->>> 1 + 1 == 2
-True
-"""}
+	def _addTestTrack(self):
+		url = "http://localhost/"+uuid1().hex
+		m = MusicFile()
+		m.url = url
+		m.save()
+		return url
 
+	def testEnqueue(self):
+		url = self._addTestTrack()
+		resp = self._method("enqueue", ["test_user", [{"url":url}], False])
+		res = resp[u'result']
+		self.assertEquals(res[u'entry'][u'url'], url)
+		self.assertEquals(res[u'entry'][u'username'], "test_user")
+		self.assertEquals(res[u'queue'], [])

@@ -18,7 +18,7 @@ class JukeboxTest(TestCase):
 		return self._call(req)
 	
 	def _call(self, req):
-		return loads(self.client.post("/rpc/jukebox", dumps(req), content_type="application/json").content)
+		return loads(self.client.post("/rpc/jukebox", dumps(req), content_type="application/json").content)[u'result']
 
 	def _addTestTrack(self):
 		url = "http://localhost/"+uuid1().hex
@@ -27,10 +27,13 @@ class JukeboxTest(TestCase):
 		m.save()
 		return url
 
-	def testEnqueue(self):
+	def _enqueueTestTrack(self):
 		url = self._addTestTrack()
 		resp = self._method("enqueue", ["test_user", [{"url":url}], False])
-		res = resp[u'result']
+		return (url, resp)
+
+	def testEnqueue(self):
+		(url, res) = self._enqueueTestTrack()
 		self.assertEquals(res[u'entry'][u'url'], url)
 		self.assertEquals(res[u'entry'][u'username'], "test_user")
 		self.assertEquals(res[u'queue'], [])

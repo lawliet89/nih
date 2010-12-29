@@ -19,6 +19,8 @@ DATABASES = {
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        # Sqlite-specific workaround for http://code.djangoproject.com/ticket/12118
+        'TEST_NAME': 'test_jukebox.db'
     }
 }
 

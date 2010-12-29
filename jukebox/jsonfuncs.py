@@ -47,11 +47,11 @@ def status_info(request):
 	if status == Status.idle:
 		elapsed = 0
 	else:
-		try:
+		(change, current, pending) = player.get_state()
+		if current != gst.STATE_NULL:
 			elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
 			elapsed /= gst.SECOND
-		except gst.QueryError, e:
-			print "e",e
+		else:
 			elapsed = 0
 
 	if QueueItem.current()!=None and QueueItem.current().what in downloader.downloads():

@@ -37,3 +37,16 @@ class JukeboxTest(TestCase):
 		self.assertEquals(res[u'entry'][u'url'], url)
 		self.assertEquals(res[u'entry'][u'username'], "test_user")
 		self.assertEquals(res[u'queue'], [])
+
+	def testSkip(self): 
+		QueueItem.objects.all().delete() # clear anything else in there
+
+		(url, _) = self._enqueueTestTrack()
+		(url2, _) = self._enqueueTestTrack()
+
+		res = self._method("get_queue")
+		self.assertEqual(res['entry']['url'], url, res)
+		res = self._method("skip", ["test_user"])
+		self.assertEqual(res['entry']['url'], url2, res)
+		res = self._method("skip", ["test_user"])
+		self.assertEqual(res['entry'], None, res)

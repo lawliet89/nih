@@ -8,7 +8,7 @@ class JukeboxTest(TestCase):
 	def setUp(self):
 		self.client = Client()
 
-	def _method(self, method, params=[]):
+	def _method(self, method, *params):
 		req = {
 		  u'version': u'1.1',
 		  u'method': method,
@@ -29,7 +29,7 @@ class JukeboxTest(TestCase):
 
 	def _enqueueTestTrack(self):
 		url = self._addTestTrack()
-		resp = self._method("enqueue", ["test_user", [{"url":url}], False])
+		resp = self._method("enqueue", "test_user", [{"url":url}], False)
 		return (url, resp)
 
 	def testEnqueue(self):
@@ -46,7 +46,7 @@ class JukeboxTest(TestCase):
 
 		res = self._method("get_queue")
 		self.assertEqual(res['entry']['url'], url, res)
-		res = self._method("skip", ["test_user"])
+		res = self._method("skip", "test_user")
 		self.assertEqual(res['entry']['url'], url2, res)
-		res = self._method("skip", ["test_user"])
+		res = self._method("skip", "test_user")
 		self.assertEqual(res['entry'], None, res)

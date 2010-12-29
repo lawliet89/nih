@@ -38,6 +38,15 @@ class JukeboxTest(TestCase):
 		self.assertEquals(res[u'entry'][u'username'], "test_user")
 		self.assertEquals(res[u'queue'], [])
 
+	def testPlay(self): 
+		QueueItem.objects.all().delete() # clear anything else in there
+
+		self._method("pause", False)
+		(url, _) = self._enqueueTestTrack()
+		res = self._method("pause", False)
+		self.assertEqual(res['paused'], False, res)
+		self.assertEqual(res['status'], "caching", res)
+
 	def testSkip(self): 
 		QueueItem.objects.all().delete() # clear anything else in there
 

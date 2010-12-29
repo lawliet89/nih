@@ -59,3 +59,16 @@ class JukeboxTest(TestCase):
 		self.assertEqual(res['entry']['url'], url2, res)
 		res = self._method("skip", "test_user")
 		self.assertEqual(res['entry'], None, res)
+
+	def testSkipWithPlay(self): 
+		(url, _) = self._enqueueTestTrack()
+		(url2, _) = self._enqueueTestTrack()
+
+		res = self._method("pause", False)
+		self.assertEqual(res['entry']['url'], url, res)
+		self.assertEqual(res['paused'], False, res)
+		self.assertEqual(res['status'], "caching", res)
+		res = self._method("skip", "test_user")
+		self.assertEqual(res['entry']['url'], url2, res)
+		res = self._method("skip", "test_user")
+		self.assertEqual(res['entry'], None, res)

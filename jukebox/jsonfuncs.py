@@ -27,6 +27,8 @@ class Status(Enum):
 status = Status.idle
 
 def metadata(item):
+	if not item.got_metadata:
+		return None
 	ret = {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
 	album = albumArt(item)
 	if album:

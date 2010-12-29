@@ -181,6 +181,8 @@ def chat_history(request, limit):
 		if item.what == "skip":
 			msg["track"] = {"url":item.info.url}
 			msg["info"] = metadata(item.info)
+		elif item.what == "failed":
+			msg["error"] = "Failed to download %s"%item.info.url
 		else:
 			msg["message"] = item.message
 		ret.append(msg)

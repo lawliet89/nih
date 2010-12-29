@@ -1,4 +1,4 @@
-from urllib import urlretrieve
+from urllib2 import urlopen, HTTPError
 from os.path import join, exists, abspath
 from os import mkdir
 from models import QueueItem
@@ -25,9 +25,13 @@ class Downloader(Thread):
 
 			hash = item.hash()
 			cacheFile = join(cacheFolder, hash)
-			urlretrieve(item.url, cacheFile)
-			assert exists(cacheFile)
-			cached(item)
+			try:
+				data = urlopen(item.url).read()
+				open(cacheFile, "wb").write(data)
+				cached(item)
+			except HTTPError:
+				item.failed = True
+				item.save()
 
 			with self.queueCondition:
 				assert len(self.queue)>0
@@ -35,7 +39,12 @@ class Downloader(Thread):
 				self.queue = self.queue[1:]
 
 			if QueueItem.current() == item and status == Status.playing:
-				play_current()
+				if item.failed:
+					char = ChatItem(what="failed", info = item.what)
+					chat.save()
+					next_track()
+				else:
+					play_current()
 	
 	def downloads(self):
 		with self.queueCondition:

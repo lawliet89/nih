@@ -11,6 +11,8 @@ class WebPath(MP_Node):
 	def __unicode__(self):
 		if self.checked:
 			return "Checked url: %s"%self.url
+		elif self.failed:
+			return "Failed url: %s"%self.url
 		else:
 			return "Unchecked url: %s"%self.url
 

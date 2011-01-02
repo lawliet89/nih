@@ -46,15 +46,15 @@ def get_tags(mime, music_file):
     try:
         if mime == 'audio/mpeg':
             tags = MP3(music_file)
-        elif mime == '.ogg':
+        elif mime == 'application/ogg':
             tags = OggVorbis(music_file)
-        elif mime == '.flac':
+        elif mime == 'audio/x-flac':
             tags = FLAC(music_file)
-        elif mime == '.m4a':
+        elif mime == 'audio/mp4':
             tags = MP4(music_file)
-        elif mime == '.wav':
+        elif mime == 'audio/x-wav':
             tags = WAV(music_file)
-        elif mime == '.wma':
+        elif mime == 'audio/x-ms-asf':
             tags = ASF(music_file)
         else: # don't have anything better to give the user
             tags = NullTags()
@@ -73,15 +73,15 @@ def get_gain(mime, music_file):
             apev2 = APEv2(music_file)
             gain = apev2['REPLAYGAIN_TRACK_GAIN'].value
 
-        elif mime == '.ogg':
+        elif mime == 'application/ogg':
             tags = OggVorbis(music_file)
             gain = tags['replaygain_track_gain'][0]
 
-        elif mime == '.m4a':
+        elif mime == 'audio/mp4':
             tags = MP4(music_file)
             gain = tags['----:com.apple.iTunes:replaygain_track_gain'][0] # Oh, how I wish I were kidding
 
-        elif mime == '.flac':
+        elif mime == 'audio/x-flac':
             tags = FLAC(music_file)
             gain = tags['replaygain_track_gain'][0]
 
@@ -100,11 +100,11 @@ def evaluate_gain(mime, music_file):
 
     if mime == 'audio/mpeg':
         cmd = ["mp3gain", "-T", music_file] # -T means modify existing file
-    elif mime == '.ogg':
+    elif mime == 'application/ogg':
         cmd = ["vorbisgain", "-f", music_file] # -f means ignore file if it has tags
-    elif mime == '.m4a':
+    elif mime == 'audio/mp4':
         cmd = ["aacgain", "-T", music_file] # -T means modify existing file
-    elif mime == '.flac':
+    elif mime == 'audio/x-flac':
         cmd = ["metaflac", "--add-replay-gain", music_file]
 
     if cmd:
@@ -197,7 +197,7 @@ def get_metadata(music_file):
         if gain:
             metadata["replayGain"] = gain
     
-        if mime == '.m4a':
+        if mime == 'audio/mp4':
             # I don't know if this counts as a defect in Mutagen or iTunes
             add_tag(tags, metadata, "\xa9ART", "artistName")
             add_tag(tags, metadata, "\xa9alb", "albumTitle")
@@ -216,7 +216,7 @@ def get_metadata(music_file):
             if tags.tags:
                 write_albumart(tags.tags.getall('APIC'), metadata, tags)
 
-        elif mime == ".wma":
+        elif mime == "audio/x-ms-asf":
             add_tag(tags, metadata, "Author", "artistName")
             add_tag(tags, metadata, "WM/AlbumArtist", "albumTitle")
             add_tag(tags, metadata, "Title","trackName")

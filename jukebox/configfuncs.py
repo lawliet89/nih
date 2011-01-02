@@ -1,6 +1,6 @@
 from jsonrpc import jsonrpc_method
 from models import *
-from spider import get_spider
+from spider import spider
 from urllib2 import urlopen, HTTPError
 
 @jsonrpc_method("all_roots")
@@ -30,10 +30,11 @@ def rescan_root(request, root):
 			urlopen(root)
 		except:
 			return # crap url
-		WebPath.add_root(url=root)
 		
-	get_spider()
-
+		root = WebPath.add_root(url=root)
+		# re-get the item to work around file/memory caching issues with Treebeard
+		spider.add(WebPath.objects.get(pk=root.id))
+		
 @jsonrpc_method("remove_root")
 def remove_root(request, root):
 	for x in WebPath.get_root_nodes():

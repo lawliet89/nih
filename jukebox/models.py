@@ -1,6 +1,8 @@
 from django.db import models
 from treebeard.mp_tree import MP_Node
 from hashlib import md5
+from django.core.signals import request_started
+from utils import runStartupTasks
 
 class WebPath(MP_Node):
 	url = models.URLField()
@@ -71,3 +73,6 @@ class QueueItem(models.Model):
 	
 	class Meta:
 		ordering = ["index"]
+
+request_started.connect(runStartupTasks)
+

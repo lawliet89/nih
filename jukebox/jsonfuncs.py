@@ -11,6 +11,7 @@ from enum import Enum
 from cache import *
 from threading import Thread
 import gobject
+from utils import registerStartupTask
 
 @jsonrpc_method('get_caller_hostname')
 def hostname(request):
@@ -244,7 +245,7 @@ class Looper(Thread):
 gobject.threads_init()
 loop = Looper()
 loop.setDaemon(True)
-loop.start()
+registerStartupTask(loop)
 
 bus = player.get_bus()
 bus.add_signal_watch()

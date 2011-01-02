@@ -1,7 +1,7 @@
 from jsonrpc import jsonrpc_method
 from models import *
 from spider import spider
-from urllib2 import urlopen, HTTPError
+from utils import urlopen, HTTPError
 
 @jsonrpc_method("all_roots")
 def all_roots(request):

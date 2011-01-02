@@ -1,9 +1,41 @@
 from os.path import join, dirname
+import urllib2
 from threading import Thread, Lock, Condition
 
+client = None
+HTTPError = urllib2.HTTPError
 
 def site_path(path):
 	return join(dirname(__file__), path)
+
+class FakeURLObject:
+	def __init__(self, backing, url):
+		self.backing = backing
+		self.url = url
+
+	def geturl(self):
+		return self.url
+
+	def read(self):
+		return self.backing.content
+
+def urlopen(url):
+	try:
+		return urllib2.urlopen(url)
+	except HTTPError:
+		global client
+		if client == None:
+			from django.test.client import Client
+			client = Client()
+		local = "http://localhost"
+		if url.find(local) != -1: # assume local server attempt, so try test client
+			path = url[len(local):]
+			obj = client.get(path)
+			if obj.status_code != 200:
+				raise
+			return FakeURLObject(obj, url)
+		else:
+			raise
 
 class BackgroundTask(Thread):
 	def __init__(self):

@@ -38,8 +38,9 @@ def metadata(item):
 	return ret
 
 def status_info(request):
-	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in QueueItem.objects.all()]
-	itemsMeta = [metadata(x.what) for x in QueueItem.objects.all()]
+	objects = QueueItem.objects.all()
+	items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in objects]
+	itemsMeta = [metadata(x.what) for x in objects]
 	if len(items)>0:
 		first = (items[0], itemsMeta[0])
 	else:
@@ -55,7 +56,8 @@ def status_info(request):
 		else:
 			elapsed = 0
 
-	if QueueItem.current()!=None and QueueItem.current().what in downloader.downloads():
+	current = QueueItem.current()
+	if current!=None and current.what in downloader.downloads():
 		state = "caching"
 	else:
 		state = status.name()

@@ -77,7 +77,7 @@ def status_info(request):
 def search(request, inp):
 	items = MusicFile.objects
 	for term in inp:
-		items = items.filter(url__contains=term)
+		items = items.filter(url__icontains=term)
 	return [{"url":x.url} for x in items]
 
 @jsonrpc_method('randomtracks')

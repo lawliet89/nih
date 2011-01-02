@@ -5,7 +5,7 @@ from django.core.signals import request_started
 from utils import runStartupTasks
 
 class WebPath(MP_Node):
-	url = models.URLField()
+	url = models.TextField()
 	node_order_by = ["url"]
 	
 	def __unicode__(self):
@@ -18,7 +18,7 @@ class WebPath(MP_Node):
 	failed = models.BooleanField(default=False)
 
 class MusicFile(models.Model):
-	url = models.URLField()
+	url = models.TextField()
 
 	def __unicode__(self):
 		if self.got_metadata:

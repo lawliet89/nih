@@ -14,7 +14,7 @@ def all_roots(request):
 def current_rescans(request):
 	ret = []
 	for root in WebPath.get_root_nodes():
-		if WebPath.objects.filter(checked = False).filter(url__startswith=root.url).count()>0:
+		if WebPath.objects.filter(checked = False, failed=False,url__startswith=root.url).count()>0:
 			ret.append(root.url)
 	return ret
 

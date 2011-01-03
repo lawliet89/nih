@@ -210,11 +210,16 @@ def next_track():
 	if QueueItem.objects.all().count()>0:
 		toplay = QueueItem.current()
 		f = cached(toplay.what)
-		if status == Status.playing:
+		if f != None:
+			if status == Status.playing:
+				player.set_state(gst.STATE_NULL)
+			player.set_property("uri", "file://"+f)
+			if status == Status.playing:
+				player.set_state(gst.STATE_PLAYING)
+		else:
+			player.set_property("uri", "")
 			player.set_state(gst.STATE_NULL)
-		player.set_property("uri", "file://"+f)
-		if status == Status.playing:
-			player.set_state(gst.STATE_PLAYING)
+
 	else:
 		player.set_property("uri", "")
 		player.set_state(gst.STATE_NULL)

@@ -124,4 +124,22 @@ class JukeboxTest(TestCase):
 		self.assertEqual(res['paused'], False, res)
 		self.assertEqual(res['status'], "playing", res)
 
+	def testNotCachedYet(self):
+		print "starting cache test"
+		self.clear_queue()
+		downloader.pause()
 
+		(url, _) = self._enqueueTestTrack()
+		(url2, _) = self._enqueueTestTrack()
+
+		res = self._method("pause", False)
+		self.assertNotEqual(res['entry'], None, res)
+		self.assertEqual(res['entry']['url'], url, res)
+		res = self._method("skip", "test_user")
+		self.assertNotEqual(res['entry'], None, res)
+		self.assertEqual(res['entry']['url'], url2, res)
+		res = self._method("skip", "test_user")
+		self.assertEqual(res['entry'], None, res)
+
+
+		downloader.unpause()

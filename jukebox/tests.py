@@ -100,11 +100,11 @@ class JukeboxTest(TestCase):
 		(url, _) = self._enqueueRealTrack()
 		(url2, _) = self._enqueueRealTrack()
 
+		self.needs_downloaded()
 		res = self._method("pause", False)
 		self.assertNotEqual(res['entry'], None, res)
 		self.assertEqual(res['entry']['url'], url, res)
 		self.assertEqual(res['paused'], False, res)
-		self.needs_downloaded()
 		self.assertEqual(res['status'], "playing", res)
 
 		res = self._method("skip", "test_user")

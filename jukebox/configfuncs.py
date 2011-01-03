@@ -28,7 +28,9 @@ def rescan_root(request, root):
 	else:
 		try:
 			urlopen(root)
-		except:
+		except Exception, e:
+			print "don't like", root, e
+			print request.META
 			return # crap url
 		
 		root = WebPath.add_root(url=root)

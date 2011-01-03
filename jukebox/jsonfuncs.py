@@ -245,9 +245,7 @@ class Looper(Thread):
 		loop.run()
 
 gobject.threads_init()
-loop = Looper()
-loop.setDaemon(True)
-registerStartupTask(loop)
+registerStartupTask(Looper)
 
 bus = player.get_bus()
 bus.add_signal_watch()

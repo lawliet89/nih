@@ -43,6 +43,4 @@ class Spider(BackgroundTask):
 		current.checked = True
 		current.save()
 
-spider = Spider()
-spider.setDaemon(True)
-registerStartupTask(spider)
+spider = registerStartupTask(Spider)

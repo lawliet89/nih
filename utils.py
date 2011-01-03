@@ -85,18 +85,31 @@ class BackgroundTask(Thread):
 
 startup_tasks = []
 started = False
+taskLock = Lock()
 
-def registerStartupTask(task):
-	global startup_tasks, started
-	startup_tasks.append(task)
-	if started:
-		task.start()
+def registerStartupTask(kind):
+	global startup_tasks, started, taskLock
+	
+	with taskLock:
+		for item in startup_tasks:
+			# can't use isinstance as we get nih.jukebox.* and jukebox.* ....
+			if kind.__name__ == item.__class__.__name__:
+				return item
+
+		task = kind()
+		task.setDaemon(True)
+
+		startup_tasks.append(task)
+		if started:
+			task.start()
+			print "already started", task, startup_tasks
+	return task
 
 def runStartupTasks(sender, **kwargs):
-	global startup_tasks, started
+	global startup_tasks, started, taskLock
 	if started:
 		return
-	started = True
-	for t in startup_tasks:
-		t.start()
-
+	with taskLock:
+		started = True
+		for t in startup_tasks:
+			t.start()

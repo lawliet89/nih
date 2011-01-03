@@ -35,9 +35,7 @@ class Downloader(BackgroundTask):
 			ret = list(self.queue)
 			return ret
 
-downloader = Downloader()
-downloader.setDaemon(True)
-registerStartupTask(downloader)
+downloader = registerStartupTask(Downloader)
 
 def is_cached(item):
 	hash = item.hash()

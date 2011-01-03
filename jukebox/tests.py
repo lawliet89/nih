@@ -25,6 +25,9 @@ class JukeboxTest(TestCase):
 			print "downloader todo", downloader.todo()
 			sleep(.5)
 
+	def clear_queue(self):
+		QueueItem.objects.all().delete() # clear anything else in there
+
 	def _method(self, method, *params):
 		req = {
 		  u'version': u'1.1',
@@ -69,7 +72,7 @@ class JukeboxTest(TestCase):
 		self.assertEquals(res[u'queue'], [])
 
 	def testPlay(self): 
-		QueueItem.objects.all().delete() # clear anything else in there
+		self.clear_queue()
 		res = self._method("pause", False)
 		self.assertEqual(res['status'], "idle", res)
 		self.assertEqual(res['entry'], None, res)
@@ -81,7 +84,7 @@ class JukeboxTest(TestCase):
 		self.assertEqual(res['status'], "caching", res)
 
 	def testSkip(self): 
-		QueueItem.objects.all().delete() # clear anything else in there
+		self.clear_queue()
 
 		(url, _) = self._enqueueRealTrack()
 		(url2, _) = self._enqueueRealTrack()
@@ -110,8 +113,8 @@ class JukeboxTest(TestCase):
 		res = self._method("skip", "test_user")
 		self.assertEqual(res['entry'], None, res)
 
-	def testPlay(self): 
-		QueueItem.objects.all().delete() # clear anything else in there
+	def testPlay(self):
+		self.clear_queue()
 
 		res = self._method("pause", False)
 		self.assertEqual(res['entry'], None, res)

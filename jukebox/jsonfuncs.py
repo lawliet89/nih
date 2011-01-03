@@ -268,7 +268,7 @@ def play_current():
 def pause(request, shouldPause):
 	global status
 	if not shouldPause:
-		if status == Status.idle and QueueItem.objects.all().count()>0:
+		if status == Status.idle and QueueItem.objects.count()>0:
 			if is_cached(QueueItem.current().what):
 				play_current()
 			status = Status.playing

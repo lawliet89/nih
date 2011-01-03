@@ -65,10 +65,11 @@ class QueueItem(models.Model):
 
 	@staticmethod
 	def current():
-		if QueueItem.objects.all().count() == 0:
+		items = QueueItem.objects.all()[:1]
+		if len(items) == 0:
 			return None
 		else:
-			return QueueItem.objects.all()[0]
+			return items[0]
 
 	def __unicode__(self):
 		return "<Music item %s>"%str(self.what)

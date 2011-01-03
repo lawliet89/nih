@@ -39,8 +39,9 @@ def urlopen(url):
 
 class BackgroundTask(Thread):
 	def __init__(self):
-		self.queue = []
 		Thread.__init__(self)
+		self.paused = False
+		self.queue = []
 		self.queueCondition = Condition()
 
 	def todo(self):
@@ -52,7 +53,7 @@ class BackgroundTask(Thread):
 		while True:
 			with self.queueCondition:
 				while True:
-					if len(self.queue)>0:
+					if not self.paused and len(self.queue)>0:
 						item = self.queue[0] # don't remove it yet though (still needs to be marked as "caching")
 						break
 					else:
@@ -72,7 +73,8 @@ class BackgroundTask(Thread):
 		with self.queueCondition:
 			self.queue.append(item)
 			print "got item for", self, item
-			self.queueCondition.notify()
+			if not self.paused:
+				self.queueCondition.notify()
 
 	def startup(self):
 		pass
@@ -82,6 +84,18 @@ class BackgroundTask(Thread):
 
 	def postProcessItem(self, item):
 		pass
+
+	# for testing purposes only. Make sure you call unpause if you're using pause!
+	
+	def pause(self):
+		print "pausing", self
+		self.paused = True
+
+	def unpause(self):
+		print "unpausing", self
+		self.paused = False
+		with self.queueCondition:
+			self.queueCondition.notify()
 
 startup_tasks = []
 started = False

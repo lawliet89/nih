@@ -1,4 +1,5 @@
 from jsonrpc import jsonrpc_method
+from jsonrpc.site import JSONRPCSite
 from models import *
 from time import mktime
 from urllib import unquote
@@ -13,7 +14,9 @@ from threading import Thread
 import gobject
 from utils import registerStartupTask
 
-@jsonrpc_method('get_caller_hostname')
+site = JSONRPCSite()
+
+@jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):
 	if request.META["REMOTE_HOST"] != "":
 		return request.META["REMOTE_HOST"]
@@ -73,21 +76,21 @@ def status_info(request):
 		"downloads": [x.url for x in downloader.downloads()]
 	}
 
-@jsonrpc_method('search')
+@jsonrpc_method('search', site=site)
 def search(request, inp):
 	items = MusicFile.objects
 	for term in inp:
 		items = items.filter(url__icontains=term)
 	return [{"url":x.url} for x in items]
 
-@jsonrpc_method('randomtracks')
+@jsonrpc_method('randomtracks', site=site)
 def randomtracks(request, count):
 	items = MusicFile.objects.all()
 	count = min(count, items.count())
 	ret = [{"url":items[x].url} for x in sample(range(items.count()),count)]
 	return ret
 
-@jsonrpc_method('enqueue')
+@jsonrpc_method('enqueue', site=site)
 def enqueue(request, username, tracks, atTop):
 	for t in tracks:
 		q = QueueItem(who = username, what = MusicFile.objects.get(url=t['url']))
@@ -102,7 +105,7 @@ def enqueue(request, username, tracks, atTop):
 		q.save()
 	return status_info(request)
 
-@jsonrpc_method('dequeue')
+@jsonrpc_method('dequeue', site=site)
 def dequeue(request, username, track):
 	queue = list(QueueItem.objects.all())[1:]
 	for item in queue:
@@ -110,18 +113,18 @@ def dequeue(request, username, track):
 			item.delete()
 	return status_info(request)
 
-@jsonrpc_method('clear_queue')
+@jsonrpc_method('clear_queue', site=site)
 def clear_queue(request, username):
 	queue = list(QueueItem.objects.all())[1:]
 	for item in queue:
 		item.delete()
 	return status_info(request)
 
-@jsonrpc_method('get_queue')
+@jsonrpc_method('get_queue', site=site)
 def get_queue(request):
 	return status_info(request)
 
-@jsonrpc_method('raise')
+@jsonrpc_method('raise', site=site)
 def higher(request, track):
 	queue = list(QueueItem.objects.all())[1:]
 	for (index,item) in enumerate(queue):
@@ -136,7 +139,7 @@ def higher(request, track):
 
 	return status_info(request)
 
-@jsonrpc_method('lower')
+@jsonrpc_method('lower', site=site)
 def lower(request, track):
 	queue = list(QueueItem.objects.all())[1:]
 	for (index,item) in enumerate(queue):
@@ -158,11 +161,11 @@ def volume():
 	volume = Mixer().getvolume()
 	return {"volume":volume[0], "who":volume_who, "direction": volume_direction}
 
-@jsonrpc_method('get_volume')
+@jsonrpc_method('get_volume', site=site)
 def get_volume(request):
 	return volume()
 
-@jsonrpc_method('set_volume')
+@jsonrpc_method('set_volume', site=site)
 def set_volume(request, username, value):
 	global volume_who, volume_direction
 	m = Mixer()
@@ -193,12 +196,12 @@ def chat_history(request, limit):
 		ret.append(msg)
 	return ret
 
-@jsonrpc_method('chat')
+@jsonrpc_method('chat', site=site)
 def chat(request, username, text):
 	item = ChatItem(what="says", message=text, who=username)
 	item.save()
 
-@jsonrpc_method('get_history')
+@jsonrpc_method('get_history', site=site)
 def get_history(request, limit):
 	return chat_history(request, limit)
 
@@ -225,7 +228,7 @@ def next_track():
 		player.set_state(gst.STATE_NULL)
 		status = Status.idle
 
-@jsonrpc_method('skip')
+@jsonrpc_method('skip', site=site)
 def skip(request, username):
 	current = QueueItem.current()
 	if current != None:

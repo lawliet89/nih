@@ -5,7 +5,6 @@ from django.contrib import admin
 admin.autodiscover()
 
 from utils import site_path
-from jukebox.jsonrpc import jsonrpc_site
 import jukebox.jsonfuncs
 import jukebox.configfuncs
 
@@ -16,6 +15,8 @@ urlpatterns = patterns('',
     (r'^spider$', 'jukebox.views.spider'),
     (r'^config$', 'jukebox.views.config'),
     (r'^$', 'jukebox.views.index'),
-    url(r'^rpc/jukebox/browse$', jsonrpc_site.dispatch, name="jsonrpc_browser"),
-    url(r'^rpc/jukebox', jsonrpc_site.dispatch, name="jsonrpc_mountpoint"),
+	url(r'^rpc/jukebox/browse$', 'jsonrpc.views.browse', name="jsonrpc_browser", kwargs={"site":jukebox.jsonfuncs.site}),
+    url(r'^rpc/jukebox', jukebox.jsonfuncs.site.dispatch, name="jsonrpc_mountpoint"),
 )
+print "opened urls.py"
+print jukebox.jsonfuncs.site

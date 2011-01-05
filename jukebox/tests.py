@@ -6,7 +6,7 @@ from jukebox.models import *
 from time import sleep
 import utils
 from spider import spider
-from cache import downloader
+from jsonfuncs import downloader
 
 class JukeboxTest(TestCase):
 	static_path = "http://localhost/static/"
@@ -140,6 +140,5 @@ class JukeboxTest(TestCase):
 		self.assertEqual(res['entry']['url'], url2, res)
 		res = self._method("skip", "test_user")
 		self.assertEqual(res['entry'], None, res)
-
 
 		downloader.unpause()

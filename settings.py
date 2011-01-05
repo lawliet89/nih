@@ -95,6 +95,9 @@ TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
 "django.core.context_processors.request"
 )
 
+TEST_RUNNER = "django_nose.NoseTestSuiteRunner"
+NOSE_ARGS = ["--with-coverage", "--cover-package=nih.jukebox", "--cover-html", "--cover-html-dir=coverage"]
+
 INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.auth',
@@ -104,5 +107,6 @@ INSTALLED_APPS = (
 	'jsonrpc',
 	'south',
 	'treebeard',
+	'django_nose',
 	'jukebox'
 )

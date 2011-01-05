@@ -13,7 +13,7 @@ class JukeboxTest(TestCase):
 
 	def setUp(self):
 		utils.client = self.client
-		self._method("rescan_root", self.static_path)
+		self._configmethod("rescan_root", self.static_path)
 
 	def needs_static(self):
 		while len(spider.todo())>0:
@@ -28,17 +28,20 @@ class JukeboxTest(TestCase):
 	def clear_queue(self):
 		QueueItem.objects.all().delete() # clear anything else in there
 
-	def _method(self, method, *params):
+	def _configmethod(self, method, *params, **kwargs):
+		return self._method(method, path="/rpc/config", *params)
+
+	def _method(self, method, *params, **kwargs):
 		req = {
 		  u'version': u'1.1',
 		  u'method': method,
 		  u'params': params,
 		  u'id': u'random_test_id'
 		}
-		return self._call(req)
+		return self._call(req, **kwargs)
 	
-	def _call(self, req):
-		resp = loads(self.client.post("/rpc/jukebox", dumps(req), content_type="application/json").content)
+	def _call(self, req, path="/rpc/jukebox"):
+		resp = loads(self.client.post(path, dumps(req), content_type="application/json").content)
 		self.assert_("result" in resp.keys(), resp)
 		return resp["result"]
 

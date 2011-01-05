@@ -1,16 +1,19 @@
 from jsonrpc import jsonrpc_method
+from jsonrpc.site import JSONRPCSite
 from models import *
 from spider import spider
 from utils import urlopen, HTTPError
 
-@jsonrpc_method("all_roots")
+site = JSONRPCSite()
+
+@jsonrpc_method("all_roots", site=site)
 def all_roots(request):
 	ret = []
 	for root in WebPath.get_root_nodes():
 		ret.append({"url":root.url, "count":MusicFile.objects.filter(url__startswith=root.url).count()})
 	return ret
 
-@jsonrpc_method("current_rescans")
+@jsonrpc_method("current_rescans", site=site)
 def current_rescans(request):
 	ret = []
 	for root in WebPath.get_root_nodes():
@@ -18,7 +21,7 @@ def current_rescans(request):
 			ret.append(root.url)
 	return ret
 
-@jsonrpc_method("rescan_root")
+@jsonrpc_method("rescan_root", site=site)
 def rescan_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:
@@ -37,7 +40,7 @@ def rescan_root(request, root):
 		# re-get the item to work around file/memory caching issues with Treebeard
 		spider.add(WebPath.objects.get(pk=root.id))
 		
-@jsonrpc_method("remove_root")
+@jsonrpc_method("remove_root", site=site)
 def remove_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:

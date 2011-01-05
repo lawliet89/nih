@@ -101,5 +101,5 @@ function update_rescans(urls) {
 }
 
 function initConfigClient() {
-    config = new JsonRpcService("/rpc/jukebox", refresh_timer_tick);
+    config = new JsonRpcService("/rpc/config", refresh_timer_tick);
 }

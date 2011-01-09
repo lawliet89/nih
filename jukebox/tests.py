@@ -145,3 +145,35 @@ class MainFunctions(JukeboxTest):
 		self.assertEqual(res['entry'], None, res)
 
 		downloader.unpause()
+
+class ConfigTests(JukeboxTest):
+	def testAllRoots(self):
+		self._configmethod("rescan_root", self.static_path)
+		self.needs_static()
+		roots = self._configmethod("all_roots")
+		self.assertEqual(len(roots), 1)
+		self.assertEqual(roots[0]["url"], self.static_path)
+		self.assertEqual(roots[0]["count"], 1)
+
+	def testCurrentRescans(self):
+		spider.pause()
+		self._configmethod("rescan_root", self.static_path)
+		rescans = self._configmethod("current_rescans")
+		self.assertEqual(len(rescans), 1)
+		self.assertEqual(rescans[0], self.static_path)
+		spider.unpause()
+
+	def testRescanRoot(self):
+		self._configmethod("rescan_root", self.static_path)
+		self._configmethod("rescan_root", self.static_path)
+
+	def testBadScanTarget(self):
+		self._configmethod("rescan_root", "foo")
+
+	def testRemoveRoot(self):
+		rootcount = len(self._configmethod("all_roots"))
+		self._configmethod("rescan_root", self.static_path)
+		self.assertEqual(len(self._configmethod("all_roots")), rootcount +1)
+		self._configmethod("remove_root", self.static_path)
+		self.assertEqual(len(self._configmethod("all_roots")), rootcount)
+

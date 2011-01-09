@@ -210,7 +210,8 @@ player = gst.element_factory_make("playbin2", "player")
 
 def next_track():
 	global status
-	QueueItem.current().delete() # remove current first item from queue
+	if QueueItem.objects.all().count()>0:
+		QueueItem.current().delete() # remove current first item from queue
 	if QueueItem.objects.all().count()>0:
 		toplay = QueueItem.current()
 		f = cached(toplay.what)

@@ -10,24 +10,6 @@ from jsonfuncs import downloader
 
 class JukeboxTest(TestCase):
 	static_path = "http://localhost/static/"
-
-	def setUp(self):
-		utils.client = self.client
-		self._configmethod("rescan_root", self.static_path)
-
-	def needs_static(self):
-		while len(spider.todo())>0:
-			print "spider todo", spider.todo()
-			sleep(.5)
-
-	def needs_downloaded(self):
-		while len(downloader.todo())>0:
-			print "downloader todo", downloader.todo()
-			sleep(.5)
-
-	def clear_queue(self):
-		QueueItem.objects.all().delete() # clear anything else in there
-
 	def _configmethod(self, method, *params, **kwargs):
 		return self._method(method, path="/rpc/config", *params)
 
@@ -44,6 +26,24 @@ class JukeboxTest(TestCase):
 		resp = loads(self.client.post(path, dumps(req), content_type="application/json").content)
 		self.assert_("result" in resp.keys(), resp)
 		return resp["result"]
+
+	def needs_static(self):
+		while len(spider.todo())>0:
+			print "spider todo", spider.todo()
+			sleep(.5)
+
+	def needs_downloaded(self):
+		while len(downloader.todo())>0:
+			print "downloader todo", downloader.todo()
+			sleep(.5)
+
+class MainFunctions(JukeboxTest):
+	def setUp(self):
+		utils.client = self.client
+		self._configmethod("rescan_root", self.static_path)
+
+	def clear_queue(self):
+		QueueItem.objects.all().delete() # clear anything else in there
 
 	def _addTestTrack(self, url = None):
 		if url == None:

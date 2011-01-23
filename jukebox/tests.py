@@ -58,9 +58,9 @@ class MainFunctions(JukeboxTest):
 			print "test track already present", url
 		return url
 
-	def _enqueueTestTrack(self):
+	def _enqueueTestTrack(self, atTop=False):
 		url = self._addTestTrack()
-		resp = self._method("enqueue", "test_user", [{"url":url}], False)
+		resp = self._method("enqueue", "test_user", [{"url":url}], atTop)
 		return (url, resp)
 
 	def _enqueueRealTrack(self):
@@ -74,6 +74,9 @@ class MainFunctions(JukeboxTest):
 		self.assertEquals(res[u'entry'][u'url'], url)
 		self.assertEquals(res[u'entry'][u'username'], "test_user")
 		self.assertEquals(res[u'queue'], [])
+		(url, res) = self._enqueueTestTrack(True)
+		self.assertEquals(len(res[u'queue']), 1)
+		downloader.unpause()
 
 	def testPlay(self): 
 		self.clear_queue()

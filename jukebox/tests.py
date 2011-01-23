@@ -10,6 +10,7 @@ from jsonfuncs import downloader
 
 class JukeboxTest(TestCase):
 	static_path = "http://localhost/static/"
+	test_track_path = static_path+"silent-3mins.mp3"
 	def _configmethod(self, method, *params, **kwargs):
 		return self._method(method, path="/rpc/config", *params)
 
@@ -64,7 +65,7 @@ class MainFunctions(JukeboxTest):
 
 	def _enqueueRealTrack(self):
 		self.needs_static()
-		url = self._addTestTrack(self.static_path+"silent-3mins.mp3")
+		url = self._addTestTrack(self.test_track_path)
 		resp = self._method("enqueue", "test_user", [{"url":url}], False)
 		return (url, resp)
 
@@ -147,6 +148,12 @@ class MainFunctions(JukeboxTest):
 		self.assertEqual(res['entry'], None, res)
 
 		downloader.unpause()
+
+	def testRandom(self):
+		self.needs_static()
+		res = self._method("randomtracks", 1)
+		self.assertEqual(len(res), 1)
+		self.assertEqual(res[0]["url"], self.test_track_path)
 
 class ConfigTests(JukeboxTest):
 	def testAllRoots(self):

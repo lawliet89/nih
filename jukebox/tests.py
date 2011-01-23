@@ -173,9 +173,7 @@ class ConfigTests(JukeboxTest):
 		self._configmethod("rescan_root", "foo")
 
 	def testRemoveRoot(self):
-		rootcount = len(self._configmethod("all_roots"))
 		self._configmethod("rescan_root", self.static_path)
-		self.assertEqual(len(self._configmethod("all_roots")), rootcount +1)
-		self._configmethod("remove_root", self.static_path)
-		self.assertEqual(len(self._configmethod("all_roots")), rootcount)
+		rootcount = len(self._configmethod("all_roots"))
+		self.assertEqual(len(self._configmethod("remove_root", self.static_path)), rootcount - 1)
 

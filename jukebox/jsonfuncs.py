@@ -5,12 +5,9 @@ from time import mktime
 from urllib import unquote
 from random import sample
 from alsaaudio import Mixer
-import pygst
-pygst.require("0.10")
-import gst
-from enum import Enum
 from cache import cached, albumArt
 from threading import Thread
+from simple_player import Player, Status
 import gobject
 from utils import urlopen, HTTPError, BackgroundTask, registerStartupTask
 from os.path import join
@@ -23,13 +20,6 @@ def hostname(request):
 		return request.META["REMOTE_HOST"]
 	else:
 		return request.META["REMOTE_ADDR"]
-
-class Status(Enum):
-	idle = 1
-	playing = 2
-	paused = 3
-
-status = Status.idle
 
 def metadata(item):
 	if not item.got_metadata:
@@ -50,21 +40,12 @@ def status_info(request):
 	else:
 		first = (None, None)
 
-	if status == Status.idle:
-		elapsed = 0
-	else:
-		(change, current, pending) = player.get_state()
-		if current != gst.STATE_NULL:
-			elapsed, format = player.query_position(gst.Format(gst.FORMAT_TIME), None)
-			elapsed /= gst.SECOND
-		else:
-			elapsed = 0
-
+	elapsed = player.elapsed()
 	current = QueueItem.current()
 	if current!=None and current.what in downloader.downloads():
 		state = "caching"
 	else:
-		state = status.name()
+		state = player.status.name()
 
 	return {
 		"status":state,
@@ -72,7 +53,7 @@ def status_info(request):
 		"info": first[1],
 		"queue": items[1:],
 		"queueInfo": itemsMeta[1:],
-		"paused": status != Status.playing,
+		"paused": player.status != Status.playing,
 		"elapsedTime": elapsed,
 		"downloads": [x.url for x in downloader.downloads()]
 	}
@@ -206,29 +187,21 @@ def chat(request, username, text):
 def get_history(request, limit):
 	return chat_history(request, limit)
 
-player = gst.element_factory_make("playbin2", "player")
-
 def next_track():
-	global status
 	if QueueItem.objects.all().count()>0:
 		QueueItem.current().delete() # remove current first item from queue
 	if QueueItem.objects.all().count()>0:
 		toplay = QueueItem.current()
 		f = cached(toplay.what)
 		if f != None:
-			if status == Status.playing:
-				player.set_state(gst.STATE_NULL)
-			player.set_property("uri", "file://"+f)
-			if status == Status.playing:
-				player.set_state(gst.STATE_PLAYING)
+			player.play(f)
 		else:
-			player.set_property("uri", "")
-			player.set_state(gst.STATE_NULL)
+			player.stop()
+	elif player.status != Status.idle:
+		player.stop()
 
-	else:
-		player.set_property("uri", "")
-		player.set_state(gst.STATE_NULL)
-		status = Status.idle
+player = Player()
+player.next_track = next_track
 
 @jsonrpc_method('skip', site=site)
 def skip(request, username):
@@ -236,18 +209,9 @@ def skip(request, username):
 	if current != None:
 		item = ChatItem(what="skip", info = current.what, who=username)
 		item.save()
+		print "saved item"
 		next_track()
 	return status_info(request)
-
-def message_handler(bus, message):
-	t = message.type
-	if t == gst.MESSAGE_EOS:
-		print "end of stream"
-		next_track()
-	
-	elif t == gst.MESSAGE_ERROR:
-		err, debug = message.parse_error()
-		print "error: %s"%err, debug
 
 class Looper(Thread):
 	def run(self):
@@ -257,34 +221,24 @@ class Looper(Thread):
 gobject.threads_init()
 registerStartupTask(Looper)
 
-bus = player.get_bus()
-bus.add_signal_watch()
-bus.connect("message", message_handler)
-
 def play_current():
 	toplay = QueueItem.current()
 	f = cached(toplay.what)
 	print "toplay", f
-	player.set_property("uri", "file://"+f)
-	player.set_state(gst.STATE_PLAYING)
-	print "player", player
+	player.play(f)
 
 @jsonrpc_method('pause', site=site)
 def pause(request, shouldPause):
-	global status
 	if not shouldPause:
-		if status == Status.idle and QueueItem.objects.count()>0:
+		if player.status == Status.idle and QueueItem.objects.count()>0:
 			from cache import is_cached
 			if is_cached(QueueItem.current().what):
 				play_current()
-			status = Status.playing
-		elif status == Status.paused:
-			player.set_state(gst.STATE_PLAYING)
-			status = Status.playing
+		elif player.status == Status.paused:
+			player.unpause()
 	else:
-		if status == Status.playing:
-			player.set_state(gst.STATE_PAUSED)
-			status = Status.paused
+		if player.status == Status.playing:
+			player.pause()
 
 	return status_info(request)
 
@@ -308,7 +262,7 @@ class Downloader(BackgroundTask):
 			char.save()
 			if QueueItem.current()!=None:
 				next_track()
-		elif QueueItem.current() == item and status == Status.playing:
+		elif QueueItem.current() == item and player.status == Status.playing:
 			play_current()
 	
 	def downloads(self):

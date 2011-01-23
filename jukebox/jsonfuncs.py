@@ -16,7 +16,7 @@ site = JSONRPCSite()
 
 @jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):
-	if request.META["REMOTE_HOST"] != "":
+	if "REMOTE_HOST" in request.META and request.META["REMOTE_HOST"] != "":
 		return request.META["REMOTE_HOST"]
 	else:
 		return request.META["REMOTE_ADDR"]

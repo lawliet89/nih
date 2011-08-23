@@ -3,6 +3,7 @@ from jsonrpc.site import JSONRPCSite
 from models import *
 from spider import spider
 from utils import urlopen, HTTPError
+from time import time
 
 site = JSONRPCSite()
 
@@ -25,8 +26,10 @@ def current_rescans(request):
 def rescan_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:
+			spider.pause()
 			x.delete()
 			WebPath.add_root(root)
+			spider.unpause()
 			break
 	else:
 		try:
@@ -42,7 +45,12 @@ def rescan_root(request, root):
 def remove_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:
+			spider.pause()
+			start = time()
+			print "deleting"
 			x.delete()
+			print "deleted", time()-start
+			spider.unpause()
 			break
 	
 	return all_roots(request)

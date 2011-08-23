@@ -25,8 +25,8 @@ def current_rescans(request):
 def rescan_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:
-			MusicFile.objects.filter(url__startswith=root).delete()
-			WebPath.objects.filter(url__startswith=root).update(checked = False)
+			x.delete()
+			WebPath.add_root(root)
 			break
 	else:
 		try:
@@ -36,15 +36,12 @@ def rescan_root(request, root):
 			print request.META
 			return # crap url
 		
-		root = WebPath.add_root(url=root)
-		# re-get the item to work around file/memory caching issues with Treebeard
-		spider.add(WebPath.objects.get(pk=root.id))
+		spider.add(WebPath.add_root(url=root))
 		
 @jsonrpc_method("remove_root", site=site)
 def remove_root(request, root):
 	for x in WebPath.get_root_nodes():
 		if x.url == root:
-			MusicFile.objects.filter(url__startswith=root).delete()
 			x.delete()
 			break
 	

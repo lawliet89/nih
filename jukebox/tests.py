@@ -47,11 +47,20 @@ class MainFunctions(JukeboxTest):
 		QueueItem.objects.all().delete() # clear anything else in there
 
 	def _addTestTrack(self, url = None):
+		root = WebPath.objects.filter(url = "http://localhost")
+		if root.count() == 0:
+			root = WebPath()
+			root.url = "http://localhost"
+			root.save()
+		else:
+			root = root[0]
+
 		if url == None:
 			url = "http://localhost/"+uuid1().hex
 		if MusicFile.objects.filter(url = url).count() == 0:
 			m = MusicFile()
 			m.url = url
+			m.parent = root
 			m.save()
 			print "added test track", url
 		else:

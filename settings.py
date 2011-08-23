@@ -106,7 +106,6 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes', # only here for the admin
 	'jsonrpc',
 	'south',
-	'treebeard',
 	'django_nose',
 	'jukebox'
 )

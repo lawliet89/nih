@@ -29,13 +29,14 @@ class Spider(BackgroundTask):
 				continue
 			if resolved[-1] == "/": # directory
 				if WebPath.objects.filter(url=resolved).count() == 0:
-					current.add_child(url=resolved)
+					child = current.add_child(url=resolved)
+					self.add(child)
 			else: # file?
 				(_, ext) = splitext(resolved)
 				ext = ext.lower()
 				if ext in known_extensions:
 					if MusicFile.objects.filter(url=resolved).count() == 0:
-						mf = MusicFile(url = resolved)
+						mf = MusicFile(parent=current, url = resolved)
 						mf.save()
 				else:
 					print "Can't handle", resolved, ext, len(ext)

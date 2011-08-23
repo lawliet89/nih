@@ -1,12 +1,10 @@
 from django.db import models
-from treebeard.mp_tree import MP_Node
 from hashlib import md5
 from django.core.signals import request_started
 from utils import runStartupTasks
 
-class WebPath(MP_Node):
+class WebPath(models.Model):
 	url = models.TextField()
-	node_order_by = ["url"]
 	
 	def __unicode__(self):
 		if self.checked:
@@ -19,8 +17,30 @@ class WebPath(MP_Node):
 	checked = models.BooleanField(default=False)
 	failed = models.BooleanField(default=False)
 
+	root = models.ForeignKey('self', null=True, blank=True)
+
+	@staticmethod
+	def add_root(url):
+		wp = WebPath(url = url)
+		wp.save()
+		print "saved root"
+		return wp
+
+	def add_child(self, url):
+		if self.root == None: # assume we're root
+			wp = WebPath(root = self, url = url)
+		else:
+			wp = WebPath(root = self.root, url = url)
+		wp.save()
+		return wp
+
+	@staticmethod
+	def get_root_nodes():
+		return WebPath.objects.exclude(root__isnull =False)
+
 class MusicFile(models.Model):
 	url = models.TextField()
+	parent = models.ForeignKey(WebPath)
 
 	def __unicode__(self):
 		if self.got_metadata:

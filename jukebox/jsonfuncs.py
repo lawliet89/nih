@@ -190,6 +190,7 @@ def get_history(request, limit):
 def next_track():
 	if QueueItem.objects.all().count()>0:
 		QueueItem.current().delete() # remove current first item from queue
+		player.stop()
 	if QueueItem.objects.all().count()>0:
 		toplay = QueueItem.current()
 		f = cached(toplay.what)

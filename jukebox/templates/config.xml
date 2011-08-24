@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Erlang Jukebox - Config</title>
+    <title>Django Jukebox - Config</title>
 	<script type="text/javascript" src="/static/prototype-1.4.0.js"></script>
     <script type="text/javascript" src="/static/json.js"></script>
     <script type="text/javascript" src="/static/jsonrpc.js"></script>

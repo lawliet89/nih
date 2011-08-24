@@ -1,3 +1,6 @@
 [submodule "ext/django-json-rpc"]
 	path = ext/django-json-rpc
 	url = git://github.com/palfrey/django-json-rpc.git
+[submodule "ext/pyscrobbler"]
+	path = ext/pyscrobbler
+	url = git://github.com/offmessage/pyscrobbler.git

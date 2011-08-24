@@ -1,7 +1,7 @@
 from jsonrpc import jsonrpc_method
 from jsonrpc.site import JSONRPCSite
 from models import *
-from time import mktime, strftime
+from time import mktime, strftime, gmtime
 from urllib import unquote
 from random import sample
 from alsaaudio import Mixer
@@ -229,7 +229,7 @@ def play_current():
 		track = dict(artist_name=song.artist,
                  song_title=song.title,
                  length=int(song.trackLength),
-				 date_played=strftime("%Y-%m-%d %H:%M:%S"), 
+				 date_played=strftime("%Y-%m-%d %H:%M:%S", gmtime()), 
                  album=song.album,
                  mbid=""
                 )

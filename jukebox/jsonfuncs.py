@@ -15,6 +15,7 @@ from audioscrobbler import AudioScrobblerPost
 from django.conf import settings
 
 site = JSONRPCSite()
+post = AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
 
 @jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):
@@ -233,7 +234,6 @@ def play_current():
                  album=song.album,
                  mbid=""
                 )
-		post = AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
 		print "track", track
 		post(**track)
 	else:

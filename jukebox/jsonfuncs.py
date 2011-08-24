@@ -1,7 +1,7 @@
 from jsonrpc import jsonrpc_method
 from jsonrpc.site import JSONRPCSite
 from models import *
-from time import mktime
+from time import mktime, strftime
 from urllib import unquote
 from random import sample
 from alsaaudio import Mixer
@@ -11,6 +11,8 @@ from simple_player import Player, Status
 import gobject
 from utils import urlopen, HTTPError, BackgroundTask, registerStartupTask
 from os.path import join
+from audioscrobbler import AudioScrobblerPost
+from django.conf import settings
 
 site = JSONRPCSite()
 
@@ -223,6 +225,17 @@ def play_current():
 	print "toplay", f
 	if f != None:
 		player.play(f)
+		song = toplay.what
+		track = dict(artist_name=song.artist,
+                 song_title=song.title,
+                 length=int(song.trackLength),
+				 date_played=strftime("%Y-%m-%d %H:%M:%S"), 
+                 album=song.album,
+                 mbid=""
+                )
+		post = AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
+		print "track", track
+		post(**track)
 	else:
 		player.stop()
 

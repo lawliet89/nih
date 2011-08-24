@@ -4,3 +4,6 @@ initial_data.json
 cache
 coverage
 .coverage
+debian/nih
+debian/nih.substvars
+*.log

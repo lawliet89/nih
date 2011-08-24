@@ -192,12 +192,7 @@ def next_track():
 		QueueItem.current().delete() # remove current first item from queue
 		player.stop()
 	if QueueItem.objects.all().count()>0:
-		toplay = QueueItem.current()
-		f = cached(toplay.what)
-		if f != None:
-			player.play(f)
-		else:
-			player.stop()
+		play_current()
 	elif player.status != Status.idle:
 		player.stop()
 
@@ -226,7 +221,10 @@ def play_current():
 	toplay = QueueItem.current()
 	f = cached(toplay.what)
 	print "toplay", f
-	player.play(f)
+	if f != None:
+		player.play(f)
+	else:
+		player.stop()
 
 @jsonrpc_method('pause', site=site)
 def pause(request, shouldPause):

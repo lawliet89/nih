@@ -72,7 +72,7 @@ class BackgroundTask(Thread):
 	def add(self, item):
 		with self.queueCondition:
 			self.queue.append(item)
-			print "got item for", self, item
+			print "got item for", self, item, self.paused
 			if not self.paused:
 				self.queueCondition.notify()
 

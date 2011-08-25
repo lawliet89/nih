@@ -6,7 +6,7 @@ from jukebox.models import *
 from time import sleep
 import utils
 from spider import spider
-from jsonfuncs import downloader
+from downloader import downloader
 
 class JukeboxTest(TestCase):
 	static_path = "http://localhost/static/"

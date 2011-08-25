@@ -15,7 +15,7 @@ def cached(item):
 	hash = item.hash()
 	cacheFile = join(cacheFolder, hash)
 	if not is_cached(item):
-		from jsonfuncs import downloader
+		from downloader import downloader
 		downloader.add(item)
 		return None
 	

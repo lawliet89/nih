@@ -1,2 +1,3 @@
-usr/share/nih/settings.py
-etc/default/nih
+/etc/apache2/sites-available/nih
+/usr/share/nih/settings.py
+/etc/default/nih

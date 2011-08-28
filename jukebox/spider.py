@@ -14,6 +14,13 @@ class Spider(BackgroundTask):
 
 	def processItem(self, current):
 		try:
+			test = current.root
+		except WebPath.DoesNotExist:
+			print "skipping, as no more root!"
+			current.delete()
+			return
+
+		try:
 			page = urlopen(current.url)
 		except HTTPError:
 			print "fail", current.url
@@ -52,6 +59,6 @@ class Spider(BackgroundTask):
 			current.save()
 		except ObjectDoesNotExist:
 			# we got deleted
-			pass
+			current.delete()
 
 spider = registerStartupTask(Spider)

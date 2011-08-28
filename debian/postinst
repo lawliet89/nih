@@ -35,6 +35,7 @@ case "$1" in
 	fi
 	chmod 600 $CF
 	usermod -a -G audio www-data
+	/usr/share/nih/manage.py migrate
 	;;
     abort-upgrade|abort-remove|abort-deconfigure)
 	;;

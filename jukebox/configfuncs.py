@@ -47,7 +47,9 @@ def remove_root(request, root):
 		if x.url == root:
 			spider.pause()
 			start = time()
-			print "deleting"
+			print "deleting", root, x
+			MusicFile.objects.filter(parent__root = x).delete()
+			WebPath.objects.filter(root = x).delete()
 			x.delete()
 			print "deleted", time()-start
 			spider.unpause()

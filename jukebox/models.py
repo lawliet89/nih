@@ -21,7 +21,7 @@ class WebPath(models.Model):
 
 	@staticmethod
 	def add_root(url):
-		wp = WebPath(url = url)
+		wp = WebPath(url = url, root = None)
 		wp.save()
 		print "saved root"
 		return wp

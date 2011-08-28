@@ -5,7 +5,8 @@
 	<Location />
 		SetHandler python-program
 		PythonHandler django.core.handlers.modpython
-		SetEnv DJANGO_SETTINGS_MODULE nih.settings
+		SetEnv DJANGO_SETTINGS_MODULE settings
+		PythonPath "sys.path + ['/usr/share/nih']"
 
 		Order Allow,Deny
 		Allow from all

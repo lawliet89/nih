@@ -23,7 +23,7 @@ set -e
 #     installation fails and the `postinst' is called with `abort-upgrade',
 #     `abort-remove' or `abort-deconfigure'.
 
-CF=/usr/share/python-support/nih/settings.py
+CF=/usr/share/nih/settings.py
 
 case "$1" in
     configure)

@@ -1,2 +1,2 @@
 etc/apache2/sites-available/nih
-usr/share/pyshared/nih/settings.py
+usr/share/nih/settings.py

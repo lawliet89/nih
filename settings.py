@@ -81,7 +81,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'nih.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
 	site_path('jukebox/templates')

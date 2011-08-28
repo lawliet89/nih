@@ -1,6 +1,6 @@
-<VirtualHost *:8000>
-	ErrorLog /var/log/apache2/nih/error.log
-	CustomLog /var/log/apache2/nih/access.log combined
+<VirtualHost *:8888>
+	ErrorLog /var/log/apache2/nih-error.log
+	CustomLog /var/log/apache2/nih-access.log combined
 
 	<Location />
 		SetHandler python-program
@@ -18,3 +18,4 @@
 		Deny from all
 	</Location>
 </VirtualHost>
+Listen 8888

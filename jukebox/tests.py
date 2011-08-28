@@ -197,7 +197,13 @@ class ConfigTests(JukeboxTest):
 		self._configmethod("rescan_root", "foo")
 
 	def testRemoveRoot(self):
+		spider.pause()
 		self._configmethod("rescan_root", self.static_path)
 		rootcount = len(self._configmethod("all_roots"))
-		self.assertEqual(len(self._configmethod("remove_root", self.static_path)), rootcount - 1)
+		res = self._configmethod("remove_root", self.static_path)
+		self.assertEqual(len(res), rootcount - 1)
+		for wp in spider.queue:
+			print "q", wp, wp.root
+		spider.unpause()
+		self.needs_static()
 

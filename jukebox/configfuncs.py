@@ -34,12 +34,12 @@ def rescan_root(request, root):
 	else:
 		try:
 			urlopen(root)
+			spider.add(WebPath.add_root(url=root))
 		except Exception, e:
 			print "don't like", root, e
 			print request.META
-			return # crap url
 		
-		spider.add(WebPath.add_root(url=root))
+	return current_rescans(request)
 		
 @jsonrpc_method("remove_root", site=site)
 def remove_root(request, root):

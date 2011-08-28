@@ -3,8 +3,9 @@ from os import mkdir
 from models import QueueItem, ChatItem
 from metadata import get_metadata
 from Queue import Queue
+from django.conf import settings
 
-cacheFolder = "cache"
+cacheFolder = settings.CACHE_FOLDER
 
 def is_cached(item):
 	hash = item.hash()

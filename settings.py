@@ -83,6 +83,8 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
+CACHE_FOLDER = "/tmp/nih-cache"
+
 TEMPLATE_DIRS = (
 	site_path('jukebox/templates')
 )

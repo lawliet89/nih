@@ -9,7 +9,7 @@ Vcs-Git: http://github.com/palfrey/nih
 Vcs-Browser: http://github.com/palfrey/nih
 
 Package: nih
-Architecture: any
-Depends: python-django, python-beautifulsoup, python-django-genshi, python-alsaaudio, python-mutagen, python-magic, python-musicbrainz2, python-imaging, python-gst0.10, python-django-south, python-mysqldb, python-coverage, python-django-nose
+Architecture: all
+Depends: python-django, python-beautifulsoup, python-django-genshi, python-alsaaudio, python-mutagen, python-magic, python-musicbrainz2, python-imaging, python-gst0.10, python-django-south, python-mysqldb, python-coverage, python-django-nose, apache2, libapache2-mod-python
 Description: <insert up to 60 chars description>
  <insert long description, indented with spaces>

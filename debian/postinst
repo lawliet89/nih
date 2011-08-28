@@ -34,6 +34,7 @@ case "$1" in
 	    chgrp www-data $CF
 	fi
 	chmod 600 $CF
+	usermod -a -G audio www-data
 	;;
     abort-upgrade|abort-remove|abort-deconfigure)
 	;;

@@ -14,16 +14,17 @@ from os.path import join
 from audioscrobbler import AudioScrobblerPost
 from django.conf import settings
 from downloader import downloader
+from socket import gethostbyaddr
 
 site = JSONRPCSite()
 post = AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
 
 @jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):
-	if "REMOTE_HOST" in request.META and request.META["REMOTE_HOST"] != "":
-		return request.META["REMOTE_HOST"]
+	if "REMOTE_HOST" in request.META.keys() and request.META["REMOTE_HOST"] != None:
+		return str(request.META["REMOTE_HOST"])
 	else:
-		return request.META["REMOTE_ADDR"]
+		return gethostbyaddr(request.META["REMOTE_ADDR"])[0]
 
 def metadata(item):
 	if not item.got_metadata:

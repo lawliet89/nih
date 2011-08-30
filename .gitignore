@@ -7,3 +7,5 @@ coverage
 debian/nih
 debian/nih.substvars
 *.log
+debian/*.debhelper
+debian/files

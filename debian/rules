@@ -5,4 +5,6 @@ include /usr/share/cdbs/1/rules/debhelper.mk
 binary-install/nih::
 	cp -R jsonrpc/ jukebox simple_player *.py debian/nih/usr/share/nih/
 	rm debian/nih/usr/share/nih/jukebox/audioscrobbler.py
+	rm debian/nih/usr/share/nih/jukebox/*.pyc
+	rm debian/nih/usr/share/nih/jukebox/**/*.pyc
 	cp jukebox/audioscrobbler.py debian/nih/usr/share/nih/jukebox/audioscrobbler.py

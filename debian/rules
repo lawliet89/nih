@@ -8,3 +8,4 @@ binary-install/nih::
 	rm -f debian/nih/usr/share/nih/jukebox/*.pyc
 	rm -f debian/nih/usr/share/nih/jukebox/**/*.pyc
 	cp jukebox/audioscrobbler.py debian/nih/usr/share/nih/jukebox/audioscrobbler.py
+	cp debian/nih.apache2.sites debian/nih/etc/apache2/sites-available/nih

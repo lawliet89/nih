@@ -10,5 +10,5 @@ Vcs-Browser: http://github.com/palfrey/nih
 
 Package: nih
 Architecture: all
-Depends: python-django, python-beautifulsoup, python, python-django-genshi, python-alsaaudio, python-mutagen, python-magic, python-musicbrainz2, python-imaging, python-gst0.10, python-django-south, python-mysqldb, python-coverage, python-django-nose, apache2, libapache2-mod-python, mysql-server
+Depends: python-django, python-beautifulsoup, python, python-django-genshi, python-alsaaudio, python-mutagen, python-magic, python-musicbrainz2, python-imaging, python-gst0.10, python-django-south, python-mysqldb, python-coverage, python-django-nose, apache2, libapache2-mod-python, mysql-server, libapache2-mod-wsgi
 Description: Not Invented Here (a jukebox)

@@ -1,0 +1,19 @@
+<VirtualHost *:8888>
+	ErrorLog /var/log/apache2/nih-error.log
+	CustomLog /var/log/apache2/nih-access.log combined
+
+	WSGIScriptAlias / /usr/share/nih/nih.wsgi
+	WSGIDaemonProcess nih processes=1 threads=10
+	WSGIProcessGroup nih
+	<Location />
+		Order Allow,Deny
+		Allow from all
+	</Location>
+
+	<Location /admin>
+		SetHandler None
+		Order Deny,Allow
+		Deny from all
+	</Location>
+</VirtualHost>
+Listen 8888

@@ -121,9 +121,9 @@ def registerStartupTask(kind):
 
 def runStartupTasks(sender, **kwargs):
 	global startup_tasks, started, taskLock
-	if started:
-		return
 	with taskLock:
+		if started:
+			return
 		started = True
 		for t in startup_tasks:
 			t.start()

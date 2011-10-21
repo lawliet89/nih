@@ -12,7 +12,7 @@ class Downloader(BackgroundTask):
 			data = urlopen(item.url).read()
 			open(cacheFile, "wb").write(data)
 			cached(item)
-		except HTTPError:
+		except (URLError, HTTPError):
 			item.failed = True
 			item.save()
 

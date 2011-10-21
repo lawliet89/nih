@@ -1,4 +1,3 @@
-
 import os
 import sys
 import subprocess
@@ -12,7 +11,7 @@ from mutagen.oggvorbis import OggVorbis
 from mutagen.mp4 import MP4, MP4Cover
 from mutagen.mp3 import HeaderNotFoundError
 from mutagen.asf import ASF
-import magic
+from xdg import Mime
 
 from musicbrainz2.webservice import *
 from urllib2 import urlopen
@@ -122,9 +121,9 @@ def add_tag(tags, metadata, read_name, write_name):
             # m4a files seem to return track number as a tuple: (tracknumber, totaltracks)
             (tag, _ignore) = tag
 
-        metadata[write_name] = unicode(tag)
+        metadata[write_name] = tag
         if debug:
-            print "'%s' '%s'"%(write_name,unicode(tag).encode("utf-8"))
+            print "'%s' '%s'"%(write_name,tag)
         tags[write_name] = tag
 
 def write_albumart(image_tag, metadata, tags):
@@ -180,10 +179,7 @@ def get_metadata(music_file):
     cache_base = music_file
     metadata = {}
 
-    mime = magic.open(magic.MAGIC_MIME)
-    mime.load()
-    mime = mime.file(music_file)
-    mime = mime.split(";")[0]
+    mime = str(Mime.get_type_by_contents(music_file))
 
     try:
         tags = get_tags(mime, music_file)

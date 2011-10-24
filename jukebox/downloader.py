@@ -18,6 +18,7 @@ class Downloader(BackgroundTask):
 			item.save()
 
 	def postProcessItem(self, item):
+		from jsonfuncs import next_track, play_current
 		if item.failed:
 			print "item failed", item
 			char = ChatItem(what="failed", info = item)

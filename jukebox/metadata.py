@@ -46,9 +46,9 @@ def get_tags(mime, music_file):
     try:
         if mime == 'audio/mpeg':
             tags = MP3(music_file)
-        elif mime == 'application/ogg':
+        elif mime in ['application/ogg', 'audio/x-vorbis+ogg']:
             tags = OggVorbis(music_file)
-        elif mime == 'audio/x-flac':
+        elif mime in ['audio/x-flac', 'audio/flac']:
             tags = FLAC(music_file)
         elif mime == 'audio/mp4':
             tags = MP4(music_file)
@@ -57,6 +57,7 @@ def get_tags(mime, music_file):
         elif mime == 'audio/x-ms-asf':
             tags = ASF(music_file)
         else: # don't have anything better to give the user
+            print "can't find tags for mime type", mime
             tags = NullTags()
         return tags
     except HeaderNotFoundError, e:

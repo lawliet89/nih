@@ -12,6 +12,7 @@ from mutagen.mp4 import MP4, MP4Cover
 from mutagen.mp3 import HeaderNotFoundError
 from mutagen.asf import ASF
 from xdg import Mime
+import magic
 
 from musicbrainz2.webservice import *
 from urllib2 import urlopen
@@ -172,14 +173,24 @@ def write_albumart(image_tag, metadata, tags):
     image.save(image_file)
 
     metadata["albumArt"] = "Yes"
-        
+
+def get_good_mime(music_file):
+    mime = Mime.get_type_by_contents(music_file)
+    if mime == None: # try magic instead
+        mime = magic.open(magic.MAGIC_MIME)
+        mime.load()
+        mime = mime.file(music_file)
+        mime = mime.split(";")[0]
+    else:
+        mime = str(mime)
+    return mime
 
 def get_metadata(music_file):
     global cache_base
     cache_base = music_file
     metadata = {}
 
-    mime = str(Mime.get_type_by_contents(music_file))
+    mime = get_good_mime(music_file)
 
     try:
         tags = get_tags(mime, music_file)

@@ -2,6 +2,7 @@ from utils import urlopen, HTTPError, BackgroundTask, registerStartupTask
 from os.path import join
 from cache import cached, albumArt
 from models import *
+from urllib2 import URLError
 
 class Downloader(BackgroundTask):
 	def processItem(self,item):
@@ -12,7 +13,7 @@ class Downloader(BackgroundTask):
 			data = urlopen(item.url).read()
 			open(cacheFile, "wb").write(data)
 			cached(item)
-		except (URLError, HTTPError):
+		except URLError:
 			item.failed = True
 			item.save()
 

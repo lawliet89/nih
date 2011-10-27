@@ -14,6 +14,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+	'OPTIONS' : {
+		'read_default_file': site_path('my.cnf'),
+	},
         'NAME': 'jukebox',                      # Or path to database file if using sqlite3.
         'USER': 'jukebox',                      # Not used with sqlite3.
         'PASSWORD': 'jukebox',                  # Not used with sqlite3.

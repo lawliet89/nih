@@ -11,13 +11,14 @@ from simple_player import Player, Status
 import gobject
 from utils import registerStartupTask
 from os.path import join
-from audioscrobbler import AudioScrobblerPost
+import audioscrobbler
 from django.conf import settings
 from downloader import downloader
 from socket import gethostbyaddr
 
 site = JSONRPCSite()
-post = AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
+audioscrobbler.enc = "utf8"
+post = audioscrobbler.AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
 
 @jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):

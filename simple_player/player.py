@@ -12,10 +12,13 @@ class Status(Enum):
 	playing = 2
 	paused = 3
 
+class StateFailException(Exception):
+	pass
+
 class Player:
-	def __init__(self, debug = False):
+	def __init__(self, debug = True):
 		self.debug = debug
-		self._player = gst.element_factory_make("playbin", "player")
+		self.newPlayer()
 		bus = self._player.get_bus()
 		bus.add_signal_watch()
 		bus.connect("message", self.message_handler)
@@ -23,6 +26,9 @@ class Player:
 
 		self.state_lock = threading.Condition()
 		self.waiting_for_state_update = False
+
+	def newPlayer(self):
+		self._player = gst.element_factory_make("playbin", "player")
 
 	def __del__(self):
 		with self.state_lock:
@@ -40,8 +46,12 @@ class Player:
 		
 		elif t == gst.MESSAGE_ERROR:
 			err, debug = message.parse_error()
-			if self.debug:
-				print >>stderr, "error: %s"%err, debug
+			if err.domain == gst.STREAM_ERROR and err.code == gst.STREAM_ERROR_CODEC_NOT_FOUND and debug.find("gstplaybin")!=-1:
+				if self.debug:
+					print >>stderr, "Invalid track, skipping", message
+			elif self.debug:
+				print >>stderr, "error: %s"%err#, err.code, err.domain, err.message
+				print >>stderr, debug
 		
 		elif t == gst.MESSAGE_STATE_CHANGED:
 			if message.src == self._player:
@@ -56,11 +66,15 @@ class Player:
 						if self.waiting_for_state_update:
 							self.waiting_for_state_update = False
 							self.state_lock.notifyAll()
+		elif t == gst.MESSAGE_STREAM_STATUS:
+			print "stream status", message
+		else:
+			print "unhandled message", t
 
 		return gst.BUS_PASS
 
 	def next_track(self):
-		pass
+		print "next track"
 
 	def elapsed(self):
 		if self.status == Status.idle:
@@ -95,8 +109,10 @@ class Player:
 				if self.debug:
 					print >>stderr, "waiting for update"
 				self.state_lock.wait()
+			if self.debug:
+				print >>stderr, "got update"
 		
-		(_, current, _) = self._player.get_state()
+		(info, current, _) = self._player.get_state()
 		if current == gst.STATE_NULL and state == gst.STATE_PAUSED:
 			if self.debug:
 				print >>stderr, "Can't pause"
@@ -113,7 +129,9 @@ class Player:
 					raise Exception, kind
 		
 		# gstreamer appears to be partially quantum. measuring state changes results...
-		self._player.get_state()
+		(info, _, _) = self._player.get_state()
+		if info == gst.STATE_CHANGE_FAILURE:
+			raise StateFailException
 
 	def stop(self):
 		if self.debug:
@@ -144,12 +162,19 @@ class Player:
 			print >>stderr, "state: playing"
 			print >>stderr, self._player.get_state()
 		path = abspath(path)
-		self._player.set_property("uri", "file://"+path)
-		if self.debug:
-			print >>stderr, "state: playing (set uri)"
-		self._set_state(gst.STATE_PLAYING)
-		if self.debug:
-			print >>stderr, "playing", path
-			print >>stderr, self._player.get_state()
+		try:
+			self._player.set_property("uri", "file://"+path)
+			if self.debug:
+				print >>stderr, "state: playing (set uri)"
+			self._set_state(gst.STATE_PLAYING)
+			if self.debug:
+				print >>stderr, "now playing", path
+		except StateFailException:
+			self._player.set_state(gst.STATE_NULL)
+			self.waiting_for_state_update = False
+			self.newPlayer()
+			self.next_track()
 
+		if self.debug:
+			print >>stderr, self._player.get_state()
 

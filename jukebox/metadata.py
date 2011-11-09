@@ -54,7 +54,7 @@ def get_tags(mime, music_file):
             tags = MP4(music_file)
         elif mime == 'audio/x-wav':
             tags = WAV(music_file)
-        elif mime == 'audio/x-ms-asf':
+        elif mime in ['audio/x-ms-asf','video/x-ms-asf']:
             tags = ASF(music_file)
         else: # don't have anything better to give the user
             print "can't find tags for mime type", mime

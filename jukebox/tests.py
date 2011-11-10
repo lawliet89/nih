@@ -172,6 +172,20 @@ class MainFunctions(JukeboxTest):
 		self.assertEqual(len(res), 1)
 		self.assertEqual(res[0]["url"], self.test_track_path)
 
+	def testPlayOnAdd(self): 
+		self.clear_queue()
+		res = self._method("pause", False)
+		self.assertEqual(res['status'], "idle", res)
+		self.assertEqual(res['entry'], None, res)
+		self.assertEqual(res['queue'], [], res)
+
+		self.needs_downloaded()
+		sleep(.2) # wait for gstreamer to catch up
+		(url, _) = self._enqueueTestTrack()
+		res = self._method("get_queue")
+		self.assertEqual(res['paused'], False, res)
+		self.assertEqual(res['status'], "caching", res)
+
 class ConfigTests(JukeboxTest):
 	def testAllRoots(self):
 		self._configmethod("rescan_root", self.static_path)

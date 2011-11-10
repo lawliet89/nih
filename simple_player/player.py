@@ -16,7 +16,7 @@ class StateFailException(Exception):
 	pass
 
 class Player:
-	def __init__(self, debug = True):
+	def __init__(self, debug = False):
 		self.debug = debug
 		self.newPlayer()
 		bus = self._player.get_bus()

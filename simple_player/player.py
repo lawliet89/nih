@@ -125,6 +125,8 @@ class Player:
 					self.waiting_for_state_update = True
 				elif kind == gst.STATE_CHANGE_SUCCESS:
 					self._set_internal_state(state)
+				elif kind == gst.STATE_CHANGE_FAILURE:
+					raise StateFailException
 				else:
 					raise Exception, kind
 		

@@ -28,7 +28,7 @@ def rescan_root(request, root):
 		if x.url == root:
 			spider.pause()
 			x.delete()
-			WebPath.add_root(root)
+			spider.add(WebPath.add_root(root))
 			spider.unpause()
 			break
 	else:

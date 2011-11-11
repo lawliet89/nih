@@ -2,7 +2,7 @@ from jsonrpc import jsonrpc_method
 from jsonrpc.site import JSONRPCSite
 from models import *
 from spider import spider
-from utils import urlopen, HTTPError
+from utils import urlopen
 from time import time
 
 site = JSONRPCSite()

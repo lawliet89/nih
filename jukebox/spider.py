@@ -1,6 +1,6 @@
 from models import WebPath, MusicFile
 from BeautifulSoup import BeautifulSoup
-from utils import urlopen, HTTPError, BackgroundTask, registerStartupTask
+from utils import urlopen, URLError, BackgroundTask, registerStartupTask
 from urlparse import urljoin
 from os.path import splitext
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,7 +22,7 @@ class Spider(BackgroundTask):
 
 		try:
 			page = urlopen(current.url)
-		except HTTPError:
+		except URLError:
 			print "fail", current.url
 			current.failed = True
 			current.save()

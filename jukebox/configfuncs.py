@@ -2,7 +2,7 @@ from jsonrpc import jsonrpc_method
 from jsonrpc.site import JSONRPCSite
 from models import *
 from spider import spider
-from utils import urlopen, HTTPError
+from utils import urlopen
 from time import time
 
 site = JSONRPCSite()
@@ -28,7 +28,7 @@ def rescan_root(request, root):
 		if x.url == root:
 			spider.pause()
 			x.delete()
-			WebPath.add_root(root)
+			spider.add(WebPath.add_root(root))
 			spider.unpause()
 			break
 	else:

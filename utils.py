@@ -3,7 +3,7 @@ import urllib2
 from threading import Thread, Lock, Condition
 
 client = None
-HTTPError = urllib2.HTTPError
+URLError = urllib2.URLError
 
 def site_path(path):
 	return join(dirname(__file__), path)
@@ -22,7 +22,7 @@ class FakeURLObject:
 def urlopen(url):
 	try:
 		return urllib2.urlopen(url)
-	except HTTPError:
+	except URLError:
 		global client
 		if client == None:
 			from django.test.client import Client

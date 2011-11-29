@@ -1,6 +1,5 @@
 from utils import urlopen, URLError, BackgroundTask, registerStartupTask
 from os.path import join
-from cache import cached, albumArt
 from models import *
 
 class Downloader(BackgroundTask):

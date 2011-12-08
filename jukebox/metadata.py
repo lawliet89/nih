@@ -50,7 +50,7 @@ def get_tags(mime, music_file):
             tags = OggVorbis(music_file)
         elif mime in ['audio/x-flac', 'audio/flac']:
             tags = FLAC(music_file)
-        elif mime == 'audio/mp4':
+        elif mime in ['video/mp4','audio/mp4']:
             tags = MP4(music_file)
         elif mime == 'audio/x-wav':
             tags = WAV(music_file)

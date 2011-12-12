@@ -34,7 +34,7 @@ def cached(item):
 
 def albumArt(item):
 	cacheFile = join(cacheFolder, item.hash() + ".jpeg")
-	return exists(cacheFile):
+	return exists(cacheFile)
 
 if not exists(cacheFolder):
 	mkdir(cacheFolder)

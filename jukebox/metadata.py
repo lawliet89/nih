@@ -175,7 +175,7 @@ def write_albumart(image_tag, metadata, tags):
     image.thumbnail((96,96), Image.ANTIALIAS)
     image.save(image_file)
 
-    metadata["albumArt"] = "Yes"
+    metadata["albumArt"] = True
 
 def get_good_mime(music_file):
     mime = Mime.get_type_by_contents(music_file)

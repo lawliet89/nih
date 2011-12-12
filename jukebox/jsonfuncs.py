@@ -31,9 +31,7 @@ def metadata(item):
 	if not item.got_metadata:
 		return None
 	ret = {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
-	album = albumArt(item)
-	if album:
-		ret["albumArt"] = album
+	if albumArt(item):
 		ret["cacheHash"] = item.hash()
 	return ret
 

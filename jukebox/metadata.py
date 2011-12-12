@@ -123,8 +123,6 @@ def add_tag(tags, metadata, read_name, write_name):
             # m4a files seem to return track number as a tuple: (tracknumber, totaltracks)
             (tag, _ignore) = tag
 
-        tag = unicode(tag)
-
         metadata[write_name] = tag
         if debug:
             print "'%s' '%s'"%(write_name,tag)

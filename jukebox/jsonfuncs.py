@@ -86,9 +86,13 @@ def enqueue(request, username, tracks, atTop):
 		cached(q.what)
 		try:
 			if atTop:
-				q.index = QueueItem.objects.all().order_by("index")[0].index - 1
+				items = QueueItem.objects.all().order_by("index")
+				if len(items)> 1:
+					q.index = (items[0].index+items[1].index)/2
+				else:
+					q.index = items[0].index + 1 # only current item in queue
 			else:
-				q.index = QueueItem.objects.order_by("-index")[0].index + 1
+				q.index = QueueItem.objects.order_by("-index")[0].index + 1 # only current item in queue
 		except IndexError: # nothing else in queue
 			q.index = 0
 		q.save()

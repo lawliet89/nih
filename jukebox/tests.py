@@ -88,6 +88,21 @@ class MainFunctions(JukeboxTest):
 		self.assertEquals(len(res[u'queue']), 1)
 		downloader.unpause()
 
+	def testEnqueueTop(self):
+		downloader.pause()
+		(url1, res) = self._enqueueTestTrack(atTop = True)
+		self.assertEquals(res[u'entry'][u'url'], url1)
+		self.assertEquals(res[u'entry'][u'username'], "test_user")
+		self.assertEquals(res[u'queue'], [])
+		(url2, res) = self._enqueueTestTrack(atTop = True)
+		self.assertEquals(len(res[u'queue']), 1)
+		self.assertEquals(res[u'queue'][0][u'url'], url2, (url1, url2))
+		(url3, res) = self._enqueueTestTrack(atTop = True)
+		self.assertEquals(len(res[u'queue']), 2)
+		self.assertEquals(res[u'queue'][0][u'url'], url3)
+		self.assertEquals(res[u'queue'][1][u'url'], url2)
+		downloader.unpause()
+
 	def testPlay(self): 
 		self.clear_queue()
 		res = self._method("pause", False)

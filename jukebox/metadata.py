@@ -50,7 +50,7 @@ def get_tags(mime, music_file):
             tags = OggVorbis(music_file)
         elif mime in ['audio/x-flac', 'audio/flac']:
             tags = FLAC(music_file)
-        elif mime == 'audio/mp4':
+        elif mime in ['video/mp4','audio/mp4']:
             tags = MP4(music_file)
         elif mime == 'audio/x-wav':
             tags = WAV(music_file)
@@ -123,8 +123,6 @@ def add_tag(tags, metadata, read_name, write_name):
             # m4a files seem to return track number as a tuple: (tracknumber, totaltracks)
             (tag, _ignore) = tag
 
-        tag = unicode(tag)
-
         metadata[write_name] = tag
         if debug:
             print "'%s' '%s'"%(write_name,tag)
@@ -175,7 +173,7 @@ def write_albumart(image_tag, metadata, tags):
     image.thumbnail((96,96), Image.ANTIALIAS)
     image.save(image_file)
 
-    metadata["albumArt"] = "Yes"
+    metadata["albumArt"] = True
 
 def get_good_mime(music_file):
     mime = Mime.get_type_by_contents(music_file)

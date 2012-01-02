@@ -321,7 +321,7 @@ function LargeTrackWidget(track, info, size) {
     var partHtml = '<span class="finalUrlPart">';    
     partHtml += '<span class="img-holder">';
 
-    if (info.albumArt) {
+    if (info.cacheHash) {
         partHtml += '<img src="cache/' + info.cacheHash + '.jpeg"/>';
     }
     

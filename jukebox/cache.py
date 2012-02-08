@@ -1,6 +1,6 @@
 from os.path import join, exists, abspath
 from os import mkdir
-from models import QueueItem, ChatItem
+from models import QueueItem, ChatItem, MusicFile
 from metadata import get_metadata
 from Queue import Queue
 from django.conf import settings
@@ -39,4 +39,7 @@ def albumArt(item):
 if not exists(cacheFolder):
 	mkdir(cacheFolder)
 for x in QueueItem.objects.all():
-	cached(x.what)
+	try:
+		cached(x.what)
+	except MusicFile.DoesNotExist:
+		x.delete()

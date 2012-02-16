@@ -9,3 +9,5 @@ debian/nih.substvars
 debian/*.debhelper
 debian/files
 *.log
+ENV
+bootstrap.py

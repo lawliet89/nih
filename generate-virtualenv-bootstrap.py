@@ -6,6 +6,7 @@ def after_install(options, home_dir):
     if not os.path.exists(etc):
         os.makedirs(etc)
     subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'django'])
-    subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'psycopg2'])
+    subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'MySQL-python'])
+    subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'django_nose'])
 """))
 f = open('bootstrap.py', 'w').write(output)

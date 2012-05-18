@@ -21,7 +21,7 @@ class Downloader(BackgroundTask):
 			print "item failed", item
 			char = ChatItem(what="failed", info = item)
 			char.save()
-			if QueueItem.current()!=None:
+			if QueueItem.current() == item:
 				next_track()
 		elif QueueItem.current() == item and player.status == Status.playing:
 			play_current()

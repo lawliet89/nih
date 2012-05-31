@@ -7,6 +7,7 @@ def after_install(options, home_dir):
         os.makedirs(etc)
     assert subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'django']) == 0
     assert subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'MySQL-python']) == 0
+    assert subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'South']) == 0
     assert subprocess.call([join(home_dir, 'bin', 'pip'), 'install', 'django_nose']) == 0
 """))
 f = open('bootstrap.py', 'w').write(output)

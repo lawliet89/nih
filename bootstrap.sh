@@ -12,7 +12,7 @@ pushd ext
 rm -r pyscrobbler
 rm -r django-json-rpc
 git clone git://github.com/offmessage/pyscrobbler.git
-git clone git://github.com/samuraisam/django-json-rpc.git
+git clone git://github.com/palfrey/django-json-rpc.git
 cd django-json-rpc
 python setup.py install
 popd

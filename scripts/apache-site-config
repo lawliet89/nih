@@ -1,0 +1,22 @@
+<VirtualHost *:8888>
+        Header set Access-Control-Allow-Origin "*"
+
+	ErrorLog /var/log/apache2/nih-error.log
+	CustomLog /var/log/apache2/nih-access.log combined
+
+	WSGIScriptAlias / /usr/share/nih/current/wsgi.py
+	WSGIDaemonProcess nih processes=1 threads=10
+	WSGIProcessGroup nih
+	<Location />
+		Order Allow,Deny
+		Allow from all
+	</Location>
+
+	Alias /media/ /usr/share/pyshared/django/contrib/admin/media/
+
+	<Location /usr/share/pyshared/django/contrib/admin/>
+		Order Allow,Deny
+		Allow from all
+	</Location>
+</VirtualHost>
+Listen 8888

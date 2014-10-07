@@ -9,3 +9,6 @@ debian/nih.substvars
 debian/*.debhelper
 debian/files
 *.log
+*.pyc
+*~
+.publish_path

@@ -29,8 +29,8 @@ def apache_config(target, site):
     os.symlink(available, enabled)
 
 def migrate():
-    sh('python', 'manage.py', 'syncdb')
-    sh('python', 'manage.py', 'migrate')
+    sh('python', 'src/manage.py', 'syncdb')
+    sh('python', 'src/manage.py', 'migrate')
 
 def deploy(source, target, site):
     setup_apache()

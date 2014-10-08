@@ -12,3 +12,4 @@ debian/files
 *.pyc
 *~
 .publish_path
+target/*

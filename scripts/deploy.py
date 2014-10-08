@@ -9,11 +9,11 @@ def sh(*args):
 
 def setup_apache():
     print "Ensuring apache is installed wth mod_wsgi and mod_headers"
-    sh('apt-get', 'install', 'apache2', 'libapache2-mod-wsgi')
+    sh('apt-get', 'install', '-y', 'apache2', 'libapache2-mod-wsgi')
     sh('a2enmod', 'headers')
 
 def apache(action):
-    print "Alpache: %s" % action
+    print "Apache: %s" % action
     sh('/etc/init.d/apache2', action)
 
 def apache_config(target, site):

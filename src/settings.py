@@ -1,5 +1,6 @@
 # Django settings for nih project.
 
+import os
 from utils import site_path
 from db_settings import db
 
@@ -92,6 +93,8 @@ CACHE_FOLDER = "/tmp/nih-cache"
 TEMPLATE_DIRS = (
 	site_path('jukebox/templates')
 )
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+REPO_URL = 'https://github.com/lshift/nih/'
 
 TEMPLATE_CONTEXT_PROCESSORS = ("django.contrib.auth.context_processors.auth",
 "django.core.context_processors.debug",

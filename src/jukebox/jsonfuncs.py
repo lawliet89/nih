@@ -4,7 +4,7 @@ from models import *
 from time import mktime, strftime, gmtime
 from urllib import unquote
 from random import sample
-from alsaaudio import Mixer
+from alsaaudio import Mixer, ALSAAudioError
 from cache import cached, albumArt
 from threading import Thread
 from simple_player import Player, Status
@@ -149,8 +149,11 @@ volume_who = ""
 volume_direction = ""
 
 def volume():
-	volume = Mixer().getvolume()
-	return {"volume":volume[0], "who":volume_who, "direction": volume_direction}
+    try:
+    	volume = Mixer().getvolume()[0]
+    except ALSAAudioError:
+        volume = 'Error'
+	return {"volume":volume, "who":volume_who, "direction": volume_direction}
 
 @jsonrpc_method('get_volume', site=site)
 def get_volume(request):
@@ -259,3 +262,9 @@ def pause(request, shouldPause):
 			player.pause()
 
 	return status_info(request)
+
+@jsonrpc_method('get_version', site=site)
+def get_version(request):
+    import version
+    return version.get_version()
+

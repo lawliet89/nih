@@ -150,10 +150,10 @@ volume_direction = ""
 
 def volume():
     try:
-    	volume = Mixer().getvolume()[0]
+        volume = Mixer().getvolume()[0]
     except ALSAAudioError:
         volume = 'Error'
-	return {"volume":volume, "who":volume_who, "direction": volume_direction}
+    return {"volume":volume, "who":volume_who, "direction": volume_direction}
 
 @jsonrpc_method('get_volume', site=site)
 def get_volume(request):

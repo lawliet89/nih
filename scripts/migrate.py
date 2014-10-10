@@ -1,3 +1,4 @@
+import os
 import os.path
 import subprocess
 from db_settings import db
@@ -26,7 +27,10 @@ def _database_exists():
     return True
 
 def migrate(target):
-    _backup(os.path.join(target, 'current', 'db-backup.sql'))
+    dir = os.path.join(target, 'current')
+    if not os.path.isdir(dir):
+        os.makedirs(dir)
+    _backup(os.path.join(dir, 'db-backup.sql'))
     _sync()
 
 def setup_db():

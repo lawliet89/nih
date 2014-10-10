@@ -4,7 +4,7 @@ import os
 import os.path
 import shutil
 import publish
-import re
+import filter
 
 def sh(*args):
     subprocess.check_output(args)
@@ -34,42 +34,13 @@ def migrate():
     sh('python', 'src/manage.py', 'syncdb')
     sh('python', 'src/manage.py', 'migrate')
 
-patterns = [
-    r"\.py$",
-    r"\.xml$",
-    r"^src/my.cnf$",
-    r"templates/.+\.xml",
-    r"jukebox/static/.+\.(js|css|ico|png|jpg|jpeg|gif|xcf)"
-]
-def keep(path, file):
-    if file[0] == '.':
-        #print "Ignoring %s. It is hidden" % path
-        return False
-    if os.path.isdir(path):
-        #print "Keeping %s. It is a dir" % path
-        return True
-    for p in patterns:
-        if re.search(p, path):
-            #print "Keeping %s. It matches %s" % (path, p)
-            return True
-    #print "Discarding %s. It didn't match any patterns." % path
-    return False
-
-def ignore(dir, files):
-    result = []
-    for file in files:
-        path = os.path.join(dir, file)
-        if not keep(path, file):
-            result.append(file)
-    return result
-
 def collect_files():
     path = os.path.abspath('target')
     print "Collecting files that need to be deployed into %s" % path
     if os.path.isdir(path):
         shutil.rmtree(path)
-    shutil.copytree('src', os.path.join(path, 'src'), ignore=ignore)
-    shutil.copy('apache.conf', os.path.join(path, 'apache.conf'))
+    shutil.copytree('.', path, ignore=filter.filter_dir)
+    filter.cleanup_dir(path)
 
 def deploy(target, site):
     setup_apache()

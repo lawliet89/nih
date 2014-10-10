@@ -28,8 +28,8 @@ def _database_exists():
 
 def migrate(target):
     dir = os.path.join(target, 'current')
-    if not os.path.isdir(dir):
-        os.makedirs(dir)
+    if not os.path.lexists(dir):
+        dir = '.'
     _backup(os.path.join(dir, 'db-backup.sql'))
     _sync()
 

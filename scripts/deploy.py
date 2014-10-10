@@ -1,13 +1,12 @@
 #!/usr/bin/python
-import subprocess
 import os
 import os.path
 import shutil
+
 import publish
 import filter
-
-def sh(*args):
-    subprocess.check_output(args)
+import migrate
+from helpers import sh
 
 def setup_apache():
     print "Ensuring apache is installed wth mod_wsgi and mod_headers"
@@ -30,10 +29,6 @@ def apache_config(target, site):
     os.symlink(target, available)
     os.symlink(available, enabled)
 
-def migrate():
-    sh('python', 'src/manage.py', 'syncdb')
-    sh('python', 'src/manage.py', 'migrate')
-
 def collect_files():
     path = os.path.abspath('target')
     print "Collecting files that need to be deployed into %s" % path
@@ -45,12 +40,16 @@ def collect_files():
 def deploy(target, site):
     setup_apache()
     apache('stop')
-    migrate()
+    migrate.migrate(target)
     collect_files()
     v = publish.make_version(target)
     v.publish(source='target')
     apache_config(target, site)
     apache('start')
+
+    print "\nDeploy completed successfully."
+    print "To rollback application: rm -r %s/current; mv %s/previous %s/current" % (target, target, target)
+    print "To rollback database: mysql jukebox < %s/previous/db-backup.sql" % target
 
 if __name__ == "__main__":
     import argparse

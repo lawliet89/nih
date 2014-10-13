@@ -35,6 +35,6 @@ Note that if you have already renamed `previous` to `current` then `db-backup.sq
 Bootstrap will
 * Install dependencies using apt-get and pip (the apt-get stage installs pip, if you don't already have it)
 * Create a database and apply migrations to it (you can edit `src/db_settings.py` to change the database credentials)
-* Checkout dependencies that are not available as packages
+* Checkout dependencies that are not available as packages using `git submodule`
 
 You can then develop using the Django development server, or deploy to Apache as above

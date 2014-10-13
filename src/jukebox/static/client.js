@@ -525,27 +525,38 @@ function build_volume_tick_closure_hide(vol) {
     }
 }
 
+function get_version() {
+    jb.get_version().addCallback(display_version);    
+}
+
+function display_version(version) {
+    var section = jq('.version');
+    section.find("a").attr("href", version.url);
+    section.find(".timestamp").text(version.timestamp);
+}
+
 function initClient() {
     jb = new JsonRpcService("/rpc/jukebox", onReady);
     build_volume_ticks();
     document.getElementById('searchtext').focus();
 
     function onReady() {
-	jb.options.timeout = 30000; /* milliseconds */
-	var username = document.location.search.match(/username=([^&]+)/);
-	if (username) {
-	    username = username[1].replace(/\+/g, " ");
-	    username = unescape(username);
-	}
+	    jb.options.timeout = 30000; /* milliseconds */
+	    var username = document.location.search.match(/username=([^&]+)/);
+	    if (username) {
+	        username = username[1].replace(/\+/g, " ");
+	        username = unescape(username);
+	    }
 
-	if (username) {
-	    document.getElementById('username').value = username;
-	    change_username();
-	} else {
-	    jb.get_caller_hostname().addCallback(update_username);
-	}
-
-	refresh_timer_tick();
-	clock_timer_tick();
+	    if (username) {
+	        document.getElementById('username').value = username;
+	        change_username();
+	    } else {
+	        jb.get_caller_hostname().addCallback(update_username);
+	    }
+        
+        get_version();
+	    refresh_timer_tick();
+	    clock_timer_tick();
     }
 }

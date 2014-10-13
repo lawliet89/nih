@@ -4,7 +4,11 @@ from spider import spider
 from models import *
 
 def index(request):
-	return render_to_response("index.xml",{"lastfm_name": settings.LASTFM_USER } )
+    data = { 
+        "lastfm_name": settings.LASTFM_USER,
+        "repo_url": settings.REPO_URL,
+    }
+    return render_to_response("index.xml", data)
 
 def spider(request):
 	return render_to_response("spider.xml", {"spider": spider})

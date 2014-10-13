@@ -312,3 +312,13 @@ span.rootCount {
 #history .who {
     font-weight: bold;
 }
+
+.version {
+    position: fixed;
+    bottom: 5px;
+    right: 5px;
+    color: #777;
+}
+.version a, .version a:visited {
+    color: #777;
+}

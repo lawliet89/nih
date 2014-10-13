@@ -4,7 +4,7 @@ Not Invented Here (a jukebox)
 
 ## Deploy
 
-* git pull https://github.com/lshift/nih.git
+* git clone https://github.com/lshift/nih.git
 * sudo scripts/bootstrap.sh
 * sudo python scripts/deploy.py
 
@@ -25,3 +25,14 @@ To rollback just rm -r current, and rename previous to current. This will rollba
 mysql jukebox < /usr/share/nih/previous/db-backup.sql
 
 Note that if you have already renamed previous to current then the db-backup will now be in current.
+
+## Develop
+* git clone git@github.com:lshift/nih.git
+* sudo scripts/bootstrap.sh
+
+Bootstrap will
+* Install dependencies using apt-get and pip (the apt-get stage installs pip, if you don't already have it)
+* Create a database and apply migrations to it (you can edit src/db_settings.py to change the database credentials)
+* Checkout dependencies that are not available as packages
+
+You can then develop using the Django development server, or deploy to Apache as above

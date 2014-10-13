@@ -8,7 +8,7 @@ Not Invented Here (a jukebox)
 * `sudo scripts/bootstrap.sh`
 * `sudo python scripts/deploy.py`
 
-This will create /usr/share/nih, and an Apache site pointing at the most recently deployed version. Default port is 8888, for historical reasons.
+This will create `/usr/share/nih`, and an Apache site pointing at the most recently deployed version. Default port is 8888, for historical reasons.
 
 ### Deploy an update
 
@@ -16,7 +16,7 @@ To deploy new versions:
 * `git pull`
 * `sudo python scripts/deploy.py`
 
-Each time you run deploy a new timestamped directory will be created in /usr/share/nih. A symlink /usr/share/nih/current always points to the most recent deploy, and /usr/share/nih/previous points to the version before (if any).
+Each time you run deploy a new timestamped directory will be created in `/usr/share/nih`. A symlink `/usr/share/nih/current` always points to the most recent deploy, and `/usr/share/nih/previous` points to the version before (if any).
 
 ### Rollback a deploy
 

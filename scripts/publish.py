@@ -11,23 +11,14 @@ def expand_path(path):
     from os.path import abspath, expanduser, expandvars
     return abspath(expandvars(expanduser(path)))
 
-def get_publish_path():
-    question = "Please enter the path to publish to"
-
-    if os.path.isfile(publish_path_file):
-        with open(publish_path_file, "r") as f:
-            target = f.read().strip()
-    else:
-        target = expand_path(raw_input("%s: " % question).strip())
-        with open(publish_path_file, "w") as f:
-            f.write(target)
-    return target
-
 def get_git_hash():
     return subprocess.check_output(["git", "rev-parse", "HEAD"]).strip()
 
 def get_git_origin():
     return subprocess.check_output(["git", "config", "--get", "remote.origin.url"]).strip()
+
+def make_version(target):
+    return Version(get_git_hash(), get_git_origin(), target)
 
 class Version:
     def __init__(self, version, origin, publish_path):

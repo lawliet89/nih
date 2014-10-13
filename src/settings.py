@@ -1,6 +1,7 @@
 # Django settings for nih project.
 
 from utils import site_path
+from db_settings import db
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -17,9 +18,9 @@ DATABASES = {
 	'OPTIONS' : {
 		'read_default_file': site_path('my.cnf'),
 	},
-        'NAME': 'jukebox',                      # Or path to database file if using sqlite3.
-        'USER': 'jukebox',                      # Not used with sqlite3.
-        'PASSWORD': 'jukebox',                  # Not used with sqlite3.
+        'NAME': db.name,                 # Or path to database file if using sqlite3.
+        'USER': db.user,                 # Not used with sqlite3.
+        'PASSWORD': db.password,         # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }

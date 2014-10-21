@@ -11,7 +11,7 @@ def index(request):
     return render_to_response("index.xml", data)
 
 def spider(request):
-	return render_to_response("spider.xml", {"spider": spider})
+    return render_to_response("spider.xml", {"spider": spider})
 
 def config(request):
-	return render_to_response("config.xml", {"roots": WebPath.get_root_nodes()})
+    return render_to_response("config.xml", {"roots": WebPath.get_root_nodes()})

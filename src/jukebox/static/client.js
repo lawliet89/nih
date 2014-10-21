@@ -7,11 +7,11 @@ function refresh_timer_tick() {
     jb.get_queue()
     .addCallback(function (status)
     {
-	update_player_status(status);
-	refresh_history();
-	refresh_volume();
-	// Only rearm the timer once we know the server's answering requests.
-	arm_refresh_timer();
+    update_player_status(status);
+    refresh_history();
+    refresh_volume();
+    // Only rearm the timer once we know the server's answering requests.
+    arm_refresh_timer();
     });
 }
 function arm_refresh_timer() {
@@ -63,16 +63,16 @@ var paused;
 
 function clock_timer_tick() {
     if (state == "playing" && !paused) {
-	elapsedTime ++;
-	if (elapsedTime > totalTime) {
-	    elapsedTime = totalTime;
+    elapsedTime ++;
+    if (elapsedTime > totalTime) {
+        elapsedTime = totalTime;
 
-	    // Clear the timeout before calling
-	    // refresh_timer_tick, since that sets it.
-	    clearTimeout(refresh_timer);
-	    refresh_timer_tick();
-	}
-	update_time();
+        // Clear the timeout before calling
+        // refresh_timer_tick, since that sets it.
+        clearTimeout(refresh_timer);
+        refresh_timer_tick();
+    }
+    update_time();
     }
     
     arm_clock_timer();
@@ -85,13 +85,13 @@ function arm_clock_timer() {
 function update_time() {
     var s = document.getElementById("statusatom");
     var timeString =
-	(state == "playing" || state == "paused")
-	? (" " + timeFormat(elapsedTime) + " / " + timeFormat(totalTime))
-	: "";
+    (state == "playing" || state == "paused")
+    ? (" " + timeFormat(elapsedTime) + " / " + timeFormat(totalTime))
+    : "";
 
     s.innerHTML = "";
     s.appendChild(document.createTextNode("Now playing (" + state + 
-    					  timeString + ")"));
+                          timeString + ")"));
 }
 
 function update_player_status(status) {
@@ -106,42 +106,42 @@ function update_player_status(status) {
 
     n.innerHTML = "";
     if (status.entry) {
-	n.appendChild(new LargeTrackWidget(status.entry, status.info, "large").domNode);
+    n.appendChild(new LargeTrackWidget(status.entry, status.info, "large").domNode);
     } else {
-	n.appendChild(document.createElement("br"));
+    n.appendChild(document.createElement("br"));
     }
 
     var currentDownloads = {};
     for (var i = 0; i < status.downloads.length; i++) {
-	currentDownloads[status.downloads[i]] = 1;
+    currentDownloads[status.downloads[i]] = 1;
     }
 
     var listnode = document.createElement("ol");
     for (var i = 0; i < status.queue.length; i++) {
-	var track = status.queue[i];
-	var info = status.queueInfo[i];
-	var itemnode = document.createElement("li");
-	var span = document.createElement("span");
-	span.className = "queue-buttons";
-	span.appendChild(button(dequeuer_for(track), "dequeue",
-				"imageButton dequeueButton",
-				"Dequeue track"));
-	span.appendChild(spacerText(" "));
-	span.appendChild(button(raiser_for(track), "up",
-				"imageButton upButton",
-				"Move track earlier in queue"));
-	span.appendChild(spacerText("/"));
-	span.appendChild(button(lowerer_for(track), "down",
-				"imageButton downButton",
-				"Move track later in queue"));
-	itemnode.appendChild(span);
-	itemnode.appendChild((i < 3)
-			     ? new LargeTrackWidget(track, info, "small").domNode
-			     : new TrackWidget(track, info).domNode);
-	if (currentDownloads[track.url]) {
-	    itemnode.appendChild(textSpan(" (caching)", "cachingIndicator"));
-	}
-	listnode.appendChild(itemnode);
+    var track = status.queue[i];
+    var info = status.queueInfo[i];
+    var itemnode = document.createElement("li");
+    var span = document.createElement("span");
+    span.className = "queue-buttons";
+    span.appendChild(button(dequeuer_for(track), "dequeue",
+                "imageButton dequeueButton",
+                "Dequeue track"));
+    span.appendChild(spacerText(" "));
+    span.appendChild(button(raiser_for(track), "up",
+                "imageButton upButton",
+                "Move track earlier in queue"));
+    span.appendChild(spacerText("/"));
+    span.appendChild(button(lowerer_for(track), "down",
+                "imageButton downButton",
+                "Move track later in queue"));
+    itemnode.appendChild(span);
+    itemnode.appendChild((i < 3)
+                 ? new LargeTrackWidget(track, info, "small").domNode
+                 : new TrackWidget(track, info).domNode);
+    if (currentDownloads[track.url]) {
+        itemnode.appendChild(textSpan(" (caching)", "cachingIndicator"));
+    }
+    listnode.appendChild(itemnode);
     }
 
     d.innerHTML = "";
@@ -160,8 +160,8 @@ function timeFormat(seconds) {
     seconds = Math.floor(seconds);
 
     return (seconds >= 3600 ? pad(Math.floor(seconds / 3600)) + ":" : "")
-	+ pad(Math.floor(seconds / 60)) + ":"
-	+ pad(seconds % 60);
+    + pad(Math.floor(seconds / 60)) + ":"
+    + pad(seconds % 60);
 }
 
 function historiesEqual(h1, h2) {
@@ -172,7 +172,7 @@ function historiesEqual(h1, h2) {
 var previousHistoryEntries = [];
 function update_history(entries) {
     if (historiesEqual(entries, previousHistoryEntries)) {
-	return;
+    return;
     }
 
     previousHistoryEntries = entries;
@@ -180,53 +180,53 @@ function update_history(entries) {
     var listnode = document.createElement("ol");
 
     for (var i = entries.length - 1; i >= 0; i--) {
-	var entry = entries[i];
-	var itemnode = document.createElement("li");
+    var entry = entries[i];
+    var itemnode = document.createElement("li");
 
-	var whennode = document.createElement("span");
-	whennode.className = "when";
+    var whennode = document.createElement("span");
+    whennode.className = "when";
     var date = new Date();
     date.setTime(entry.when * 1000); // JS wants millis, erlang:now() gives seconds
-	whennode.appendChild(document.createTextNode(format_date(date)));
+    whennode.appendChild(document.createTextNode(format_date(date)));
 
-	var whonode = document.createElement("span");
-	whonode.className = "who";
-	whonode.appendChild(document.createTextNode(entry.who));
+    var whonode = document.createElement("span");
+    whonode.className = "who";
+    whonode.appendChild(document.createTextNode(entry.who));
 
-	var whatnode = document.createElement("span");
-	whatnode.className = "what";
+    var whatnode = document.createElement("span");
+    whatnode.className = "what";
 
-	var whatHTML;
+    var whatHTML;
 
-	if (entry.message) {
-	    whatHTML = entry.what + ' "' + entry.message + '"';
+    if (entry.message) {
+        whatHTML = entry.what + ' "' + entry.message + '"';
 
         if (entry.track) {
-	        whatHTML += '<span class="while-listening"> while listening to '
+            whatHTML += '<span class="while-listening"> while listening to '
                      + new TrackWidget(entry.track, entry.info).domNode.innerHTML
                      + '</span>';
         }
 
-	} else if (entry.what == 'skip') {
-	    whatHTML = ' <span class="skip">skip</span> ' 
+    } else if (entry.what == 'skip') {
+        whatHTML = ' <span class="skip">skip</span> ' 
                  + new TrackWidget(entry.track, entry.info).domNode.innerHTML;
 
-	} else if (entry.error) {
-	    whatHTML = '<span class="error">' + JSON.stringify(entry.error) + '</span>';
+    } else if (entry.error) {
+        whatHTML = '<span class="error">' + JSON.stringify(entry.error) + '</span>';
 
-	} else if (entry.http_error) {
-	    whatHTML = '<span class="http-error">' + entry.http_error.response_code + ' downloading ' + entry.http_error.url + '</span>';
-	}
+    } else if (entry.http_error) {
+        whatHTML = '<span class="http-error">' + entry.http_error.response_code + ' downloading ' + entry.http_error.url + '</span>';
+    }
 
     whatnode.innerHTML = whatHTML;
 
-	itemnode.appendChild(whennode);
-	itemnode.appendChild(document.createTextNode(" "));
-	itemnode.appendChild(whonode);
-	itemnode.appendChild(document.createTextNode(" "));
-	itemnode.appendChild(whatnode);
+    itemnode.appendChild(whennode);
+    itemnode.appendChild(document.createTextNode(" "));
+    itemnode.appendChild(whonode);
+    itemnode.appendChild(document.createTextNode(" "));
+    itemnode.appendChild(whatnode);
 
-	listnode.appendChild(itemnode);
+    listnode.appendChild(itemnode);
     }
 
     var h = document.getElementById("history");
@@ -284,13 +284,13 @@ function enqueuer_for(trackEntries, atTop) {
 
 function raiser_for(track) {
     return function () {
-	jb.raise(track).addCallback(update_player_status);
+    jb.raise(track).addCallback(update_player_status);
     };
 }
 
 function lowerer_for(track) {
     return function () {
-	jb.lower(track).addCallback(update_player_status);
+    jb.lower(track).addCallback(update_player_status);
     };
 }
 
@@ -346,7 +346,7 @@ function LargeTrackWidget(track, info, size) {
     this.domNode.innerHTML = partHtml;
 
     if (this.track.username) {
-	this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
+    this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
     }
 }
 
@@ -376,7 +376,7 @@ function TrackWidget(track, info) {
     this.domNode.innerHTML = partHtml;
 
     if (this.track.username) {
-	this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
+    this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
     }
 }
 
@@ -393,16 +393,16 @@ function group_by_folder(results) {
     var current = null;
     var acc = [];
     for (var i = 0; i < results.length; i++) {
-	var track = results[i];
-	var folder = track.url.match(/(.*\/)[^\/]*/)[1];
-	if (folder != current) {
-	    if (current != null) {
-		groups.push({folder: current, results: acc});
-		acc = [];
-	    }
-	    current = folder;
-	}
-	acc.push(track);
+    var track = results[i];
+    var folder = track.url.match(/(.*\/)[^\/]*/)[1];
+    if (folder != current) {
+        if (current != null) {
+        groups.push({folder: current, results: acc});
+        acc = [];
+        }
+        current = folder;
+    }
+    acc.push(track);
     }
     groups.push({folder: current, results: acc});
     return groups;
@@ -414,40 +414,40 @@ function display_search_results(ungrouped_results, divnode) {
     divnode.innerHTML = "";
 
     for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-	var listnode = document.createElement("ul");
-	var group = groups[groupIndex];
+    var listnode = document.createElement("ul");
+    var group = groups[groupIndex];
 
-	for (var i = 0; i < group.results.length; i++) {
-	    var track = group.results[i];
-	    var itemnode = document.createElement("li");
-	    itemnode.appendChild(button(enqueuer_for([track], false), "enqueue",
-					"imageButton enqueueButton",
-					"Append track to queue"));
-	    itemnode.appendChild(spacerText(" "));
-	    itemnode.appendChild(button(enqueuer_for([track], true), "@top",
-					"imageButton atTopButton",
-					"Prepend track to queue"));
-	    itemnode.appendChild(new TrackWidget(track, null).domNode);
-	    listnode.appendChild(itemnode);
-	}
+    for (var i = 0; i < group.results.length; i++) {
+        var track = group.results[i];
+        var itemnode = document.createElement("li");
+        itemnode.appendChild(button(enqueuer_for([track], false), "enqueue",
+                    "imageButton enqueueButton",
+                    "Append track to queue"));
+        itemnode.appendChild(spacerText(" "));
+        itemnode.appendChild(button(enqueuer_for([track], true), "@top",
+                    "imageButton atTopButton",
+                    "Prepend track to queue"));
+        itemnode.appendChild(new TrackWidget(track, null).domNode);
+        listnode.appendChild(itemnode);
+    }
 
-	var enqF = document.createElement("a");
-	enqF.onclick = enqueuer_for(group.results, false);
-	enqF.innerHTML = "(enqueue)";
+    var enqF = document.createElement("a");
+    enqF.onclick = enqueuer_for(group.results, false);
+    enqF.innerHTML = "(enqueue)";
 
-	var folderName = document.createElement("a");
-	folderName.className = "folderLink";
-	folderName.href = group.folder;
-	folderName.appendChild(document.createTextNode(unescape(group.folder)));
+    var folderName = document.createElement("a");
+    folderName.className = "folderLink";
+    folderName.href = group.folder;
+    folderName.appendChild(document.createTextNode(unescape(group.folder)));
 
-	var heading = document.createElement("div");
-	heading.className = "folderHeading";
-	heading.appendChild(enqF);
-	heading.appendChild(document.createTextNode(" "));
-	heading.appendChild(folderName);
+    var heading = document.createElement("div");
+    heading.className = "folderHeading";
+    heading.appendChild(enqF);
+    heading.appendChild(document.createTextNode(" "));
+    heading.appendChild(folderName);
 
-	divnode.appendChild(heading);
-	divnode.appendChild(listnode);
+    divnode.appendChild(heading);
+    divnode.appendChild(listnode);
     }
 
     var enqAll = new ButtonWidget("Enqueue all").domNode;
@@ -464,11 +464,11 @@ function do_search() {
 
     jb.search(keys)
     .addCallback(function (results) {
-		     display_search_results(results, p);
-		 })
+             display_search_results(results, p);
+         })
     .addErrorCallback(function (err) {
-			  p.innerHTML = JSON.stringify(err);
-		      });
+              p.innerHTML = JSON.stringify(err);
+              });
     return false;
 }
 
@@ -478,11 +478,11 @@ function do_random(count) {
 
     jb.randomtracks(count)
     .addCallback(function (results) {
-		     display_search_results(results, p);
-		 })
+             display_search_results(results, p);
+         })
     .addErrorCallback(function (err) {
-			  p.innerHTML = JSON.stringify(err);
-		      });
+              p.innerHTML = JSON.stringify(err);
+              });
     return false;
 }
 
@@ -494,22 +494,22 @@ function send_chat() {
 
 function volume_setter_for(i) {
     return function () {
-	jb.set_volume(currentUsername, i).addCallback(update_volume);
+    jb.set_volume(currentUsername, i).addCallback(update_volume);
     };
 }
 
 function build_volume_ticks() {
     var container = document.getElementById("volume-ticks");
     for (var i = 0; i <= 100; i++) {
-	var link = document.createElement("a");
-	link.id = "volume-tick-" + i;
-	link.className = "inactive-volume-tick";
-	link.onclick = volume_setter_for(i);
-	link.innerHTML = "|";
-	link.title = i;
-	link.onmouseover = build_volume_tick_closure_show(i);
-	link.onmouseout = build_volume_tick_closure_hide(i);
-	container.appendChild(link);
+    var link = document.createElement("a");
+    link.id = "volume-tick-" + i;
+    link.className = "inactive-volume-tick";
+    link.onclick = volume_setter_for(i);
+    link.innerHTML = "|";
+    link.title = i;
+    link.onmouseover = build_volume_tick_closure_show(i);
+    link.onmouseout = build_volume_tick_closure_hide(i);
+    container.appendChild(link);
     }
 }
 
@@ -541,22 +541,22 @@ function initClient() {
     document.getElementById('searchtext').focus();
 
     function onReady() {
-	    jb.options.timeout = 30000; /* milliseconds */
-	    var username = document.location.search.match(/username=([^&]+)/);
-	    if (username) {
-	        username = username[1].replace(/\+/g, " ");
-	        username = unescape(username);
-	    }
+        jb.options.timeout = 30000; /* milliseconds */
+        var username = document.location.search.match(/username=([^&]+)/);
+        if (username) {
+            username = username[1].replace(/\+/g, " ");
+            username = unescape(username);
+        }
 
-	    if (username) {
-	        document.getElementById('username').value = username;
-	        change_username();
-	    } else {
-	        jb.get_caller_hostname().addCallback(update_username);
-	    }
+        if (username) {
+            document.getElementById('username').value = username;
+            change_username();
+        } else {
+            jb.get_caller_hostname().addCallback(update_username);
+        }
         
         get_version();
-	    refresh_timer_tick();
-	    clock_timer_tick();
+        refresh_timer_tick();
+        clock_timer_tick();
     }
 }

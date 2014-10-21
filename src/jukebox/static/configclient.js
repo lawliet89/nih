@@ -5,13 +5,13 @@ function refresh_timer_tick() {
     config.all_roots()
     .addCallback(function (roots)
     {
-	update_roots(roots);
-	config.current_rescans()
-	.addCallback(function (urls)
-	{
-	    update_rescans(urls);
-	    arm_refresh_timer();
-	});
+    update_roots(roots);
+    config.current_rescans()
+    .addCallback(function (urls)
+    {
+        update_rescans(urls);
+        arm_refresh_timer();
+    });
     });
 }
 function arm_refresh_timer() {
@@ -34,13 +34,13 @@ function do_add_root() {
 
 function rescanner_for(url) {
     return function () {
-	config.rescan_root(url).addCallback(update_rescans);
+    config.rescan_root(url).addCallback(update_rescans);
     };
 }
 
 function deleter_for(url) {
     return function () {
-	config.remove_root(url).addCallback(update_roots);
+    config.remove_root(url).addCallback(update_roots);
     };
 }
 
@@ -60,7 +60,7 @@ function span_for(klass, node) {
 
 function padLeft(totalWidth, s) {
     while (s.length < totalWidth) {
-	s = "_" + s;
+    s = "_" + s;
     }
     return s;
 }
@@ -68,17 +68,17 @@ function padLeft(totalWidth, s) {
 function update_roots(roots) {
     var listnode = document.createElement("ul");
     for (var i = 0; i < roots.length; i++) {
-	var root = roots[i];
-	var itemnode = document.createElement("li");
-	itemnode.appendChild(button(rescanner_for(root.url), "rescan"));
-	itemnode.appendChild(document.createTextNode(" "));
-	itemnode.appendChild(button(deleter_for(root.url), "delete"));
-	itemnode.appendChild(document.createTextNode(" ("));
-	itemnode.appendChild(span_for("rootCount",
-				      document.createTextNode(padLeft(6, "" + root.count))));
-	itemnode.appendChild(document.createTextNode(" tracks) "));
-	itemnode.appendChild(link_for(root.url));
-	listnode.appendChild(itemnode);
+    var root = roots[i];
+    var itemnode = document.createElement("li");
+    itemnode.appendChild(button(rescanner_for(root.url), "rescan"));
+    itemnode.appendChild(document.createTextNode(" "));
+    itemnode.appendChild(button(deleter_for(root.url), "delete"));
+    itemnode.appendChild(document.createTextNode(" ("));
+    itemnode.appendChild(span_for("rootCount",
+                      document.createTextNode(padLeft(6, "" + root.count))));
+    itemnode.appendChild(document.createTextNode(" tracks) "));
+    itemnode.appendChild(link_for(root.url));
+    listnode.appendChild(itemnode);
     }
 
     var d = document.getElementById("roots");
@@ -89,10 +89,10 @@ function update_roots(roots) {
 function update_rescans(urls) {
     var listnode = document.createElement("ul");
     for (var i = 0; i < urls.length; i++) {
-	var root = urls[i];
-	var itemnode = document.createElement("li");
-	itemnode.appendChild(document.createTextNode(root));
-	listnode.appendChild(itemnode);
+    var root = urls[i];
+    var itemnode = document.createElement("li");
+    itemnode.appendChild(document.createTextNode(root));
+    listnode.appendChild(itemnode);
     }
 
     var d = document.getElementById("rescans");

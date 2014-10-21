@@ -5,16 +5,16 @@ import gobject
 from time import sleep
 
 class Looper(threading.Thread):
-	def __init__(self):
-		threading.Thread.__init__(self)
-		gobject.threads_init()
+    def __init__(self):
+        threading.Thread.__init__(self)
+        gobject.threads_init()
 
-	def run(self):
-		self.loop = gobject.MainLoop()
-		self.loop.run()
+    def run(self):
+        self.loop = gobject.MainLoop()
+        self.loop.run()
 
-	def quit(self):
-		self.loop.quit()
+    def quit(self):
+        self.loop.quit()
 
 loop = Looper()
 loop.setDaemon(True)

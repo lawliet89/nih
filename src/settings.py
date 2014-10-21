@@ -16,9 +16,9 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-	'OPTIONS' : {
-		'read_default_file': site_path('my.cnf'),
-	},
+    'OPTIONS' : {
+        'read_default_file': site_path('my.cnf'),
+    },
         'NAME': db.name,                 # Or path to database file if using sqlite3.
         'USER': db.user,                 # Not used with sqlite3.
         'PASSWORD': db.password,         # Not used with sqlite3.
@@ -91,7 +91,7 @@ ROOT_URLCONF = 'urls'
 CACHE_FOLDER = "/tmp/nih-cache"
 
 TEMPLATE_DIRS = (
-	site_path('jukebox/templates')
+    site_path('jukebox/templates')
 )
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 REPO_URL = 'https://github.com/lshift/nih/'
@@ -116,8 +116,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.sessions',
     'django.contrib.contenttypes', # only here for the admin
-	'jsonrpc',
-	'south',
-	'django_nose',
-	'jukebox'
+    'jsonrpc',
+    'south',
+    'django_nose',
+    'jukebox'
 )

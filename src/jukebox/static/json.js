@@ -38,34 +38,34 @@ var JSON = {
     license: 'http://www.crockford.com/JSON/license.html',
 
     javaSerializers: {
-	"java.lang.Object": function (arg) { return JSON.stringify(String(arg)); }
+    "java.lang.Object": function (arg) { return JSON.stringify(String(arg)); }
     },
 
     rhinoSupport: false, /* set to true to enable Java JSON serialization */
     isJavaObject: function (o) {
-	if (this.rhinoSupport) {
-	    if (o instanceof java.lang.Object) {
-		return true;
-	    }
-	}
-	return false;
+    if (this.rhinoSupport) {
+        if (o instanceof java.lang.Object) {
+        return true;
+        }
+    }
+    return false;
     },
 
     findJavaSerializer: function (o) {
-	var c = o.getClass();
-	while (c != null) {
-	    if (typeof this.javaSerializers[c.getName()] != 'undefined') {
-		return this.javaSerializers[c.getName()];
-	    }
-	    var interfaces = c.getInterfaces();
-	    for (var i = 0; i < interfaces.length; i++) {
-		if (typeof this.javaSerializers[interfaces[i].getName()] != 'undefined') {
-		    return this.javaSerializers[interfaces[i].getName()];
-		}
-	    }
-	    c = c.getSuperclass();
-	}
-	return null;
+    var c = o.getClass();
+    while (c != null) {
+        if (typeof this.javaSerializers[c.getName()] != 'undefined') {
+        return this.javaSerializers[c.getName()];
+        }
+        var interfaces = c.getInterfaces();
+        for (var i = 0; i < interfaces.length; i++) {
+        if (typeof this.javaSerializers[interfaces[i].getName()] != 'undefined') {
+            return this.javaSerializers[interfaces[i].getName()];
+        }
+        }
+        c = c.getSuperclass();
+    }
+    return null;
     },
 
     stringify: function (arg) {
@@ -83,13 +83,13 @@ var JSON = {
                         s += v;
                     }
                     return '[' + s + ']';
-		} else if (typeof arg.toJsonString != 'undefined') {
-		    return arg.toJsonString();
-		} else if (this.isJavaObject(arg)) {
-		    v = this.findJavaSerializer(arg);
-		    if (v != null) {
-			return v(arg);
-		    }
+        } else if (typeof arg.toJsonString != 'undefined') {
+            return arg.toJsonString();
+        } else if (this.isJavaObject(arg)) {
+            v = this.findJavaSerializer(arg);
+            if (v != null) {
+            return v(arg);
+            }
                 } else if (typeof arg.toString != 'undefined') {
                     for (i in arg) {
                         v = arg[i];
@@ -339,30 +339,30 @@ outer:          while (next()) {
             error("Syntax error");
         }
 
-	function ctor() {
-	    var name = '';
-	    if (ch == '@') {
-		next();
-		while (ch == '.' || (ch.toUpperCase() >= 'A' &&
-				     ch.toUpperCase() <= 'Z')) {
-		    name += ch;
-		    next();
-		}
-		var arg = val();
-		if (name in ctors) {
-		    return ctors[name](arg);
-		} else {
-		    error("Unknown ctor " + name);
-		}
-	    }
-	    error("Bad ctor");
-	}
+    function ctor() {
+        var name = '';
+        if (ch == '@') {
+        next();
+        while (ch == '.' || (ch.toUpperCase() >= 'A' &&
+                     ch.toUpperCase() <= 'Z')) {
+            name += ch;
+            next();
+        }
+        var arg = val();
+        if (name in ctors) {
+            return ctors[name](arg);
+        } else {
+            error("Unknown ctor " + name);
+        }
+        }
+        error("Bad ctor");
+    }
 
         function val() {
             white();
             switch (ch) {
-	        case '@':
-		    return ctor();
+            case '@':
+            return ctor();
                 case '{':
                     return obj();
                 case '[':

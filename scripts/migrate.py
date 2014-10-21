@@ -14,7 +14,8 @@ def _backup(path):
         f.write(sql)
 
 def _sync():
-    sh('python', 'src/manage.py', 'syncdb')
+    print "Running syncdb and migrate"
+    sh('python', 'src/manage.py', 'syncdb', '--noinput')
     sh('python', 'src/manage.py', 'migrate')
 
 def _database_exists():
@@ -38,6 +39,8 @@ def setup_db():
         print 'Database already exists, no need for me to create it.'
     else:
         username = raw_input("Enter your mysql user name (default: root): ") or "root"
-        sql = "CREATE DATABASE IF NOT EXISTS %(name)s; GRANT ALL ON %(name)s.* TO '%(user)s' IDENTIFIED BY '%(password)s';" % db
-        sh('mysql', '-u', username, '-p' '-f' '-e', sql)
+        sql = "CREATE DATABASE IF NOT EXISTS %(name)s; GRANT ALL ON %(name)s.* TO '%(user)s' IDENTIFIED BY '%(password)s';" % db.__dict__
+        print "Now you will be prompted for the password that goes with that mysql account"
+        sh('mysql', '-u', username, '-p', '-f', '-e', sql)
+        print "Created database %s" % db.name
         _sync()

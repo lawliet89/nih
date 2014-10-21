@@ -5,7 +5,7 @@ Not Invented Here (a jukebox)
 ## Deploy
 
 * `git clone https://github.com/lshift/nih.git`
-* `sudo scripts/bootstrap.sh`
+* `sudo sh scripts/bootstrap.sh`
 * `sudo python scripts/deploy.py`
 
 This will create `/usr/share/nih`, and an Apache site pointing at the most recently deployed version. Default port is 8888, for historical reasons.
@@ -30,7 +30,7 @@ Note that if you have already renamed `previous` to `current` then `db-backup.sq
 
 ## Develop
 * `git clone git@github.com:lshift/nih.git`
-* `sudo scripts/bootstrap.sh`
+* `sudo sh scripts/bootstrap.sh`
 
 Bootstrap will
 * Install dependencies using apt-get and pip (the apt-get stage installs pip, if you don't already have it)

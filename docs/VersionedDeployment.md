@@ -1,4 +1,5 @@
 # Deployment
+The deploy script is designed to make sure that all the state of the jukebox is backed up and every step, and can easily be rolled back: So the source code, the Apache configuration, and the database state. Steps on how to deploy and rollback are found at [README](../README.md). This document is about how it works under the hood.
 
 ## Versions
 If you use the included deploy script (`scripts/deploy.py`) then your application will have the following structure:
@@ -33,3 +34,6 @@ Parsers for this file should not make any assumptions about lines beyond line 3,
 
 ## Apache
 The deploy script creates `nih.conf` in Apache's `sites-available` and `sites-enabled`. In both cases, these are soft links that eventually resolve to `/usr/share/nih/current/apache.conf`. This means that if a new version of the code makes a change to the Apache configuration, these changes can also be rolled back as part of the normal mechanism.
+
+## MySQL
+The deploy script also backs up the MySQL database to an SQL file using `mysqldump`. This is placed in the version folder for the *previous* version. If there isn't a previous version (e.g. because this is the first deploy) the file is output to the working directory.

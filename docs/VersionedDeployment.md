@@ -12,7 +12,7 @@ You may have changed the directory from `/usr/bin/nih` by passing parameters to 
 
 Every time you run `deploy.py` a new timestamped subdirectory is created in `all`. We will call these directories 'versions'. `current` is a soft link to the most recently created version. `previous` will exist from the second deploy onwards, and is a soft link that points to the last but one version. (Of course, if you rollback by manually manipulating the links, then those invariants will no longer hold.)
 
-== Version structure ==
+## Version structure
 Each version has this structure:
 <pre>apache.conf
 src
@@ -20,7 +20,7 @@ VERSION</pre>
 
 `src` contains the main Django application, and is hosted by Apache using mod_wsgi. Although mod_wsgi, when properly configured, should not serve files indiscriminately from `src`, we try to keep files that must not be exposed over the web outside of `src` where possible, in case of misconfiguration. For that reason `apache.conf` lives at this level, outside of `src`.
 
-=== VERSION file format ===
+### VERSION file format
 There is also the `VERSION` file. This file's format is part of nih's public API, and should hopefully never change. It is as follows:
 1. First line is the full URL of the repository that your repository was cloned from. "By your repository", I mean the repository that the source was deployed from.
 2. Second line is an abitrary string that identifies the version uniquely. In deploy.py this is the git commit hash, but that's not required for this file's format.

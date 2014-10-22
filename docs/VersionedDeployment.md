@@ -26,6 +26,7 @@ VERSION</pre>
 
 ### VERSION file format
 There is also the `VERSION` file. This file's format is part of nih's public API, and should hopefully never change. It is as follows:
+
 1. First line is the full URL of the repository that your repository was cloned from. "By your repository", I mean the repository that the source was deployed from.
 2. Second line is an abitrary string that identifies the version uniquely. In deploy.py this is the git commit hash, but that's not required for this file's format.
 3. Third line is the timestamp of when the deploy was run, in [ISO 8601](http://en.wikipedia.org/wiki/ISO_8601) format.

@@ -10,6 +10,8 @@ Not Invented Here (a jukebox)
 
 This will create `/usr/share/nih`, and an Apache site pointing at the most recently deployed version. Default port is 8888, for historical reasons.
 
+See [Versioned Deployment](docs/VersionedDeployment.md) for more on how deployed is handled.
+
 ### Deploy an update
 
 To deploy new versions:

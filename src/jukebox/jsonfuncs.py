@@ -16,9 +16,17 @@ from django.conf import settings
 from downloader import downloader
 from socket import gethostbyaddr
 
+def make_audioscrobbler():
+    if settings.LASTFM_ENABLED:
+        audioscrobbler.enc = "utf8"
+        return audioscrobbler.AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
+    else:
+        def do_nothing(**kwargs):
+            pass
+        return do_nothing
+
 site = JSONRPCSite()
-audioscrobbler.enc = "utf8"
-post = audioscrobbler.AudioScrobblerPost(username=settings.LASTFM_USER, password=settings.LASTFM_PASSWORD, verbose=True)
+post = make_audioscrobbler()
 
 @jsonrpc_method('get_caller_hostname', site=site)
 def hostname(request):

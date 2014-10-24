@@ -226,9 +226,7 @@ function update_history(entries) {
     contentnode.innerHTML = contents;
 
     itemnode.appendChild(whennode);
-    //itemnode.appendChild(document.createTextNode(" "));
     itemnode.appendChild(whonode);
-    //itemnode.appendChild(document.createTextNode(" "));
     itemnode.appendChild(whatnode);
     itemnode.appendChild(contentnode); 
 
@@ -245,11 +243,11 @@ function format_date(date) {
     var time = '<span class="time">' + date.toLocaleTimeString() + '</span>';
 
     var now = new Date();
-    /*if (date.getDate() != now.getDate() || 
+    if (date.getDate() != now.getDate() || 
         date.getMonth() != now.getMonth() || 
-        date.getFullYear() != now.getFullYear()) {*/
+        date.getFullYear() != now.getFullYear()) {
         time += ' (<span class="date">' + date.toLocaleDateString() + '</span>)';
-//    }
+    }
 
     return time;
 }

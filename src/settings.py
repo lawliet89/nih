@@ -109,6 +109,7 @@ NOSE_ARGS = ["--with-coverage", "--cover-package=nih.jukebox, simple_player", "-
 
 LASTFM_USER="test_erlang"
 LASTFM_PASSWORD="test_erlang"
+LASTFM_ENABLED=False
 
 INSTALLED_APPS = (
     'django.contrib.sites',

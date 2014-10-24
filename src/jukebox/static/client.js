@@ -177,54 +177,60 @@ function update_history(entries) {
 
     previousHistoryEntries = entries;
 
-    var listnode = document.createElement("ol");
+    var listnode = document.createElement("table");
 
     for (var i = entries.length - 1; i >= 0; i--) {
     var entry = entries[i];
-    var itemnode = document.createElement("li");
+    var itemnode = document.createElement("tr");
 
-    var whennode = document.createElement("span");
+    var whennode = document.createElement("td");
     whennode.className = "when";
     var date = new Date();
     date.setTime(entry.when * 1000); // JS wants millis, erlang:now() gives seconds
     whennode.appendChild(document.createTextNode(format_date(date)));
 
-    var whonode = document.createElement("span");
+    var whonode = document.createElement("td");
     whonode.className = "who";
-    whonode.appendChild(document.createTextNode(entry.who));
+    if (entry.who) {
+        whonode.appendChild(document.createTextNode(entry.who));
+    }
 
-    var whatnode = document.createElement("span");
+    var whatnode = document.createElement("td");
     whatnode.className = "what";
+    whatnode.innerHTML = '<span class="' + entry.what + '">' + entry.what + '</span>';
 
-    var whatHTML;
+    var contents;
 
     if (entry.message) {
-        whatHTML = entry.what + ' "' + entry.message + '"';
+        contents = entry.message;
 
         if (entry.track) {
-            whatHTML += '<span class="while-listening"> while listening to '
+            contents += '<span class="while-listening"> while listening to '
                      + new TrackWidget(entry.track, entry.info).domNode.innerHTML
                      + '</span>';
         }
 
-    } else if (entry.what == 'skip') {
-        whatHTML = ' <span class="skip">skip</span> ' 
-                 + new TrackWidget(entry.track, entry.info).domNode.innerHTML;
+    } else if (entry.what == 'skip' 
+            || entry.what == 'play' 
+            || entry.what == 'pause') {
+        contents = new TrackWidget(entry.track, entry.info).domNode.innerHTML;
 
     } else if (entry.error) {
-        whatHTML = '<span class="error">' + JSON.stringify(entry.error) + '</span>';
+        contents = '<span class="error">' + JSON.stringify(entry.error) + '</span>';
 
     } else if (entry.http_error) {
-        whatHTML = '<span class="http-error">' + entry.http_error.response_code + ' downloading ' + entry.http_error.url + '</span>';
+        contents = '<span class="http-error">' + entry.http_error.response_code + ' downloading ' + entry.http_error.url + '</span>';
     }
 
-    whatnode.innerHTML = whatHTML;
+    var contentnode = document.createElement("td");
+    contentnode.innerHTML = contents;
 
     itemnode.appendChild(whennode);
-    itemnode.appendChild(document.createTextNode(" "));
+    //itemnode.appendChild(document.createTextNode(" "));
     itemnode.appendChild(whonode);
-    itemnode.appendChild(document.createTextNode(" "));
+    //itemnode.appendChild(document.createTextNode(" "));
     itemnode.appendChild(whatnode);
+    itemnode.appendChild(contentnode); 
 
     listnode.appendChild(itemnode);
     }
@@ -271,7 +277,7 @@ function do_clear_queue() {
 }
 
 function do_pause(shouldPause) {
-    jb.pause(shouldPause).addCallback(update_player_status);
+    jb.pause(shouldPause, currentUsername).addCallback(update_player_status);
 }
 
 function do_enqueue(trackEntries, atTop) {

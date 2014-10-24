@@ -187,8 +187,14 @@ def set_volume(request, username, value):
 def chat_history(request, limit):
     ret = []
     for item in ChatItem.objects.all()[:limit]:
-        msg = {"when":mktime(item.when.timetuple()),"who":item.who, "what":item.what}
-        if item.what == "skip":
+        msg = { 
+            "when": mktime(item.when.timetuple()),
+            "what": item.what
+        }
+        if item.who:
+            msg["who"] = item.who
+
+        if item.what == "skip" or item.what == "play" or item.what == "pause":
             msg["track"] = {"url":item.info.url}
             msg["info"] = metadata(item.info)
         elif item.what == "failed":
@@ -200,7 +206,8 @@ def chat_history(request, limit):
 
 @jsonrpc_method('chat', site=site)
 def chat(request, username, text):
-    item = ChatItem(what="says", message=text, who=username)
+    current = QueueItem.current()
+    item = ChatItem(what="says", message=text, who=username, info=current.what)
     item.save()
 
 @jsonrpc_method('get_history', site=site)
@@ -253,21 +260,30 @@ def play_current():
                 )
         print "track", track
         post(**track)
+        item = ChatItem(what="play", info=song, who=None)
+        item.save()
     else:
         player.stop()
+        item = ChatItem(what="stop", who=None)
+        item.save()
 
 @jsonrpc_method('pause', site=site)
-def pause(request, shouldPause):
+def pause(request, shouldPause, username):
+    current = QueueItem.current()
     if not shouldPause:
         if player.status == Status.idle and QueueItem.objects.count()>0:
             from cache import is_cached
-            if is_cached(QueueItem.current().what):
+            if is_cached(current.what):
                 play_current()
         elif player.status == Status.paused:
             player.unpause()
+            item = ChatItem(what="play", info=current.what, who=username)
+            item.save()
     else:
         if player.status == Status.playing:
             player.pause()
+            item = ChatItem(what="pause", info=current.what, who=username)
+            item.save()
 
     return status_info(request)
 

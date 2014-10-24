@@ -62,13 +62,13 @@ class MusicFile(models.Model):
 class ChatItem(models.Model):
     what = models.CharField(max_length=200)
     when = models.DateTimeField(auto_now_add=True)
-    who = models.CharField(max_length=200)
+    who = models.CharField(max_length=200, null=True, blank=True)
 
     info = models.ForeignKey('MusicFile', null=True, blank=True)
     message = models.CharField(max_length=1024)
 
     class Meta:
-        ordering = ["-when"]
+        ordering = ["-when", "-id"]
 
     def __unicode__(self):
         ret = "<Chat: %s, %s, %s, "%(self.what, self.when, self.who)

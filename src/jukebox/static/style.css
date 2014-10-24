@@ -138,6 +138,10 @@ abbr {
     color: grey;
 }
 
+#history .when .date, #history .when .time {
+    white-space: nowrap;
+}
+
 #history .what {
     font-weight: bold;
     padding: 2px;

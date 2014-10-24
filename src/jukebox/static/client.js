@@ -187,7 +187,7 @@ function update_history(entries) {
     whennode.className = "when";
     var date = new Date();
     date.setTime(entry.when * 1000); // JS wants millis, erlang:now() gives seconds
-    whennode.appendChild(document.createTextNode(format_date(date)));
+    whennode.innerHTML = format_date(date);
 
     var whonode = document.createElement("td");
     whonode.className = "who";
@@ -242,14 +242,14 @@ function update_history(entries) {
 }
 
 function format_date(date) {
-    var time = date.toLocaleTimeString();
+    var time = '<span class="time">' + date.toLocaleTimeString() + '</span>';
 
     var now = new Date();
-    if (date.getDate() != now.getDate() || 
+    /*if (date.getDate() != now.getDate() || 
         date.getMonth() != now.getMonth() || 
-        date.getFullYear() != now.getFullYear()) {
-        time += " (" + date.toLocaleDateString() + ")";
-    }
+        date.getFullYear() != now.getFullYear()) {*/
+        time += ' (<span class="date">' + date.toLocaleDateString() + '</span>)';
+//    }
 
     return time;
 }

@@ -3,101 +3,89 @@
     <head>
         <title>Django Jukebox</title>
         <script type="text/javascript" src="static/prototype-1.4.0.js" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
         <script type="text/javascript" src="static/json.js" />
         <script type="text/javascript" src="static/jsonrpc.js" />
         <script type="text/javascript" src="static/client.js" />
-        <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
-        <script type="text/javascript">var jq = jQuery.noConflict();</script>
         <link rel="stylesheet" href="static/style.css" type="text/css" />
         <link rel="icon" href="static/favicon.png" type="image/png" />
     </head>
     <body>
         <div class="controls">
-            <form action="" method="GET">
-                Username:
-                <input id="username" name="username" type="text" value="?" />
-                <input type="submit" value="Change" />
-            </form>
-            <br />
-            <button onclick="do_skip()">Skip</button>
-            <button onclick="do_pause(true)">Pause</button>
-            <button onclick="do_pause(false)">Unpause</button>
-            <p style="text-align: right">
-                <a href="${repo_url}/issues">Bug reports</a>
-                <?python has_lastfm = lastfm_name != ''
-          ?>
-                <py:if test="has_lastfm">
-                    <a href="http://www.last.fm/user/${lastfm_name}">Last.fm</a>
-                </py:if>
-            </p>
-        </div>
-        <table class="volume-control">
-            <tr>
-                <td id="volume-indicator" />
-                <td id="volume-ticks" />
-                <td id="volume">?</td>
-                <td id="volume-who" />
-            </tr>
-        </table>
-        <div>
-            <div class="mainColumn">
+            <div class="buttons">
+                <button onclick="do_skip()">Skip</button>
+                <button onclick="do_pause(true)">Pause</button>
+                <button onclick="do_pause(false)">Play</button>
+            </div>
+            <div class="status">
                 <div class="now-playing">
-                    <h2 id="statusatom">?</h2>
-                    <span id="nowplaying">?</span>
-                </div>
-                <div class="columnClear" />
-            </div>
-            <div class="leftColumn">
-                <div class="searchpanel">
-                    <h2>Search</h2>
-                    <div class="paneBody">
-                        <form onsubmit="do_search(); return false;">
-                            <input id="searchtext" name="searchtext" type="text" value="" />
-                            <button onclick="do_search(); return false;">Search</button>
-                            <button onclick="do_random(10); return false;">Rnd(10)</button>
-                        </form>
+                    <div class="status-row">
+                        <span id="statusatom">?</span>
+                        <span class="volume-control">
+                            <span id="volume-indicator" />
+                            <span>Volume<input id="volume-selector" type="range" /></span>
+                            <span id="volume">?</span>
+                            <span id="volume-who" />
+                        </span>
                     </div>
+                    <div id="nowplaying">?</div>
                 </div>
-                <div class="columnClear" />
             </div>
-            <div class="columnClear" />
         </div>
-        <div>
-            <div class="mainColumn">
-                <div>
-                    <h2>Queue</h2>
-                    <div id="statuspanel" class="paneBody playlistQueue" />
-                </div>
-                <div class="columnClear" />
+
+        <div class="queue" style="position:relative;">
+            <h2>Queue</h2>
+            <div style="position:absolute; top: 20px; left: 85px;" class="paneBody">
+                <form onsubmit="do_search(); return false;">
+                    <input id="searchtext" name="searchtext" type="text" value="" />
+                    <button onclick="do_search(); return false;">Search</button>
+                    <button onclick="do_random(10); return false;">10 random tracks</button>
+                </form>
             </div>
-            <div class="leftColumn">
-                <div>
-                    <h2>History</h2>
-                    <div class="paneBody">
-                        <div class="history" id="history" />
-                        <form onsubmit="send_chat(); return false;">
-                            <input id="chatMessage" name="chatMessage" type="text" value="" />
-                            <button onclick="send_chat(); return false;">Chat</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="columnClear" />
-            </div>
-            <div class="columnClear" />
+            <div id="statuspanel" class="paneBody playlistQueue" />
         </div>
+        <div class="history">
+            <h2>History</h2>
+            <div class="paneBody">
+                <div id="history" />
+                <div class="chat">
+                    <form onsubmit="send_chat(); return false;">
+                        <input id="chatMessage" name="chatMessage" type="text" value="" />
+                        <button onclick="send_chat(); return false;">Chat</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+
         <div id="searchResultsContainer">
             <h2>Search Results</h2>
             <div class="paneBody">
                 <div id="searchResults" class="searchResults" />
             </div>
         </div>
-        <a href="/config">(configuration)</a>
-        <br />
-        <a href="/admin">Admin</a>
-        <div class="version">
-            <a href="">This version</a>
-            published on
-            <span class="timestamp" />
+
+        <div class="footer">
+            <div class="username">
+                <form action="" method="GET">
+                    Username:
+                    <input id="username" name="username" type="text" value="?" />
+                    <input type="submit" value="Change" />
+                </form>
+            </div>
+            <a href="/config">Configuration</a> |
+            <a href="/admin">Admin</a> | 
+            <a href="https://github.com/palfrey/nih/issues">Bug reports</a> |
+            <?python has_lastfm = lastfm_name != ''
+      ?>
+            <py:if test="has_lastfm">
+                <a href="http://www.last.fm/user/${lastfm_name}">Last.fm</a> |
+            </py:if>
+            <span class="version">
+                <a href="">This version</a>
+                published on
+                <span class="timestamp" />
+            </span>
         </div>
         <script>Event.observe(window, 'load', initClient);</script>
     </body>

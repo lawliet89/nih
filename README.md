@@ -40,3 +40,6 @@ Bootstrap will
 * Checkout dependencies that are not available as packages using `git submodule`
 
 You can then develop using the Django development server, or deploy to Apache as above
+
+## Scrobbling
+This is disabled by default. You can enable it by changing `settings.LASTFM_ENABLED` to true. There are credentials for a Last.fm 'test_erlang' account in the settings file.

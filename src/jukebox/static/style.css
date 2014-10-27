@@ -138,8 +138,11 @@ abbr {
     color: grey;
 }
 
-#history .skip {
-    background: yellow;
+#history .when .date, #history .when .time {
+    white-space: nowrap;
+}
+
+#history .what {
     font-weight: bold;
     padding: 2px;
 }
@@ -254,12 +257,12 @@ a.folderLink {
 
 .mainColumn {
     float: right;
-    width: 60%;
+    width: 50%;
     left: 100px;
 }
 .leftColumn {
     float: left;
-    width: 40%;
+    width: 50%;
 }
 .columnClear {
     clear: both;
@@ -304,13 +307,9 @@ span.rootCount {
     font-family: mono;
 }
 
-#history .when {
+#history .when, #history .who, #history .what {
     font-size: 0.8em;
     color: #888;
-}
-
-#history .who {
-    font-weight: bold;
 }
 
 .version {

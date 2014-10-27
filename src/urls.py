@@ -23,3 +23,9 @@ urlpatterns = patterns('',
 )
 print "opened urls.py"
 print jukebox.jsonfuncs.site
+
+#One time startup
+#http://stackoverflow.com/questions/6791911/execute-code-when-django-starts-once-only
+
+from jukebox.models import ChatItem
+ChatItem(what="start", message="Server started", who=None).save()

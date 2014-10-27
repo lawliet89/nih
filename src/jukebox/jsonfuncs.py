@@ -187,8 +187,14 @@ def set_volume(request, username, value):
 def chat_history(request, limit):
     ret = []
     for item in ChatItem.objects.all()[:limit]:
-        msg = {"when":mktime(item.when.timetuple()),"who":item.who, "what":item.what}
-        if item.what == "skip":
+        msg = { 
+            "when": mktime(item.when.timetuple()),
+            "what": item.what
+        }
+        if item.who:
+            msg["who"] = item.who
+
+        if item.what == "skip" or item.what == "play" or item.what == "pause":
             msg["track"] = {"url":item.info.url}
             msg["info"] = metadata(item.info)
         elif item.what == "failed":
@@ -200,8 +206,7 @@ def chat_history(request, limit):
 
 @jsonrpc_method('chat', site=site)
 def chat(request, username, text):
-    item = ChatItem(what="says", message=text, who=username)
-    item.save()
+    ChatItem(what="says", message=text, who=username).save()
 
 @jsonrpc_method('get_history', site=site)
 def get_history(request, limit):
@@ -223,8 +228,7 @@ player.next_track = next_track
 def skip(request, username):
     current = QueueItem.current()
     if current != None:
-        item = ChatItem(what="skip", info = current.what, who=username)
-        item.save()
+        ChatItem(what="skip", info = current.what, who=username).save()
         print "saved item"
         next_track()
     return status_info(request)
@@ -253,21 +257,26 @@ def play_current():
                 )
         print "track", track
         post(**track)
+        ChatItem(what="play", info=song, who=None).save()
     else:
         player.stop()
+        ChatItem(what="stop", who=None).save()
 
 @jsonrpc_method('pause', site=site)
-def pause(request, shouldPause):
+def pause(request, shouldPause, username):
+    current = QueueItem.current()
     if not shouldPause:
         if player.status == Status.idle and QueueItem.objects.count()>0:
             from cache import is_cached
-            if is_cached(QueueItem.current().what):
+            if is_cached(current.what):
                 play_current()
         elif player.status == Status.paused:
             player.unpause()
+            ChatItem(what="play", info=current.what, who=username).save()
     else:
         if player.status == Status.playing:
             player.pause()
+            ChatItem(what="pause", info=current.what, who=username).save()
 
     return status_info(request)
 

@@ -292,3 +292,6 @@ def get_version(request):
     import version
     return version.get_version()
 
+def get_status():
+    return player.status
+

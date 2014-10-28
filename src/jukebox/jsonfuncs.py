@@ -194,7 +194,14 @@ def chat_history(request, limit):
         if item.who:
             msg["who"] = item.who
 
-        if item.what == "skip" or item.what == "play" or item.what == "pause":
+        player_actions = [
+            'skip',
+            'play',
+            'pause',
+            'resume',
+        ]
+
+        if item.what in player_actions:
             msg["track"] = {"url":item.info.url}
             msg["info"] = metadata(item.info)
         elif item.what == "failed":
@@ -257,7 +264,7 @@ def play_current():
                 )
         print "track", track
         post(**track)
-        ChatItem(what="play", info=song, who=None).save()
+        ChatItem(what="play", info=song, who=toplay.who).save()
     else:
         player.stop()
         ChatItem(what="stop", who=None).save()
@@ -272,7 +279,7 @@ def pause(request, shouldPause, username):
                 play_current()
         elif player.status == Status.paused:
             player.unpause()
-            ChatItem(what="play", info=current.what, who=username).save()
+            ChatItem(what="resume", info=current.what, who=username).save()
     else:
         if player.status == Status.playing:
             player.pause()

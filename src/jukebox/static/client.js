@@ -212,7 +212,8 @@ function update_history(entries) {
 
     } else if (entry.what == 'skip' 
             || entry.what == 'play' 
-            || entry.what == 'pause') {
+            || entry.what == 'pause'
+            || entry.what == 'resume') {
         contents = new TrackWidget(entry.track, entry.info).domNode.innerHTML;
 
     } else if (entry.error) {

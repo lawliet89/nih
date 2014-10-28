@@ -1,6 +1,7 @@
 from utils import urlopen, URLError, BackgroundTask, registerStartupTask
 from os.path import join
 from models import *
+from simple_player import Status
 
 class Downloader(BackgroundTask):
     def processItem(self,item):
@@ -16,14 +17,15 @@ class Downloader(BackgroundTask):
             item.save()
 
     def postProcessItem(self, item):
-        from jsonfuncs import next_track, play_current
+        from jsonfuncs import next_track, play_current, get_status
+        current = QueueItem.current().what
         if item.failed:
             print "item failed", item
             char = ChatItem(what="failed", info = item)
             char.save()
-            if QueueItem.current() == item:
+            if current == item:
                 next_track()
-        elif QueueItem.current() == item and player.status == Status.playing:
+        elif current == item and get_status() == Status.idle:
             play_current()
     
     def downloads(self):

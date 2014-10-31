@@ -24,6 +24,7 @@ def current_rescans(request):
 
 @jsonrpc_method("rescan_root", site=site)
 def rescan_root(request, root):
+    result = "success"
     for x in WebPath.get_root_nodes():
         if x.url == root:
             spider.pause()
@@ -38,8 +39,13 @@ def rescan_root(request, root):
         except Exception, e:
             print "don't like", root, e
             print request.META
+            result = "failure"
         
-    return current_rescans(request)
+    return {
+        "result": result,
+        "root": root,
+        "current_rescans": current_rescans(request)
+    }
         
 @jsonrpc_method("remove_root", site=site)
 def remove_root(request, root):

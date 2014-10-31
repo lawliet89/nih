@@ -7,6 +7,7 @@ import publish
 import filter
 import migrate
 from helpers import sh
+from status import wait_until_idle
 
 def setup_apache():
     print "Ensuring apache is installed wth mod_wsgi and mod_headers"
@@ -38,6 +39,7 @@ def collect_files():
     filter.cleanup_dir(path)
 
 def deploy(target, site):
+    wait_until_idle()
     setup_apache()
     apache('stop')
     migrate.migrate(target)

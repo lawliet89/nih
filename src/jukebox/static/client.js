@@ -273,13 +273,13 @@ function finish_editing_username(save) {
     box.hide();
     jq('#modal').hide();
     if (save) {
-        jq('#username').text(box.find('input').val());
-        change_username();
+        var newName = box.find('input').val();
+        change_username(newName);
     }
 }
 
-function change_username() {
-    jb.set_username(jq('#username').text()).addCallback(update_username);
+function change_username(newName) {
+    jb.set_username(newName).addCallback(update_username);
 }
 
 function do_skip() {
@@ -562,15 +562,8 @@ function initClient() {
 
     function onReady() {
         jb.options.timeout = 30000; /* milliseconds */
-        var username = document.location.search.match(/username=([^&]+)/);
-        if (username) {
-            username = username[1].replace(/\+/g, " ");
-            username = unescape(username);
-        }
-
-        if (username) {
-            document.getElementById('username').value = username;
-            change_username();
+        if (usernameFromRequest) {
+            change_username(usernameFromRequest);
         } else {
             jb.get_username().addCallback(update_username);
         }

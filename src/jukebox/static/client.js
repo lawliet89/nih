@@ -4,14 +4,12 @@ var currentUsername = "unknown";
 var refresh_timer = null; // will be result of setTimeout below.
 var clock_timer = null; // will be result of setTimeout below.
 function refresh_timer_tick() {
-    jb.get_queue()
-    .addCallback(function (status)
-    {
-    update_player_status(status);
-    refresh_history();
-    refresh_volume();
-    // Only rearm the timer once we know the server's answering requests.
-    arm_refresh_timer();
+    jb.get_queue().addCallback(function (status) {
+        update_player_status(status);
+        refresh_history();
+        refresh_volume();
+        // Only rearm the timer once we know the server's answering requests.
+        arm_refresh_timer();
     });
 }
 function arm_refresh_timer() {
@@ -264,7 +262,8 @@ function update_volume(result) {
 }
 
 function change_username() {
-    update_username(document.getElementById('username').value);
+    var value = document.getElementById('username').value;
+    jb.set_username(value).addCallback(update_username);
 }
 
 function do_skip() {
@@ -557,7 +556,7 @@ function initClient() {
             document.getElementById('username').value = username;
             change_username();
         } else {
-            jb.get_caller_hostname().addCallback(update_username);
+            jb.get_username().addCallback(update_username);
         }
         
         get_version();

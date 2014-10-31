@@ -16,7 +16,7 @@
             <form onsubmit="return false;">
                 Username:
                 <input id="username" name="username" type="text" value="?" />
-                <input type="submit" value="Change" />
+                <button onclick="change_username()">Change</button>
             </form>
             <br />
             <button onclick="do_skip()">Skip</button>

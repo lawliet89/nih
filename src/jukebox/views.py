@@ -8,6 +8,10 @@ def index(request):
         "lastfm_name": settings.LASTFM_USER,
         "repo_url": settings.REPO_URL,
     }
+    username = request.GET.get('username', None)
+    if username:
+        data["username"] = username
+    data["has_username"] = "username" in data
     return render_to_response("index.xml", data)
 
 def spider(request):

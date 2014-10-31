@@ -8,16 +8,20 @@
         <script type="text/javascript" src="static/client.js" />
         <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
         <script type="text/javascript">var jq = jQuery.noConflict();</script>
+        <script type="text/javascript">
+            var usernameFromRequest;
+            <py:if test="has_username">
+                usernameFromRequest = '${username}';
+             </py:if> 
+        </script>
         <link rel="stylesheet" href="static/style.css" type="text/css" />
         <link rel="icon" href="static/favicon.png" type="image/png" />
     </head>
     <body>
-        <div class="controls">
-            <form action="" method="GET">
-                Username:
-                <input id="username" name="username" type="text" value="?" />
-                <input type="submit" value="Change" />
-            </form>
+        <div class="controls">            
+            Username: <span id="username">?</span>
+            <button onclick="edit_username()">Change</button>
+
             <br />
             <button onclick="do_skip()">Skip</button>
             <button onclick="do_pause(true)">Pause</button>
@@ -100,5 +104,17 @@
             <span class="timestamp" />
         </div>
         <script>Event.observe(window, 'load', initClient);</script>
+
+        <div id="modal">
+            <div class="modalbox" id="edit-username">  
+                <h3>Change username</h3>  
+                <form onsubmit="return false;">
+                    <input name="username" type="text" value="?" />
+                    <br />
+                    <button onclick="finish_editing_username(true);">Save</button>
+                    <button onclick="finish_editing_username(false);">Cancel</button>
+                </form>
+            </div>
+        </div>
     </body>
 </html>

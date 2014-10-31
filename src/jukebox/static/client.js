@@ -4,14 +4,12 @@ var currentUsername = "unknown";
 var refresh_timer = null; // will be result of setTimeout below.
 var clock_timer = null; // will be result of setTimeout below.
 function refresh_timer_tick() {
-    jb.get_queue()
-    .addCallback(function (status)
-    {
-    update_player_status(status);
-    refresh_history();
-    refresh_volume();
-    // Only rearm the timer once we know the server's answering requests.
-    arm_refresh_timer();
+    jb.get_queue().addCallback(function (status) {
+        update_player_status(status);
+        refresh_history();
+        refresh_volume();
+        // Only rearm the timer once we know the server's answering requests.
+        arm_refresh_timer();
     });
 }
 function arm_refresh_timer() {
@@ -24,11 +22,6 @@ function refresh_history() {
 
 function refresh_volume() {
     jb.get_volume().addCallback(update_volume);
-}
-
-function update_username(newName) {
-    currentUsername = newName;
-    document.getElementById('username').value = newName;
 }
 
 function button(actionfn, text, maybeClass, maybeTitle) {
@@ -263,8 +256,30 @@ function update_volume(result) {
     current_volume = vol;
 }
 
-function change_username() {
-    update_username(document.getElementById('username').value);
+function update_username(newName) {
+    currentUsername = newName;
+    jq('#username').text(newName);
+}
+
+function edit_username() {
+    var box = jq('#edit-username');
+    box.find('input').val(currentUsername);
+    box.show();
+    jq('#modal').fadeIn();
+}
+
+function finish_editing_username(save) {
+    var box = jq('#edit-username');
+    box.hide();
+    jq('#modal').hide();
+    if (save) {
+        var newName = box.find('input').val();
+        change_username(newName);
+    }
+}
+
+function change_username(newName) {
+    jb.set_username(newName).addCallback(update_username);
 }
 
 function do_skip() {
@@ -547,17 +562,10 @@ function initClient() {
 
     function onReady() {
         jb.options.timeout = 30000; /* milliseconds */
-        var username = document.location.search.match(/username=([^&]+)/);
-        if (username) {
-            username = username[1].replace(/\+/g, " ");
-            username = unescape(username);
-        }
-
-        if (username) {
-            document.getElementById('username').value = username;
-            change_username();
+        if (usernameFromRequest) {
+            change_username(usernameFromRequest);
         } else {
-            jb.get_caller_hostname().addCallback(update_username);
+            jb.get_username().addCallback(update_username);
         }
         
         get_version();

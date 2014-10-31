@@ -28,12 +28,17 @@ def make_audioscrobbler():
 site = JSONRPCSite()
 post = make_audioscrobbler()
 
-@jsonrpc_method('get_caller_hostname', site=site)
-def hostname(request):
-    if "REMOTE_HOST" in request.META.keys() and request.META["REMOTE_HOST"] != None:
-        return str(request.META["REMOTE_HOST"])
-    else:
-        return gethostbyaddr(request.META["REMOTE_ADDR"])[0]
+@jsonrpc_method('get_username', site=site)
+def get_username(request):
+    return request.session.get('username', None)         \
+        or str(request.META.get("REMOTE_HOST", None))    \
+        or gethostbyaddr(request.META["REMOTE_ADDR"])[0] \
+        or "Unknown"
+
+@jsonrpc_method('set_username', site=site)
+def set_username(request, username):
+    request.session['username'] = username
+    return username
 
 def metadata(item):
     if not item.got_metadata:

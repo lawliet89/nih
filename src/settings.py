@@ -111,6 +111,8 @@ LASTFM_USER="test_erlang"
 LASTFM_PASSWORD="test_erlang"
 LASTFM_ENABLED=False
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
 INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.auth',

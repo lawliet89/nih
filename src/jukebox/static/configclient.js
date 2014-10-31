@@ -3,15 +3,12 @@ var config = null;
 var refresh_timer = null; // will be result of setTimeout below.
 function refresh_timer_tick() {
     config.all_roots()
-    .addCallback(function (roots)
-    {
-    update_roots(roots);
-    config.current_rescans()
-    .addCallback(function (urls)
-    {
-        update_rescans(urls);
-        arm_refresh_timer();
-    });
+    .addCallback(function (roots) {
+        update_roots(roots);
+        config.current_rescans().addCallback(function (urls) {
+            update_rescans(urls);
+            arm_refresh_timer();
+        });
     });
 }
 function arm_refresh_timer() {
@@ -34,13 +31,13 @@ function do_add_root() {
 
 function rescanner_for(url) {
     return function () {
-    config.rescan_root(url).addCallback(update_rescans);
+        config.rescan_root(url).addCallback(rescan_handler);
     };
 }
 
 function deleter_for(url) {
     return function () {
-    config.remove_root(url).addCallback(update_roots);
+        config.remove_root(url).addCallback(update_roots);
     };
 }
 
@@ -86,13 +83,20 @@ function update_roots(roots) {
     d.appendChild(listnode);
 }
 
+function rescan_handler(result) {
+    if (result.result != "success") {
+        alert("Failed to rescan root " + result.root + ". Perhaps you typed the URL wrong, or that server is turned off?");
+    }
+    update_rescans(result.current_rescans);
+}
+
 function update_rescans(urls) {
     var listnode = document.createElement("ul");
     for (var i = 0; i < urls.length; i++) {
-    var root = urls[i];
-    var itemnode = document.createElement("li");
-    itemnode.appendChild(document.createTextNode(root));
-    listnode.appendChild(itemnode);
+        var root = urls[i];
+        var itemnode = document.createElement("li");
+        itemnode.appendChild(document.createTextNode(root));
+        listnode.appendChild(itemnode);
     }
 
     var d = document.getElementById("rescans");

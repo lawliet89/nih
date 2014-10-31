@@ -261,11 +261,23 @@ function update_username(newName) {
     jq('#username').text(newName);
 }
 
+function showModal() {
+    jq('#modal').fadeIn();
+    jq('.modalbox').each(function() {
+        jq(this).css({
+            'margin-left': -jq(this).width() / 2,
+            'margin-top': -jq(this).height() / 2,
+        });
+    });
+}
+
 function edit_username() {
     var box = jq('#edit-username');
-    box.find('input').val(currentUsername);
+    var input = box.find('input');
+    input.val(currentUsername);
     box.show();
-    jq('#modal').fadeIn();
+    showModal();
+    input.focus().select();
 }
 
 function finish_editing_username(save) {

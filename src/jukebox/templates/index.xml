@@ -28,8 +28,6 @@
             <button onclick="do_pause(false)">Unpause</button>
             <p style="text-align: right">
                 <a href="${repo_url}/issues">Bug reports</a>
-                <?python has_lastfm = lastfm_name != ''
-          ?>
                 <py:if test="has_lastfm">
                     <a href="http://www.last.fm/user/${lastfm_name}">Last.fm</a>
                 </py:if>

@@ -8,6 +8,7 @@ def index(request):
         "lastfm_name": settings.LASTFM_USER,
         "repo_url": settings.REPO_URL,
     }
+    data["has_lastfm"] = settings.LASTFM_ENABLED
     username = request.GET.get('username', None)
     if username:
         data["username"] = username

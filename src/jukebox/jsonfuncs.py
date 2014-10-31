@@ -30,14 +30,10 @@ post = make_audioscrobbler()
 
 @jsonrpc_method('get_username', site=site)
 def get_username(request):
-    username = request.session.get('username', None)
-    if not username and "REMOTE_HOST" in request.META.keys():
-        username = str(request.META["REMOTE_HOST"])
-    if not username:
-        username = gethostbyaddr(request.META["REMOTE_ADDR"])[0]
-    if not username:
-        username = "Unknown"
-    return username
+    return request.session.get('username', None)         \
+        or str(request.META.get("REMOTE_HOST", None))    \
+        or gethostbyaddr(request.META["REMOTE_ADDR"])[0] \
+        or "Unknown"
 
 @jsonrpc_method('set_username', site=site)
 def set_username(request, username):

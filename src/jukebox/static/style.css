@@ -321,3 +321,29 @@ span.rootCount {
 .version a, .version a:visited {
     color: #777;
 }
+
+#modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    display: none;
+}
+
+.modalbox {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 200px;
+    margin-left: -150px;
+    margin-top: -100px;
+    background-color: White;
+    border: 1px solid black;
+    z-index: 20;
+    padding: 10px;
+}

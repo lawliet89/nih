@@ -24,11 +24,6 @@ function refresh_volume() {
     jb.get_volume().addCallback(update_volume);
 }
 
-function update_username(newName) {
-    currentUsername = newName;
-    document.getElementById('username').value = newName;
-}
-
 function button(actionfn, text, maybeClass, maybeTitle) {
     var b = document.createElement("button");
     b.className = "action-span";
@@ -261,9 +256,30 @@ function update_volume(result) {
     current_volume = vol;
 }
 
+function update_username(newName) {
+    currentUsername = newName;
+    jq('#username').text(newName);
+}
+
+function edit_username() {
+    var box = jq('#edit-username');
+    box.find('input').val(currentUsername);
+    box.show();
+    jq('#modal').fadeIn();
+}
+
+function finish_editing_username(save) {
+    var box = jq('#edit-username');
+    box.hide();
+    jq('#modal').hide();
+    if (save) {
+        jq('#username').text(box.find('input').val());
+        change_username();
+    }
+}
+
 function change_username() {
-    var value = document.getElementById('username').value;
-    jb.set_username(value).addCallback(update_username);
+    jb.set_username(jq('#username').text()).addCallback(update_username);
 }
 
 function do_skip() {

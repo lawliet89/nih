@@ -12,12 +12,10 @@
         <link rel="icon" href="static/favicon.png" type="image/png" />
     </head>
     <body>
-        <div class="controls">
-            <form onsubmit="return false;">
-                Username:
-                <input id="username" name="username" type="text" value="?" />
-                <button onclick="change_username()">Change</button>
-            </form>
+        <div class="controls">            
+            Username: <span id="username">?</span>
+            <button onclick="edit_username()">Change</button>
+
             <br />
             <button onclick="do_skip()">Skip</button>
             <button onclick="do_pause(true)">Pause</button>
@@ -100,5 +98,17 @@
             <span class="timestamp" />
         </div>
         <script>Event.observe(window, 'load', initClient);</script>
+
+        <div id="modal">
+            <div class="modalbox" id="edit-username">  
+                <h3>Change username</h3>  
+                <form onsubmit="return false;">
+                    <input name="username" type="text" value="?" />
+                    <br />
+                    <button onclick="finish_editing_username(true);">Save</button>
+                    <button onclick="finish_editing_username(false);">Cancel</button>
+                </form>
+            </div>
+        </div>
     </body>
 </html>

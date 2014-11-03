@@ -378,25 +378,25 @@ function TrackWidget(track, info) {
     this.domNode = document.createElement("span");
     this.domNode.className = "jukeboxTrack";
 
-    var partHtml = '<span class="finalUrlPart">';
-    partHtml += '<abbr title="' + unescape(this.track.url) + '">';
-    
-    if (info.trackName) {
-        partHtml += info.trackName;
-        if (info.artistName) partHtml += ' - ' + info.artistName;
-        partHtml += '<a href="' + this.track.url + '" class="trackUrlLink">(...)</a>';
-    } else {
-        partHtml += short_url(this.track.url);
-        partHtml += '<a href="' + this.track.url + '" class="trackUrlLink">(...)</a>';
+    function getName(url, info) {
+        if (!info.trackName) {
+            return short_url(url);
+        }
+        parts = [info.trackNumber, info.trackName, track.artistName];
+        return parts.filter(function(part) { return part }).join(" - ");     
     }
 
+    var partHtml = '<span class="finalUrlPart">';
+    partHtml += '<abbr title="' + unescape(this.track.url) + '">';    
+    partHtml += getName(track.url, info);
+    partHtml += '<a href="' + this.track.url + '" class="trackUrlLink">(...)</a>';
     partHtml += '</abbr>';
     partHtml += '</span>';
 
     this.domNode.innerHTML = partHtml;
 
     if (this.track.username) {
-    this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
+        this.domNode.appendChild(textSpan(" (" + this.track.username + ")", "trackUsername"));
     }
 }
 
@@ -434,40 +434,40 @@ function display_search_results(ungrouped_results, divnode) {
     divnode.innerHTML = "";
 
     for (var groupIndex = 0; groupIndex < groups.length; groupIndex++) {
-    var listnode = document.createElement("ul");
-    var group = groups[groupIndex];
+        var listnode = document.createElement("ul");
+        var group = groups[groupIndex];
 
-    for (var i = 0; i < group.results.length; i++) {
-        var track = group.results[i];
-        var itemnode = document.createElement("li");
-        itemnode.appendChild(button(enqueuer_for([track], false), "enqueue",
-                    "imageButton enqueueButton",
-                    "Append track to queue"));
-        itemnode.appendChild(spacerText(" "));
-        itemnode.appendChild(button(enqueuer_for([track], true), "@top",
-                    "imageButton atTopButton",
-                    "Prepend track to queue"));
-        itemnode.appendChild(new TrackWidget(track, null).domNode);
-        listnode.appendChild(itemnode);
-    }
+        for (var i = 0; i < group.results.length; i++) {
+            var track = group.results[i];
+            var itemnode = document.createElement("li");
+            itemnode.appendChild(button(enqueuer_for([track], false), "enqueue",
+                        "imageButton enqueueButton",
+                        "Append track to queue"));
+            itemnode.appendChild(spacerText(" "));
+            itemnode.appendChild(button(enqueuer_for([track], true), "@top",
+                        "imageButton atTopButton",
+                        "Prepend track to queue"));
+            itemnode.appendChild(new TrackWidget(track, track.info).domNode);
+            listnode.appendChild(itemnode);
+        }
 
-    var enqF = document.createElement("a");
-    enqF.onclick = enqueuer_for(group.results, false);
-    enqF.innerHTML = "(enqueue)";
+        var enqF = document.createElement("a");
+        enqF.onclick = enqueuer_for(group.results, false);
+        enqF.innerHTML = "(enqueue)";
 
-    var folderName = document.createElement("a");
-    folderName.className = "folderLink";
-    folderName.href = group.folder;
-    folderName.appendChild(document.createTextNode(unescape(group.folder)));
+        var folderName = document.createElement("a");
+        folderName.className = "folderLink";
+        folderName.href = group.folder;
+        folderName.appendChild(document.createTextNode(unescape(group.folder)));
 
-    var heading = document.createElement("div");
-    heading.className = "folderHeading";
-    heading.appendChild(enqF);
-    heading.appendChild(document.createTextNode(" "));
-    heading.appendChild(folderName);
+        var heading = document.createElement("div");
+        heading.className = "folderHeading";
+        heading.appendChild(enqF);
+        heading.appendChild(document.createTextNode(" "));
+        heading.appendChild(folderName);
 
-    divnode.appendChild(heading);
-    divnode.appendChild(listnode);
+        divnode.appendChild(heading);
+        divnode.appendChild(listnode);
     }
 
     var enqAll = new ButtonWidget("Enqueue all").domNode;

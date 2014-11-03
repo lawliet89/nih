@@ -43,7 +43,13 @@ def set_username(request, username):
 def metadata(item):
     if not item.got_metadata:
         return None
-    ret = {"artistName":item.artist, "albumTitle":item.album, "trackName":item.title, "trackNumber":item.trackNumber, "totalTime": item.trackLength}
+    ret = { 
+        "artistName": item.artist, 
+        "albumTitle": item.album, 
+        "trackName": item.title, 
+        "trackNumber":item.trackNumber, 
+        "totalTime": item.trackLength
+    }
     if albumArt(item):
         ret["cacheHash"] = item.hash()
     return ret
@@ -81,7 +87,7 @@ def search(request, inp):
     for term in inp:
         items = items.filter(url__icontains=term)
     items = items.order_by('parent__url', 'url')
-    return [{"url":x.url} for x in items]
+    return [{"url": x.url, "info": metadata(x)} for x in items]
 
 @jsonrpc_method('randomtracks', site=site)
 def randomtracks(request, count):

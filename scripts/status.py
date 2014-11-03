@@ -3,7 +3,12 @@ import json
 import time
 
 def wait_until_idle():
-    while get_status() != 'idle':
+    status = None
+    while True:
+        status = get_status()
+        print "Jukebox status: %s" % status
+        if status == 'idle':
+            break
         time.sleep(5)
 
 def get_status():

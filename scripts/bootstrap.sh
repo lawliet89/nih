@@ -2,7 +2,7 @@
 set -e
 git submodule update --init --recursive
 apt-get install python-pip python-musicbrainz2 python-alsaaudio python-magic python-mysqldb mysql-server python-gst0.1
-pip install django==1.3.1 django-nose South mutagen BeautifulSoup django-genshi
+pip install django==1.3.1 django-nose South mutagen BeautifulSoup django-genshi requests
 
 python scripts/setupdb.py
 echo ""

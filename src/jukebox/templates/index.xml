@@ -105,12 +105,13 @@
 
         <div id="modal">
             <div class="modalbox" id="edit-username">  
-                <h3>Change username</h3>  
+                <h2>Change username</h2>  
                 <form onsubmit="return false;">
-                    <input name="username" type="text" value="?" />
-                    <br />
-                    <button onclick="finish_editing_username(true);">Save</button>
-                    <button onclick="finish_editing_username(false);">Cancel</button>
+                    <p><input name="username" type="text" value="?" /></p>
+                    <div class="dialog-buttons"><div>
+                        <button onclick="finish_editing_username(true);">Save</button>
+                        <button onclick="finish_editing_username(false);">Cancel</button>
+                    </div></div>
                 </form>
             </div>
         </div>

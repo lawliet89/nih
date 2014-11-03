@@ -39,7 +39,6 @@ def collect_files():
     filter.cleanup_dir(path)
 
 def deploy(target, site):
-    wait_until_idle()
     setup_apache()
     apache('stop')
     migrate.migrate(target)
@@ -60,6 +59,14 @@ if __name__ == "__main__":
         help='The directory to publish files to. Default /usr/share/nih')
     parser.add_argument('--site', required=False, default='nih',
         help='The name of the site in Apache. Default "nih"')
+    parser.add_argument('--wait', dest='wait', action='store_true',
+        help='Wait for Jukebox to be idle before deploying')
+    parser.add_argument('--no-wait', dest='wait', action='store_false',
+        help='Do not wait for Jukebox to be idle before deploying')
+    parser.set_defaults(wait=True)
     args = parser.parse_args()
 
+    if args.wait:
+        print "Waiting for Jukebox to be idle. To override this behaviour use the '--no-wait' option"
+        wait_until_idle()
     deploy(args.target, args.site)

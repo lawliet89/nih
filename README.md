@@ -10,7 +10,9 @@ Not Invented Here (a jukebox)
 
 This will create `/usr/share/nih`, and an Apache site pointing at the most recently deployed version. Default port is 8888, for historical reasons.
 
-See [Versioned Deployment](docs/VersionedDeployment.md) for more on how deployed is handled.
+See [Versioned Deployment](docs/VersionedDeployment.md) for more on how deployment is handled.
+
+By default, the deploy script will wait until the Jukebox is idle (not playing any music) before making any changes, so you can deploy away without any worry of an interruption to the music. Use `--help` to learn how to change the default settings.
 
 ### Deploy an update
 

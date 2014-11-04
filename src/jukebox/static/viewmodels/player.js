@@ -1,30 +1,29 @@
 function PlayerViewModel(user) {
-    this.trackName = ko.observable("?");
+    var me = this;
     this.status = ko.observable("?");
     this.volume = new VolumeViewModel(user);
     this.progress = new ProgressViewModel();
     this.user = user;
+    this.track = new TrackViewModel();
 
     this.active = ko.computed(function() {
         return this.status() == 'playing';
     }, this);
 
     var controls = $("#player .controls");
-    controls.find(".play").click(this.play);
-    controls.find(".pause").click(this.pause);
-    controls.find(".skip").click(this.skip);
+    controls.find(".play").click(function() { me.play(); });
+    controls.find(".pause").click(function() { me.pause(); });
+    controls.find(".skip").click(function() { me.skip(); });
 }
 PlayerViewModel.prototype.setup = function() {
     incrementPlayer();
 }
 PlayerViewModel.prototype.update = function(status) {
-    if (status.entry) {
-        this.trackName(status.info.trackName);
-    } else {
-        this.trackName("...");
-    }
     if (status.info) {
+        this.track.update(status.info);
         this.progress.update(status.elapsedTime, status.info.totalTime);
+    } else {
+        this.track.clear();
     }
     this.status(status.status);
 }

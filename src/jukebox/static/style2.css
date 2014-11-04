@@ -1,11 +1,13 @@
 body {
     margin: 0;
     font-family: "Times New Roman", "Georgia", serif;
+    font-size: 12pt;
 }
 
 .contents {
     padding: 20px;
     position: relative;
+    height: 100%;
 }
 
 #player {
@@ -13,20 +15,32 @@ body {
     margin: 0 0 0 0;
     padding: 0;
     width: 100%;
-    height: 140px;
+    height: 180px;
     background-color: #0F2BA8;
     border-bottom: 1px solid #A88C0F;
     color: white;
 }
 
-#player .track {
+#player .title {
     font-size: 32pt;
+}
+
+#player .artist {
+    display: inline-block;
+}
+#player .album {
+    display: inline-block;
+}
+#player .art {
+    height: 120px;
+    float: left;
+    margin-right: 20px;
 }
 
 #player .controls {
     position: absolute;
     right: 20px;
-    bottom: 20px;
+    bottom: 80px;
 }
 #player .controls button {
     width: 64px;
@@ -36,6 +50,13 @@ body {
 }
 
 #player .status {
+    display: inline-block;
+    padding-left: 10px;
+    white-space: nowrap;
+    font-size: 10pt;
+}
+#player .status span {
+    z-index: 20;
 }
 
 #player .progressContainer {
@@ -43,7 +64,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 8px;
+    height: 17px;
     background-color: #6E5D15;
     border-top: 1px solid #A88C0F;
 }
@@ -52,16 +73,21 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    height: 8px;
+    height: 17px;
     background-color: #A88C0F;
     width: 0%;
+    overflow: hidden;
+    transition: width 2s;
 }
 
 #player .volume {
+    position: absolute;
+    bottom: 80px;
+    left: 160px;
+    display: inline-block;
 }
 #player .volume input[type=range] {
     width: 320px;
-    margin-top: 10px;
     height: 10px;
 }
 

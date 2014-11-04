@@ -11,15 +11,13 @@
         <script type="text/javascript" src="static/viewmodels/volume.js" />
         <script type="text/javascript" src="static/viewmodels/progress.js" />
         <script type="text/javascript" src="static/viewmodels/user.js" />
+        <script type="text/javascript" src="static/viewmodels/track.js" />
         <script type="text/javascript" src="static/viewmodels/player.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
         <div id="player" data-bind="with: player">
-            <div class="progressContainer"></div>
-            <div class="progress" data-bind="style: { width: progress.progress }"></div>
-            <div class="contents">
-                <div class="track" data-bind="text: trackName">?</div>
+            <div class="progressContainer">
                 <div class="status">
                     <span data-bind="text: status">?</span>
                     <span data-bind="with: progress">
@@ -27,20 +25,45 @@
                         <span data-bind="text: totalTimeText">?</span>
                     </span>
                 </div>
+            </div>
+            <div class="progress" data-bind="style: { width: progress.progress }">
+                <div class="status">
+                    <span data-bind="text: status">?</span>
+                    <span data-bind="with: progress">
+                        <span data-bind="text: elapsedTimeText">?</span> /
+                        <span data-bind="text: totalTimeText">?</span>
+                    </span>
+                </div>
+            </div>
+            <div class="contents">
+                <div class="track" data-bind="with: track">
+                    <img class="art" data-bind="attr:{src: artUrl}" />
+                    <div class="title" data-bind="text: trackName">?</div>
+                    <div class="album" data-bind="visible: albumTitle">
+                        Track <span data-bind="text: trackNumber" />
+                        from <span data-bind="text: albumTitle" />
+                    </div>
+                    <div class="artist" data-bind="visible: artistName">
+                        by <span data-bind="text: artistName" />
+                    </div>
+                </div>
                 <div class="volume" data-bind="with: volume">
                     Volume <input type="range" data-bind="value: volume" /> 
-                    (<span data-bind="text: who"></span>
-                     <span data-bind="text: direction"></span>)
+                    <span data-bind="visible: volumeChanged">
+                        (<span data-bind="text: who"></span>
+                         <span data-bind="text: direction"></span>)
+                    </span>
                 </div>
+
                 <div class="controls">
                     <button class="play">
-                        <img src="http://mrjelly/play.png" alt="Play" />
+                        <img src="static/icons/play.png" alt="Play" />
                     </button>
                     <button class="pause">
-                        <img src="http://mrjelly/pause.png" alt="Pause" />
+                        <img src="static/icons/pause.png" alt="Pause" />
                     </button>
                     <button class="skip">
-                        <img src="http://mrjelly/skip.png" alt="Skip" />
+                        <img src="static/icons/skip.png" alt="Skip" />
                     </button>
                 </div>
             </div>

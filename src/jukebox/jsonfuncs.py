@@ -181,6 +181,7 @@ def get_volume(request):
 @jsonrpc_method('set_volume', site=site)
 def set_volume(request, username, value):
     global volume_who, volume_direction
+    value = int(value)
     m = Mixer()
     if value > m.getvolume()[0]:
         volume_direction = "up"

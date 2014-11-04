@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/">
+    <head>
+        <title>Django Jukebox</title>
+        <link rel="stylesheet" href="static/style2.css" type="text/css" />
+        <link rel="icon" href="static/favicon.png" type="image/png" />
+        <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
+        <script type="text/javascript" src="static/knockout-3.2.0.js" />
+        <script type="text/javascript" src="static/json.js" />
+        <script type="text/javascript" src="static/jukebox.js" />
+        <script type="text/javascript" src="static/viewmodels/volume.js" />
+        <script type="text/javascript" src="static/viewmodels/player.js" />
+    </head>
+    <body>
+        <div id="player">
+            <div class="progressContainer"></div>
+            <div class="progress" data-bind="style: { width: progress }"></div>
+            <div class="contents">
+                <div class="track" data-bind="text: trackName">?</div>
+                <div class="status">
+                    <span data-bind="text: status">?</span>
+                    <span data-bind="text: elapsedTimeText">?</span> /
+                    <span data-bind="text: totalTimeText">?</span>
+                </div>
+                <div class="volume">
+                    Volume <input type="range" data-bind="value: volume.volume" /> 
+                    (<span data-bind="text: volume.who"></span>
+                     <span data-bind="text: volume.direction"></span>)
+                </div>
+                <div class="controls">
+                    <button class="play">
+                        <img src="http://mrjelly/play.png" alt="Play" />
+                    </button>
+                    <button class="pause">
+                        <img src="http://mrjelly/pause.png" alt="Pause" />
+                    </button>
+                    <button class="skip">
+                        <img src="http://mrjelly/skip.png" alt="Skip" />
+                    </button>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

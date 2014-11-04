@@ -7,25 +7,30 @@
         <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
         <script type="text/javascript" src="static/knockout-3.2.0.js" />
         <script type="text/javascript" src="static/json.js" />
-        <script type="text/javascript" src="static/jukebox.js" />
+        <script type="text/javascript" src="static/client-knockout.js" />
         <script type="text/javascript" src="static/viewmodels/volume.js" />
+        <script type="text/javascript" src="static/viewmodels/progress.js" />
+        <script type="text/javascript" src="static/viewmodels/user.js" />
         <script type="text/javascript" src="static/viewmodels/player.js" />
+        <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
-        <div id="player">
+        <div id="player" data-bind="with: player">
             <div class="progressContainer"></div>
-            <div class="progress" data-bind="style: { width: progress }"></div>
+            <div class="progress" data-bind="style: { width: progress.progress }"></div>
             <div class="contents">
                 <div class="track" data-bind="text: trackName">?</div>
                 <div class="status">
                     <span data-bind="text: status">?</span>
-                    <span data-bind="text: elapsedTimeText">?</span> /
-                    <span data-bind="text: totalTimeText">?</span>
+                    <span data-bind="with: progress">
+                        <span data-bind="text: elapsedTimeText">?</span> /
+                        <span data-bind="text: totalTimeText">?</span>
+                    </span>
                 </div>
-                <div class="volume">
-                    Volume <input type="range" data-bind="value: volume.volume" /> 
-                    (<span data-bind="text: volume.who"></span>
-                     <span data-bind="text: volume.direction"></span>)
+                <div class="volume" data-bind="with: volume">
+                    Volume <input type="range" data-bind="value: volume" /> 
+                    (<span data-bind="text: who"></span>
+                     <span data-bind="text: direction"></span>)
                 </div>
                 <div class="controls">
                     <button class="play">
@@ -38,6 +43,19 @@
                         <img src="http://mrjelly/skip.png" alt="Skip" />
                     </button>
                 </div>
+            </div>
+        </div>
+        <div id="username" data-bind="with: user">
+            Username: <span class="name" data-bind="text: name" />
+        </div>
+        <div id="clicktrap">
+            <div id="edit-username" class="modalbox" data-bind="with: user">
+                <div class="title">Enter a new username</div>
+                <form onSubmit="$(this).siblings('.save').click(); return false;">
+                    <input type="text" data-bind="value: newName" />
+                </form>
+                <button class="save">Save</button>
+                <button>Cancel</button>
             </div>
         </div>
     </body>

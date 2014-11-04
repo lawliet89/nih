@@ -1,5 +1,8 @@
+var jukebox;
+
 $(function() {
-    setupJukebox();
+    jukebox = new JukeboxViewModel();
+    jukebox.setup();
     refresh();
 });
 
@@ -28,4 +31,20 @@ function refresh() {
     rpc('get_queue', [], updatePlayer);
     rpc('get_volume', [], updateVolume);
     setTimeout(refresh, 3000);
+}
+
+function showModal(modal) {
+    $('.modalbox').each(function() {
+        $(this).hide()
+               .css({
+            'margin-left': -$(this).width() / 2,
+            'margin-top': -$(this).height() / 2,
+        });
+    });
+    modal.show();
+    $("#clicktrap").fadeIn();
+
+    return function() {
+        $("#clicktrap").fadeOut();
+    }
 }

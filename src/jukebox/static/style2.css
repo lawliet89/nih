@@ -77,7 +77,8 @@ body {
     background-color: #A88C0F;
     width: 0%;
     overflow: hidden;
-    transition: width 2s;
+    transition: width 1s;
+    transition-timing-function: linear;
 }
 
 #player .volume {

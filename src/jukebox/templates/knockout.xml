@@ -48,7 +48,7 @@
                     </div>
                 </div>
                 <div class="volume" data-bind="with: volume">
-                    Volume <input type="range" data-bind="value: volume" /> 
+                    Volume <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
                     <span data-bind="visible: volumeChanged">
                         (<span data-bind="text: who"></span>
                          <span data-bind="text: direction"></span>)

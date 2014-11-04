@@ -25,6 +25,10 @@ ProgressViewModel.prototype.update = function(elapsed, total) {
     this.elapsedTime(elapsed);
     this.totalTime(total);
 }
+ProgressViewModel.prototype.clear = function() {
+    this.elapsedTime(0);
+    this.totalTime(0.1);
+}
 ProgressViewModel.prototype.increment = function() {
     if (this.elapsedTime() < this.totalTime()) {
         this.elapsedTime(this.elapsedTime() + 1);

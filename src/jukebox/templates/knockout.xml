@@ -20,7 +20,7 @@
             <div class="progressContainer">
                 <div class="status">
                     <span data-bind="text: status">?</span>
-                    <span data-bind="with: progress">
+                    <span data-bind="with: progress, visible: track.hasTrack">
                         <span data-bind="text: elapsedTimeText">?</span> /
                         <span data-bind="text: totalTimeText">?</span>
                     </span>

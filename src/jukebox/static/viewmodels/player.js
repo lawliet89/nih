@@ -24,6 +24,7 @@ PlayerViewModel.prototype.update = function(status) {
         this.progress.update(status.elapsedTime, status.info.totalTime);
     } else {
         this.track.clear();
+        this.progress.clear();
     }
     this.status(status.status);
 }

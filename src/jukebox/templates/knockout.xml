@@ -26,7 +26,7 @@
                     </span>
                 </div>
             </div>
-            <div class="progress" data-bind="style: { width: progress.progress }">
+            <div class="progress" data-bind="visible: track.hasTrack, style: { width: progress.progress }">
                 <div class="status">
                     <span data-bind="text: status">?</span>
                     <span data-bind="with: progress">

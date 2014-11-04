@@ -1,10 +1,13 @@
 function VolumeViewModel(user) {
-    this.volume = ko.observable(0);
+    this.volume = ko.observable(null);
     this.who = ko.observable("");
     this.direction = ko.observable("");
 
     this.volume.subscribe(function(newVolume) {
-        rpc("set_volume", [user.name(), parseInt(newVolume)], updateVolume);
+        var value = parseInt(newVolume);
+        if (!isNaN(value)) {
+            rpc("set_volume", [user.name(), value], updateVolume);
+        }
     });
     this.volumeChanged = ko.computed(function() {
         return this.who() && this.direction();

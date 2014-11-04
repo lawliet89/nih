@@ -15,6 +15,9 @@ function TrackViewModel() {
             return "static/no-art.png";
         }
     }, this);
+    this.hasTrack = ko.computed(function() {
+        return this.trackName;
+    });
 }
 TrackViewModel.prototype.update = function(metadata) {
     this.trackName(metadata.trackName);
@@ -24,7 +27,7 @@ TrackViewModel.prototype.update = function(metadata) {
     this.artCacheHash(metadata.cacheHash);
 }
 TrackViewModel.prototype.clear = function() {
-    this.trackName("...");
+    this.trackName("Nothing playing");
     this.artistName("");
     this.albumTitle("");
     this.trackNumber("");

@@ -4,7 +4,7 @@ function VolumeViewModel(user) {
     this.direction = ko.observable("");
 
     this.volume.subscribe(function(newVolume) {
-        rpc("set_volume", [user.name(), newVolume], updateVolume);
+        rpc("set_volume", [user.name(), parseInt(newVolume)], updateVolume);
     });
     this.volumeChanged = ko.computed(function() {
         return this.who() && this.direction();

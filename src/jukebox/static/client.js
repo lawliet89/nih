@@ -327,7 +327,7 @@ function lowerer_for(track) {
 }
 
 function do_dequeue(track) {
-    jb.dequeue(currentUsername, track).addCallback(update_player_status);
+    jb.dequeue(currentUsername, track.id).addCallback(update_player_status);
 }
 
 function dequeuer_for(track) {

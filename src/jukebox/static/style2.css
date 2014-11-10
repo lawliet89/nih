@@ -108,6 +108,13 @@ body {
 
 #queue {
 }
+#queue h1 {
+    font-family: inherit;
+    font-size: 14pt;
+    font-weight: bold;
+    margin: 15px 0 3px 8px;
+    color: #0F2BA8;
+}
 
 #queue ol {
     list-style-type: none;
@@ -131,19 +138,28 @@ body {
     font-size: 8pt;
     color: #ccc;
 }
-#queue ol li .who {
+#queue ol li .controls {
+    display: table;
     position: absolute;
-    right: 5px;
-    top: 5px;
-    font-size: 8pt;
-    color: #ccc;
+    right: 8px;
+    top: 50%;
+    height: 20px;
+    margin-top: -10px;
+    font-size: 10pt;
+    color: white;
 }
-#queue h1 {
-    font-family: inherit;
-    font-size: 14pt;
-    font-weight: bold;
-    margin: 15px 0 3px 8px;
-    color: #0F2BA8;
+#queue ol li .controls .who {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 10px;
+}
+#queue ol li .controls .remove {
+    display: table-cell;
+    vertical-align: middle;
+    opacity: 0.3;
+}
+#queue ol li:hover .controls .remove {
+    opacity: 1;
 }
 
 #clicktrap {

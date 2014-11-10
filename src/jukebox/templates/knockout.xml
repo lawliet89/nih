@@ -77,16 +77,20 @@
             <div id="queue" data-bind="with: queue">
                 <h1>Queue (<span data-bind="text: count" />)</h1>
                 <ol data-bind="foreach: items">
-                    <li>
+                    <li class="item">
                         <div class="trackName" data-bind="text: trackName" />
                         <div class="metadata">
                             Track <span data-bind="text: trackNumber" /> from
                             <span data-bind="text: albumTitle" /> by
                             <span data-bind="text: artistName" />
                         </div>
-                        <div class="who">
-                            Enqueued by <span data-bind="text: who" />
+                        <div class="controls">
+                            <span class="who" data-bind="text: who" />
+                            <a href="#" class="remove">
+                                <img src="static/icons/largeX.png" alt="x" />
+                            </a>
                         </div>
+                        
                     </li> 
                 </ol>
             </div>

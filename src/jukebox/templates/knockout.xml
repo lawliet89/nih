@@ -44,10 +44,10 @@
                         <div class="title" data-bind="text: trackName">?</div>
                         <div class="album" data-bind="visible: albumTitle">
                             Track <span data-bind="text: trackNumber" />
-                            from <span data-bind="text: albumTitle" />
+                            from <span class="albumTitle" data-bind="text: albumTitle" />
                         </div>
                         <div class="artist" data-bind="visible: artistName">
-                            by <span data-bind="text: artistName" />
+                            by <span class="artistName" data-bind="text: artistName" />
                         </div>
                     </div>
                     <div class="volume" data-bind="with: volume">
@@ -80,10 +80,16 @@
                 <ol data-bind="foreach: items">
                     <li class="item">
                         <div class="trackName" data-bind="text: trackName" />
-                        <div class="metadata">
-                            Track <span data-bind="text: trackNumber" /> from
-                            <span data-bind="text: albumTitle" /> by
-                            <span data-bind="text: artistName" />
+                        <div class="metadata">     
+                            <span data-bind="visible: trackNumber">                       
+                                Track <span data-bind="text: trackNumber" />
+                            </span>
+                            <span data-bind="visible: albumTitle">
+                                from <span data-bind="text: albumTitle" />
+                            </span>
+                            <span data-bind="visible: artistName">
+                                by <span data-bind="text: artistName" />
+                            </span>
                         </div>
                         <div class="controls">
                             <span class="who" data-bind="text: who" />

@@ -13,64 +13,85 @@
         <script type="text/javascript" src="static/viewmodels/user.js" />
         <script type="text/javascript" src="static/viewmodels/track.js" />
         <script type="text/javascript" src="static/viewmodels/player.js" />
+        <script type="text/javascript" src="static/viewmodels/queue.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
-        <div id="player" data-bind="with: player">
-            <div class="progressContainer">
-                <div class="status">
-                    <span data-bind="text: status">?</span>
-                    <span data-bind="with: progress, visible: track.hasTrack">
-                        <span data-bind="text: elapsedTimeText">?</span> /
-                        <span data-bind="text: totalTimeText">?</span>
-                    </span>
-                </div>
-            </div>
-            <div class="progress" data-bind="visible: track.hasTrack, style: { width: progress.progress }">
-                <div class="status">
-                    <span data-bind="text: status">?</span>
-                    <span data-bind="with: progress">
-                        <span data-bind="text: elapsedTimeText">?</span> /
-                        <span data-bind="text: totalTimeText">?</span>
-                    </span>
-                </div>
-            </div>
-            <div class="contents">
-                <div class="track" data-bind="with: track">
-                    <img class="art" data-bind="attr:{src: artUrl}" />
-                    <div class="title" data-bind="text: trackName">?</div>
-                    <div class="album" data-bind="visible: albumTitle">
-                        Track <span data-bind="text: trackNumber" />
-                        from <span data-bind="text: albumTitle" />
-                    </div>
-                    <div class="artist" data-bind="visible: artistName">
-                        by <span data-bind="text: artistName" />
+        <div class="jukebox">
+            <div id="player" data-bind="with: player">
+                <div class="progressContainer">
+                    <div class="status">
+                        <span data-bind="text: status">?</span>
+                        <span data-bind="with: progress, visible: track.hasTrack">
+                            <span data-bind="text: elapsedTimeText">?</span> /
+                            <span data-bind="text: totalTimeText">?</span>
+                        </span>
                     </div>
                 </div>
-                <div class="volume" data-bind="with: volume">
-                    Volume <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
-                    <span data-bind="visible: volumeChanged">
-                        (<span data-bind="text: who"></span>
-                         <span data-bind="text: direction"></span>)
-                    </span>
+                <div class="progress" data-bind="visible: track.hasTrack, style: { width: progress.progress }">
+                    <div class="status">
+                        <span data-bind="text: status">?</span>
+                        <span data-bind="with: progress">
+                            <span data-bind="text: elapsedTimeText">?</span> /
+                            <span data-bind="text: totalTimeText">?</span>
+                        </span>
+                    </div>
                 </div>
+                <div class="contents">
+                    <div class="track" data-bind="with: track">
+                        <img class="art" data-bind="attr:{src: artUrl}" />
+                        <div class="title" data-bind="text: trackName">?</div>
+                        <div class="album" data-bind="visible: albumTitle">
+                            Track <span data-bind="text: trackNumber" />
+                            from <span data-bind="text: albumTitle" />
+                        </div>
+                        <div class="artist" data-bind="visible: artistName">
+                            by <span data-bind="text: artistName" />
+                        </div>
+                    </div>
+                    <div class="volume" data-bind="with: volume">
+                        Volume <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
+                        <span data-bind="visible: volumeChanged">
+                            (<span data-bind="text: who"></span>
+                             <span data-bind="text: direction"></span>)
+                        </span>
+                    </div>
 
-                <div class="controls">
-                    <button class="play">
-                        <img src="static/icons/play.png" alt="Play" />
-                    </button>
-                    <button class="pause">
-                        <img src="static/icons/pause.png" alt="Pause" />
-                    </button>
-                    <button class="skip">
-                        <img src="static/icons/skip.png" alt="Skip" />
-                    </button>
+                    <div class="controls">
+                        <button class="play">
+                            <img src="static/icons/play.png" alt="Play" />
+                        </button>
+                        <button class="pause">
+                            <img src="static/icons/pause.png" alt="Pause" />
+                        </button>
+                        <button class="skip">
+                            <img src="static/icons/skip.png" alt="Skip" />
+                        </button>
+                    </div>
                 </div>
             </div>
+            <div id="username" data-bind="with: user">
+                Username: <span class="name" data-bind="text: name" />
+            </div>
+
+            <div id="queue" data-bind="with: queue">
+                <h1>Queue (<span data-bind="text: count" />)</h1>
+                <ol data-bind="foreach: items">
+                    <li>
+                        <div class="trackName" data-bind="text: trackName" />
+                        <div class="metadata">
+                            Track <span data-bind="text: trackNumber" /> from
+                            <span data-bind="text: albumTitle" /> by
+                            <span data-bind="text: artistName" />
+                        </div>
+                        <div class="who">
+                            Enqueued by <span data-bind="text: who" />
+                        </div>
+                    </li> 
+                </ol>
+            </div>
         </div>
-        <div id="username" data-bind="with: user">
-            Username: <span class="name" data-bind="text: name" />
-        </div>
+    
         <div id="clicktrap">
             <div id="edit-username" class="modalbox" data-bind="with: user">
                 <div class="title">Enter a new username</div>

@@ -29,13 +29,13 @@ PlayerViewModel.prototype.update = function(status) {
     this.status(status.status);
 }
 PlayerViewModel.prototype.play = function() {
-    rpc("pause", [false, this.user.name()], updatePlayer); 
+    rpc("pause", [false, this.user.name()], updateJukebox); 
 }
 PlayerViewModel.prototype.pause = function() {
-    rpc("pause", [true, this.user.name()], updatePlayer);
+    rpc("pause", [true, this.user.name()], updateJukebox);
 }
 PlayerViewModel.prototype.skip = function() {
-    rpc("skip", [this.user.name()], updatePlayer); 
+    rpc("skip", [this.user.name()], updateJukebox); 
 }
 
 function incrementPlayer() {
@@ -44,9 +44,6 @@ function incrementPlayer() {
         player.progress.increment();
     }
     setTimeout(incrementPlayer, 1000);
-}
-function updatePlayer(status) {
-    jukebox.player.update(status);
 }
 function updateVolume(status) {
     jukebox.player.volume.update(status);

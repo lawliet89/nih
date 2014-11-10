@@ -28,7 +28,7 @@ function rpc(method, params, callback) {
 }
 
 function refresh() {
-    rpc('get_queue', [], updatePlayer);
+    rpc('get_queue', [], updateJukebox);
     rpc('get_volume', [], updateVolume);
     setTimeout(refresh, 3000);
 }

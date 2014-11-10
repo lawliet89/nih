@@ -50,9 +50,10 @@ QueueViewModel.prototype.update = function(items, infos) {
 }
 QueueViewModel.prototype.setup = function() {
     var me = this;
-    $("#queue").on("click", "li.item .remove", function() {
+    $("#queue").on("click", "li.item .remove", function(event) {
         var item = ko.dataFor(this);
         item.queue.remove(item);
+        event.preventDefault();
     });
     $("#queue ol").sortable({
         revert: true,

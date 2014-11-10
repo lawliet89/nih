@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="static/style2.css" type="text/css" />
         <link rel="icon" href="static/favicon.png" type="image/png" />
         <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
+        <script type="text/javascript" src="static/jquery-ui.js" />
         <script type="text/javascript" src="static/knockout-3.2.0.js" />
         <script type="text/javascript" src="static/json.js" />
         <script type="text/javascript" src="static/client-knockout.js" />

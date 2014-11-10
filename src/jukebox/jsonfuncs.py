@@ -125,6 +125,7 @@ def dequeue(request, username, trackId):
     for item in queue:
         if item.id == trackId:
             item.delete()
+    reindex_queue()
     return status_info(request)
 
 @jsonrpc_method('clear_queue', site=site)

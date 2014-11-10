@@ -56,7 +56,11 @@ def metadata(item):
 
 def status_info(request):
     objects = QueueItem.objects.all()
-    items = [{"id":x.id, "url":x.what.url, "username":x.who} for x in objects]
+    items = [{
+        "id": x.id, 
+        "url": x.what.url, 
+        "username": x.who, 
+        "index": x.index } for x in objects]
     itemsMeta = [metadata(x.what) for x in objects]
     if len(items)>0:
         first = (items[0], itemsMeta[0])
@@ -134,33 +138,38 @@ def clear_queue(request, username):
 def get_queue(request):
     return status_info(request)
 
-@jsonrpc_method('raise', site=site)
-def higher(request, track):
+@jsonrpc_method('reorder', site=site)
+def reorder(request, trackId, new_position):
     queue = list(QueueItem.objects.all())[1:]
-    for (index,item) in enumerate(queue):
-        if item.id == track["id"]:
-            if index > 0:
-                tmp = queue[index-1].index
-                queue[index-1].index = queue[index].index
-                queue[index].index = tmp
-                queue[index].save()
-                queue[index-1].save()
-            break
+    length = len(queue)
+    if new_position < 1:
+        raise Exception("Cannot move items above position 1 in the queue")
+    if new_position > length:
+        new_position = length
+    
+    mover = QueueItem.objects.get(id=trackId)
+    old_position = mover.index
+    if old_position == 0:
+        raise Exception("Cannot move the currently playing track")
 
-    return status_info(request)
+    # Shuffle items that were previously below this item up to fill
+    # the gap it left when it moved down
+    if new_position > old_position: 
+        for _, item in enumerate(queue):
+            if item.index > old_position and item.index <= new_position:
+                item.index -= 1
+                item.save()
 
-@jsonrpc_method('lower', site=site)
-def lower(request, track):
-    queue = list(QueueItem.objects.all())[1:]
-    for (index,item) in enumerate(queue):
-        if item.id == track["id"]:
-            if index < len(queue)-1:
-                tmp = queue[index+1].index
-                queue[index+1].index = queue[index].index
-                queue[index].index = tmp
-                queue[index].save()
-                queue[index+1].save()
-            break
+    # Shuffle items that were previously above this item down to fill
+    # the gap it left when it moved up
+    if new_position < old_position: 
+        for _, item in enumerate(queue):
+            if item.index >= new_position and item.index < old_position:
+                item.index += 1
+                item.save()
+
+    mover.index = new_position
+    mover.save()
 
     return status_info(request)
 
@@ -230,10 +239,18 @@ def chat(request, username, text):
 def get_history(request, limit):
     return chat_history(request, limit)
 
+def reindex_queue():
+    index = 0
+    for _, item in enumerate(QueueItem.objects.all()):
+        item.index = index            
+        item.save()
+        index += 1
+
 def next_track():
-    if QueueItem.objects.all().count()>0:
+    if QueueItem.objects.all().count() > 0:
         QueueItem.current().delete() # remove current first item from queue
         player.stop()
+        reindex_queue()
     if QueueItem.objects.all().count()>0:
         play_current()
     elif player.status != Status.idle:

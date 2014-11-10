@@ -316,13 +316,13 @@ function enqueuer_for(trackEntries, atTop) {
 
 function raiser_for(track) {
     return function () {
-    jb.raise(track).addCallback(update_player_status);
+        jb.reorder(track.id, track.index - 1).addCallback(update_player_status);
     };
 }
 
 function lowerer_for(track) {
     return function () {
-    jb.lower(track).addCallback(update_player_status);
+        jb.reorder(track.id, track.index + 1).addCallback(update_player_status);
     };
 }
 
@@ -359,7 +359,6 @@ function LargeTrackWidget(track, info, size) {
     
     partHtml += '</span>';
     partHtml += '<abbr title="' + unescape(this.track.url) + '">';
-    
     if (info.trackName) {
         partHtml += '<b>' + info.trackName + '</b>';
         if (info.artistName) partHtml += ' - ' + info.artistName;

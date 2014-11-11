@@ -4,6 +4,7 @@ function SearchItem(url, info) {
     this.folder = this.metadata.folder;
 }
 
+// For grouping the results by folder
 function ResultsGroup(url) {
     var parts = parseUri(url);
     var folderParts = splitPath(parts.directory);

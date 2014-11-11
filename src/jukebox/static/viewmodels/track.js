@@ -17,8 +17,12 @@ function TrackViewModel() {
         }
     }, this);
 }
-TrackViewModel.prototype.update = function(metadata) {
-    this.trackName(metadata.trackName);
+TrackViewModel.prototype.update = function(url, metadata) {
+    if (metadata.trackName) {
+        this.trackName(metadata.trackName);
+    } else {
+        this.trackName(splitPath(url).name);
+    }
     this.artistName(metadata.artistName);
     this.albumTitle(metadata.albumTitle);
     this.trackNumber(metadata.trackNumber);

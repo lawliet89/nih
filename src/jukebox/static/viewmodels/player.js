@@ -20,7 +20,7 @@ PlayerViewModel.prototype.setup = function() {
 }
 PlayerViewModel.prototype.update = function(status) {
     if (status.info) {
-        this.track.update(status.info);
+        this.track.update(status.entry.url, status.info);
         this.progress.update(status.elapsedTime, status.info.totalTime);
     } else {
         this.track.clear();

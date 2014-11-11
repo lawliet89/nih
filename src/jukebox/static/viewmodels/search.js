@@ -68,9 +68,15 @@ SearchViewModel.prototype.setup = function() {
         }
     });
     $("#search-results").on("click", "li.item", function(event) {
-        var item = ko.dataFor(this);
+        var li = this;
+
+        $(li).addClass("selected");
+        setTimeout(function() { $(li).removeClass("selected") }, 10);
+
+        var item = ko.dataFor(li);
         var tracks = [{ url: item.url()}];
         rpc("enqueue", [me.user.name(), tracks, false], updateJukebox);
+
         event.preventDefault();        
     });
 }

@@ -18,6 +18,12 @@ ol li {
 #search-results ol li {
     cursor: pointer;
 }
+#search-results ol li:not(.selected) {
+    transition: background-color 1s;
+}
+#search-results ol li.selected {
+    background-color: #0F2BA8;
+}
 
 ol li .trackName {
     font-size: 12pt;    

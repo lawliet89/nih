@@ -110,6 +110,7 @@ NOSE_ARGS = ["--with-coverage", "--cover-package=nih.jukebox, simple_player", "-
 LASTFM_USER="test_erlang"
 LASTFM_PASSWORD="test_erlang"
 LASTFM_ENABLED=False
+MAX_SEARCH_RESULTS=200
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 

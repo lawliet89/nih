@@ -3,18 +3,24 @@
     <head>
         <title>Django Jukebox</title>
         <link rel="stylesheet" href="static/style2.css" type="text/css" />
+        <link rel="stylesheet" href="static/player.css" type="text/css" />
+        <link rel="stylesheet" href="static/lists.css" type="text/css" />
         <link rel="icon" href="static/favicon.png" type="image/png" />
         <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
         <script type="text/javascript" src="static/jquery-ui.js" />
         <script type="text/javascript" src="static/knockout-3.2.0.js" />
         <script type="text/javascript" src="static/json.js" />
+        <script type="text/javascript" src="static/parseUri.js" />
+
         <script type="text/javascript" src="static/client-knockout.js" />
         <script type="text/javascript" src="static/viewmodels/volume.js" />
         <script type="text/javascript" src="static/viewmodels/progress.js" />
         <script type="text/javascript" src="static/viewmodels/user.js" />
         <script type="text/javascript" src="static/viewmodels/track.js" />
         <script type="text/javascript" src="static/viewmodels/player.js" />
+        <script type="text/javascript" src="static/viewmodels/metadata.js" />
         <script type="text/javascript" src="static/viewmodels/queue.js" />
+        <script type="text/javascript" src="static/viewmodels/search.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
@@ -75,29 +81,72 @@
                 Username: <span class="name" data-bind="text: name" />
             </div>
 
+            <ul id="tabs">                
+                <li class="queue selected" data-content="#queue">
+                    Queue (<span data-bind="text: queue.count" />)
+                </li>
+                <li class="search" data-content="#search-results">
+                    Search <input id="search-box" type="text"
+                        data-bind="value: search.query, valueUpdate: 'afterkeydown'" />
+                </li>
+            </ul>
+
+            <div id="search-results" data-bind="with: search" style="display: none;">
+                <div data-bind="foreach: groups">
+                    <div class="folder">
+                        <div class="header">
+                            <div class="name">
+                                <span data-bind="text: folder" />
+                                (<span data-bind="text: count" />)
+                            </div>
+                            <div class="folder-metadata">
+                                <a class="path" data-bind="text: path, attr: { href: url }" />
+                                (<span class="host" data-bind="text: host" />)
+                            </div>
+                        </div>                
+                        <ol data-bind="foreach: items">
+                            <li class="item" data-bind="with: metadata">
+                                <div class="trackName" data-bind="text: trackName" />
+                                <div class="metadata">     
+                                    <span data-bind="visible: trackNumber">                       
+                                        Track <span data-bind="text: trackNumber" />
+                                    </span>
+                                    <span data-bind="visible: albumTitle">
+                                        from <span data-bind="text: albumTitle" />
+                                    </span>
+                                    <span data-bind="visible: artistName">
+                                        by <span data-bind="text: artistName" />
+                                    </span>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
             <div id="queue" data-bind="with: queue">
-                <h1>Queue (<span data-bind="text: count" />)</h1>
                 <ol data-bind="foreach: items">
                     <li class="item">
-                        <div class="trackName" data-bind="text: trackName" />
-                        <div class="metadata">     
-                            <span data-bind="visible: trackNumber">                       
-                                Track <span data-bind="text: trackNumber" />
-                            </span>
-                            <span data-bind="visible: albumTitle">
-                                from <span data-bind="text: albumTitle" />
-                            </span>
-                            <span data-bind="visible: artistName">
-                                by <span data-bind="text: artistName" />
-                            </span>
+                        <div data-bind="with: metadata">
+                            <div class="trackName" data-bind="text: trackName" />
+                            <div class="metadata">     
+                                <span data-bind="visible: trackNumber">                       
+                                    Track <span data-bind="text: trackNumber" />
+                                </span>
+                                <span data-bind="visible: albumTitle">
+                                    from <span data-bind="text: albumTitle" />
+                                </span>
+                                <span data-bind="visible: artistName">
+                                    by <span data-bind="text: artistName" />
+                                </span>
+                            </div>
                         </div>
                         <div class="controls">
                             <span class="who" data-bind="text: who" />
                             <a href="#" class="remove">
                                 <img src="static/icons/largeX.png" alt="x" />
                             </a>
-                        </div>
-                        
+                        </div>                        
                     </li> 
                 </ol>
             </div>

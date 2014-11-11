@@ -1,9 +1,11 @@
 var jukebox;
+var tabs;
 
 $(function() {
     jukebox = new JukeboxViewModel();
     jukebox.setup();
     refresh();
+    tabs = new TabManager();
 });
 
 var jsonRpcRequestId = 1;
@@ -47,4 +49,21 @@ function showModal(modal) {
     return function() {
         $("#clicktrap").fadeOut();
     }
+}
+
+function TabManager() {
+    var me = this;
+    this.select = function(selector) {
+        var previous = $("#tabs li.selected");
+        previous.removeClass("selected");
+        $(previous.data("content")).hide();
+
+        var newTab = $("#tabs " + selector);
+        newTab.addClass("selected");
+        $(newTab.data("content")).show();        
+    };
+    $("#tabs li.queue").click(function() { 
+        me.select(".queue"); 
+    });
+    this.select(".queue"); 
 }

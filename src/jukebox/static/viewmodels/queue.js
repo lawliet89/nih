@@ -5,26 +5,7 @@ function QueueItem(item, info, queue) {
     this.who = ko.observable(item.username);
     this.url = ko.observable(item.url);
 
-    this.trackName   = ko.observable();
-    this.trackNumber = ko.observable();
-    this.albumTitle  = ko.observable();
-    this.artistName  = ko.observable();
-    this.totalTime   = ko.observable();
-
-    if (info && info.trackName) {
-        this.trackName(info.trackName);
-        this.trackNumber(info.trackNumber);
-        this.albumTitle(info.albumTitle);
-        this.artistName(info.artistName);
-        this.totalTime(info.totalTime);
-    } else {
-        this.trackName(this.short_url(this.url()));
-    }
-}
-QueueItem.prototype.short_url = function(url) {
-    var part = url.substr(url.lastIndexOf('/') + 1);
-    part = unescape(part);
-    return part.replace(/_/g, ' ');
+    this.metadata = new Metadata(item.url, info);
 }
 
 function QueueViewModel(user) {

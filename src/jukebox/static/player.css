@@ -1,0 +1,98 @@
+#player {
+    position: relative;
+    margin: 0 0 0 0;
+    padding: 0;
+    width: 100%;
+    height: 180px;
+    background-color: #0F2BA8;
+    color: white;
+}
+
+#player .title {
+    font-size: 32pt;
+}
+
+#player .artist {
+    display: inline-block;
+}
+#player .artist .artistName {
+    color: #A88C0F;
+}
+#player .album {
+    display: inline-block;
+}
+#player .album .albumTitle {
+    color: #A88C0F;
+}
+#player .art {
+    height: 120px;
+    float: left;
+    margin-right: 20px;
+}
+
+#player .controls {
+    position: absolute;
+    right: 20px;
+    bottom: 80px;
+}
+#player .controls button {
+    width: 64px;
+    height: 64px;
+    margin-left: 10px;
+    border-radius: 32px;
+}
+
+#player .status {
+    display: inline-block;
+    padding-left: 10px;
+    white-space: nowrap;
+    font-size: 10pt;
+}
+#player .status span {
+    z-index: 20;
+}
+
+#player .progressContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 17px;
+    background-color: #6E5D15;
+    border-top: 1px solid #A88C0F;
+}
+#player .progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 16px;
+    background-color: #A88C0F;
+    border-bottom: 1px solid #6E5D15;
+    width: 0%;
+    overflow: hidden;
+    transition: width 1s;
+    transition-timing-function: linear;
+}
+
+#player .volume {
+    position: absolute;
+    bottom: 80px;
+    left: 160px;
+    display: inline-block;
+}
+#player .volume input[type=range] {
+    width: 320px;
+    height: 10px;
+}
+
+#username {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    color: #A88C0F;
+}
+#username .name {
+    cursor: pointer;
+    color: white;
+}

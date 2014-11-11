@@ -90,7 +90,7 @@ def search(request, inp):
     items = MusicFile.objects
     for term in inp:
         items = items.filter(url__icontains=term)
-    items = items.order_by('parent__url', 'url')
+    items = items.order_by('parent__url', 'url')[0:settings.MAX_SEARCH_RESULTS]
     return [{"url": x.url, "info": metadata(x)} for x in items]
 
 @jsonrpc_method('randomtracks', site=site)

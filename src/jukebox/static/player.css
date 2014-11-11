@@ -94,6 +94,10 @@
     width: 320px;
     height: 10px;
 }
+#player .volume .label {
+    float: left;
+    display: block;
+}
 
 #username {
     position: absolute;

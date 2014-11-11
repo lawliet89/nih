@@ -59,11 +59,14 @@
                         </div>
                     </div>
                     <div class="volume" data-bind="with: volume">
-                        Volume <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
-                        <span data-bind="visible: volumeChanged">
-                            (<span data-bind="text: who"></span>
-                             <span data-bind="text: direction"></span>)
-                        </span>
+                        <img class="label" src="static/icons/volume.png" alt="Volume" />
+                        <div style="margin: 4px 0 0 26px;">
+                            <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
+                            <span data-bind="visible: volumeChanged">
+                                (<span data-bind="text: who"></span>
+                                 <span data-bind="text: direction"></span>)
+                            </span>
+                        </div>
                     </div>
 
                     <div class="controls">

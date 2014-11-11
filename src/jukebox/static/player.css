@@ -10,6 +10,15 @@
 
 #player .title {
     font-size: 32pt;
+    margin-right: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#player .metadata {
+    margin-right: 250px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #player .artist {

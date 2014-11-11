@@ -48,12 +48,14 @@
                     <div class="track" data-bind="with: track">
                         <img class="art" data-bind="attr:{src: artUrl}" />
                         <div class="title" data-bind="text: trackName">?</div>
-                        <div class="album" data-bind="visible: albumTitle">
-                            Track <span data-bind="text: trackNumber" />
-                            from <span class="albumTitle" data-bind="text: albumTitle" />
-                        </div>
-                        <div class="artist" data-bind="visible: artistName">
-                            by <span class="artistName" data-bind="text: artistName" />
+                        <div class="metadata">
+                            <div class="album" data-bind="visible: albumTitle">
+                                Track <span data-bind="text: trackNumber" />
+                                from <span class="albumTitle" data-bind="text: albumTitle" />
+                            </div>
+                            <div class="artist" data-bind="visible: artistName">
+                                by <span class="artistName" data-bind="text: artistName" />
+                            </div>
                         </div>
                     </div>
                     <div class="volume" data-bind="with: volume">

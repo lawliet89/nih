@@ -28,35 +28,29 @@ function SearchViewModel(user) {
     this.groups = ko.observableArray();
     this.groupLookup = {};
     this.user = user;
+    this.currentQuery = null;
 
-    this.query.extend({ rateLimit: { timeout: 200, method: "notifyWhenChangesStop" } });
-    this.query.subscribe(function(newQuery) {
-        if (newQuery) {
+    this.count = ko.computed(function() {
+        var number = 0;
+        this.groups().forEach(function(g) { number += g.count(); });
+        return number;
+    }, this);
+
+    this.query.extend({ rateLimit: { timeout: 400, method: "notifyWhenChangesStop" } });
+    this.query.subscribe(function(q) {
+        if (q) {
             tabs.select(".search");
-            rpc("search", [newQuery.split(/ +/)], function(results) {
-                me.handleSearchResults(results);
-            });
+            me.clear();
+            if (me.currentQuery) {
+                me.currentQuery.kill();
+            }
+            me.currentQuery = new Query(q, me);
         }
     });    
 }
-SearchViewModel.prototype.handleSearchResults = function(results) {
-    var me = this;
+SearchViewModel.prototype.clear = function() {
     this.groupLookup = {};
     this.groups.removeAll();
-
-    var i = 0;
-    var step = 25;
-    var handle = function() {
-        var target = Math.min(results.length, i + step);
-        while (i < target) {
-            var r = results[i];
-            var item = new SearchItem(r.url, r.info);        
-            me.getGroup(item).add(item);
-            i++;
-            setTimeout(handle, 10);
-        }
-    };
-    handle();
 }
 SearchViewModel.prototype.getGroup = function(item) {
     var group = this.groupLookup[item.folder];
@@ -75,6 +69,7 @@ SearchViewModel.prototype.setup = function() {
             tabs.select(".search"); 
         }
     });
+    // Enqueue tracks when you click on them in the search results
     $("#search-results").on("click", "li.item", function(event) {
         var li = this;
 

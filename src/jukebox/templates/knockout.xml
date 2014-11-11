@@ -20,6 +20,7 @@
         <script type="text/javascript" src="static/viewmodels/player.js" />
         <script type="text/javascript" src="static/viewmodels/metadata.js" />
         <script type="text/javascript" src="static/viewmodels/queue.js" />
+        <script type="text/javascript" src="static/viewmodels/query.js" />
         <script type="text/javascript" src="static/viewmodels/search.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
@@ -93,6 +94,7 @@
                 <li class="search" data-content="#search-results">
                     Search <input id="search-box" type="text"
                         data-bind="value: search.query, valueUpdate: 'afterkeydown'" />
+                    (<span data-bind="text: search.count" />)
                 </li>
             </ul>
 

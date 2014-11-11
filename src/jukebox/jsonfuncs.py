@@ -86,11 +86,13 @@ def status_info(request):
     }
 
 @jsonrpc_method('search', site=site)
-def search(request, inp):
+def search(request, inp, count=0, skip=0):
     items = MusicFile.objects
     for term in inp:
         items = items.filter(url__icontains=term)
-    items = items.order_by('parent__url', 'url')[0:settings.MAX_SEARCH_RESULTS]
+    items = items.order_by('parent__url', 'url')
+    if count > 0:
+        items = items[skip:count]
     return [{"url": x.url, "info": metadata(x)} for x in items]
 
 @jsonrpc_method('randomtracks', site=site)

@@ -26,6 +26,7 @@ function SearchViewModel(user) {
     var me = this;
     this.query = ko.observable();
     this.groups = ko.observableArray();
+    this.groupLookup = {};
     this.user = user;
 
     this.query.extend({ rateLimit: { timeout: 200, method: "notifyWhenChangesStop" } });
@@ -40,24 +41,31 @@ function SearchViewModel(user) {
 }
 SearchViewModel.prototype.handleSearchResults = function(results) {
     var me = this;
-    var groupLookup = {};
-    var groups = [];
+    this.groupLookup = {};
+    this.groups.removeAll();
 
-    var getGroup = function(item) {
-        var group = groupLookup[item.folder];
-        if (!group) {
-            group = new ResultsGroup(item.folder);
-            groups.push(group);
-            groupLookup[item.folder] = group;
+    var i = 0;
+    var step = 25;
+    var handle = function() {
+        var target = Math.min(results.length, i + step);
+        while (i < target) {
+            var r = results[i];
+            var item = new SearchItem(r.url, r.info);        
+            me.getGroup(item).add(item);
+            i++;
+            setTimeout(handle, 10);
         }
-        return group;
+    };
+    handle();
+}
+SearchViewModel.prototype.getGroup = function(item) {
+    var group = this.groupLookup[item.folder];
+    if (!group) {
+        group = new ResultsGroup(item.folder);
+        this.groups.push(group);
+        this.groupLookup[item.folder] = group;
     }
-
-    results.forEach(function(r) {
-        var item = new SearchItem(r.url, r.info);        
-        getGroup(item).add(item);
-    });
-    this.groups(groups);
+    return group;
 }
 SearchViewModel.prototype.setup = function() {    
     var me = this;

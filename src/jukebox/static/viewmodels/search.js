@@ -25,7 +25,7 @@ ResultsGroup.prototype.add = function(item) {
 
 function SearchViewModel(user) {
     var me = this;
-    this.query = ko.observable();
+    this.queryString = ko.observable("");
     this.groups = ko.observableArray();
     this.groupLookup = {};
     this.user = user;
@@ -37,17 +37,28 @@ function SearchViewModel(user) {
         return number;
     }, this);
 
-    this.query.extend({ rateLimit: { timeout: 400, method: "notifyWhenChangesStop" } });
-    this.query.subscribe(function(q) {
-        if (q) {
+    this.searchTerms = ko.computed(function() {
+        return this.queryString()
+            .split(/ +/)
+            .filter(function(t) { return t != ""; });
+    }, this);
+    this.searchTerms.extend({ rateLimit: { timeout: 400, method: "notifyWhenChangesStop" } });
+    this.searchTerms.subscribe(function(terms) {
+        if (terms.length) {
             tabs.select(".search");
-            me.clear();
-            if (me.currentQuery) {
-                me.currentQuery.kill();
-            }
-            me.currentQuery = new Query(q, me);
+            me.setQuery(new Query(terms, me));            
         }
     });    
+}
+SearchViewModel.prototype.setQuery = function(newQuery) {
+    if (!newQuery.equals(this.currentQuery)) {
+        this.clear();
+        if (this.currentQuery) {
+            this.currentQuery.kill();
+        }
+        this.currentQuery = newQuery;
+        newQuery.start();
+    }
 }
 SearchViewModel.prototype.clear = function() {
     this.groupLookup = {};
@@ -66,7 +77,7 @@ SearchViewModel.prototype.setup = function() {
     var me = this;
     $("#tabs li.search").click(function() {
         $("#search-box").focus();
-        if (me.query()) {
+        if (me.queryString()) {
             tabs.select(".search"); 
         }
     });

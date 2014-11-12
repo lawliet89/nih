@@ -93,7 +93,7 @@
                 </li>
                 <li class="search" data-content="#search-results">
                     Search <input id="search-box" type="text"
-                        data-bind="value: search.query, valueUpdate: 'afterkeydown'" />
+                        data-bind="value: search.queryString, valueUpdate: 'afterkeydown'" />
                     (<span data-bind="text: search.count" />)
                 </li>
             </ul>

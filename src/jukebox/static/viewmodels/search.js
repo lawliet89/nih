@@ -7,13 +7,11 @@ function SearchItem(url, info) {
 // For grouping the results by folder
 function ResultsGroup(url) {
     var parts = parseUri(url);
-    var folderParts = splitPath(parts.directory);
-
     this.items = ko.observableArray();
     this.url = url;
     this.host = parts.authority;
-    this.path = folderParts.path;      
-    this.folder = folderParts.name;
+    this.path = parts.directory;
+    this.folder = splitPath(parts.directory).name;
     
     this.count = ko.computed(function() {
         return this.items().length;

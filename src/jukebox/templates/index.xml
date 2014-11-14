@@ -11,6 +11,7 @@
         <script type="text/javascript" src="static/knockout-3.2.0.js" />
         <script type="text/javascript" src="static/json.js" />
         <script type="text/javascript" src="static/parseUri.js" />
+        <script type="text/javascript" src="static/moment.js" />
 
         <script type="text/javascript" src="static/client.js" />
         <script type="text/javascript" src="static/viewmodels/volume.js" />
@@ -22,6 +23,7 @@
         <script type="text/javascript" src="static/viewmodels/queue.js" />
         <script type="text/javascript" src="static/viewmodels/query.js" />
         <script type="text/javascript" src="static/viewmodels/search.js" />
+        <script type="text/javascript" src="static/viewmodels/version.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
@@ -162,6 +164,19 @@
                     </li> 
                 </ol>
             </div>
+        </div>
+
+        <div id="footer">
+            <div class="version" data-bind="with: version">
+                <a data-bind="attr: { href: url }">This version</a>
+                published
+                <span class="hover" data-bind="text: when, attr: { title: timestamp }" />
+            </div>
+            <ul class="controls">
+                <li><a href="${repo_url}/issues">Report a bug</a></li>
+                <li><a href="/oldui">Old UI</a></li>
+                <li><a href="/config">Manage music sources</a></li>
+            </ul>
         </div>
     
         <div id="clicktrap">

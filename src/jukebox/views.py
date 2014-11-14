@@ -18,8 +18,8 @@ def _index_data(request):
 def index(request):    
     return render_to_response("index.xml", _index_data(request))
 
-def newui(request):
-    return render_to_response("knockout.xml", _index_data(request))  
+def oldui(request):
+    return render_to_response("oldui.xml", _index_data(request))  
 
 def spider(request):
     return render_to_response("spider.xml", {"spider": spider})

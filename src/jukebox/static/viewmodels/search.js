@@ -3,6 +3,10 @@ function SearchItem(url, info) {
     this.metadata = new Metadata(url, info);
     this.folder = this.metadata.folder;
 }
+SearchItem.prototype.enqueue = function(who) {
+    var tracks = [{ url: this.url()}];
+    rpc("enqueue", [who.name(), tracks, false], updateJukebox);
+}
 
 // For grouping the results by folder
 function ResultsGroup(url) {
@@ -19,6 +23,13 @@ function ResultsGroup(url) {
 }
 ResultsGroup.prototype.add = function(item) {
     this.items.push(item);
+}
+ResultsGroup.prototype.enqueue = function(who) {
+    var tracks = [];
+    this.items().forEach(function(item) {
+        tracks.push({ url: item.url() })
+    });
+    rpc("enqueue", [who.name(), tracks, false], updateJukebox);
 }
 
 function SearchViewModel(user) {
@@ -77,6 +88,7 @@ SearchViewModel.prototype.getGroup = function(item) {
 }
 SearchViewModel.prototype.setup = function() {    
     var me = this;
+    // Clicking on the search tab
     $("#tabs li.search").click(function() {
         $("#search-box").focus();
         if (me.queryString()) {
@@ -91,9 +103,14 @@ SearchViewModel.prototype.setup = function() {
         setTimeout(function() { $(li).removeClass("selected") }, 10);
 
         var item = ko.dataFor(li);
-        var tracks = [{ url: item.url()}];
-        rpc("enqueue", [me.user.name(), tracks, false], updateJukebox);
+        item.enqueue(me.user);
 
         event.preventDefault();        
+    });
+    // Enqueue folder button
+    $("#search-results").on("click", ".folder button.enqueue", function(event) {
+        var group = ko.dataFor(this);
+        group.enqueue(me.user);
+        event.preventDefault();
     });
 }

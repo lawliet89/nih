@@ -109,6 +109,7 @@
                             <div class="name">
                                 <span data-bind="text: folder" />
                                 (<span data-bind="text: count" />)
+                                <button class="enqueue">Enqueue folder</button>
                             </div>
                             <div class="folder-metadata">
                                 <a class="path" data-bind="text: path, attr: { href: url }" />

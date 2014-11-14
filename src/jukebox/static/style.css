@@ -36,6 +36,13 @@ body {
     cursor: auto;
 }
 
+#tabs li.search .loading {
+    display: block;
+    float: right;
+    margin-top: 4px;
+    margin-left: 5px;
+}
+
 #search-results .folder {
     margin: 20px 0 0px 0px;
 }

@@ -27,12 +27,16 @@ function SearchViewModel(user) {
     this.groups = ko.observableArray();
     this.groupLookup = {};
     this.user = user;
-    this.currentQuery = null;
+    this.currentQuery = ko.observable(null);
 
     this.count = ko.computed(function() {
         var number = 0;
         this.groups().forEach(function(g) { number += g.count(); });
         return number;
+    }, this);
+    this.isSearching = ko.computed(function() {
+        return this.currentQuery() != null
+            && this.currentQuery().alive();
     }, this);
 
     this.searchTerms = ko.computed(function() {
@@ -49,12 +53,12 @@ function SearchViewModel(user) {
     });    
 }
 SearchViewModel.prototype.setQuery = function(newQuery) {
-    if (!newQuery.equals(this.currentQuery)) {
+    if (!newQuery.equals(this.currentQuery())) {
         this.clear();
-        if (this.currentQuery) {
-            this.currentQuery.kill();
+        if (this.currentQuery()) {
+            this.currentQuery().kill();
         }
-        this.currentQuery = newQuery;
+        this.currentQuery(newQuery);
         newQuery.start();
     }
 }

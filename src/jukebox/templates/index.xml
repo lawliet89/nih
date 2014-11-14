@@ -2,117 +2,171 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://genshi.edgewall.org/">
     <head>
         <title>Django Jukebox</title>
-        <script type="text/javascript" src="static/prototype-1.4.0.js" />
-        <script type="text/javascript" src="static/json.js" />
-        <script type="text/javascript" src="static/jsonrpc.js" />
-        <script type="text/javascript" src="static/client.js" />
-        <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
-        <script type="text/javascript">var jq = jQuery.noConflict();</script>
-        <script type="text/javascript">
-            var usernameFromRequest;
-            <py:if test="has_username">
-                usernameFromRequest = '${username}';
-             </py:if> 
-        </script>
         <link rel="stylesheet" href="static/style.css" type="text/css" />
-        <link rel="icon" href="static/favicon.png" type="image/png" />
+        <link rel="stylesheet" href="static/player.css" type="text/css" />
+        <link rel="stylesheet" href="static/lists.css" type="text/css" />
+        <link rel="icon" href="static/icons/favicon.png" type="image/png" />
+        <script type="text/javascript" src="static/jquery-2.1.1.min.js" />
+        <script type="text/javascript" src="static/jquery-ui.js" />
+        <script type="text/javascript" src="static/knockout-3.2.0.js" />
+        <script type="text/javascript" src="static/json.js" />
+        <script type="text/javascript" src="static/parseUri.js" />
+
+        <script type="text/javascript" src="static/client.js" />
+        <script type="text/javascript" src="static/viewmodels/volume.js" />
+        <script type="text/javascript" src="static/viewmodels/progress.js" />
+        <script type="text/javascript" src="static/viewmodels/user.js" />
+        <script type="text/javascript" src="static/viewmodels/track.js" />
+        <script type="text/javascript" src="static/viewmodels/player.js" />
+        <script type="text/javascript" src="static/viewmodels/metadata.js" />
+        <script type="text/javascript" src="static/viewmodels/queue.js" />
+        <script type="text/javascript" src="static/viewmodels/query.js" />
+        <script type="text/javascript" src="static/viewmodels/search.js" />
+        <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
-        <div class="controls">            
-            Username: <span id="username">?</span>
-            <button onclick="edit_username()">Change</button>
-
-            <br />
-            <button onclick="do_skip()">Skip</button>
-            <button onclick="do_pause(true)">Pause</button>
-            <button onclick="do_pause(false)">Unpause</button>
-            <p style="text-align: right">
-                <a href="${repo_url}/issues">Bug reports</a>
-                <py:if test="has_lastfm">
-                    <a href="http://www.last.fm/user/${lastfm_name}">Last.fm</a>
-                </py:if>
-            </p>
-        </div>
-        <table class="volume-control">
-            <tr>
-                <td id="volume-indicator" />
-                <td id="volume-ticks" />
-                <td id="volume">?</td>
-                <td id="volume-who" />
-            </tr>
-        </table>
-        <div>
-            <div class="mainColumn">
-                <div class="now-playing">
-                    <h2 id="statusatom">?</h2>
-                    <span id="nowplaying">?</span>
-                </div>
-                <div class="columnClear" />
-            </div>
-            <div class="leftColumn">
-                <div class="searchpanel">
-                    <h2>Search</h2>
-                    <div class="paneBody">
-                        <form onsubmit="do_search(); return false;">
-                            <input id="searchtext" name="searchtext" type="text" value="" />
-                            <button onclick="do_search(); return false;">Search</button>
-                            <button onclick="do_random(10); return false;">Rnd(10)</button>
-                        </form>
+        <div class="jukebox">
+            <div id="player" data-bind="with: player">
+                <div class="progressContainer">
+                    <div class="status">
+                        <span data-bind="text: status">?</span>
+                        <span data-bind="with: progress, visible: track.hasTrack">
+                            <span data-bind="text: elapsedTimeText">?</span> /
+                            <span data-bind="text: totalTimeText">?</span>
+                        </span>
                     </div>
                 </div>
-                <div class="columnClear" />
-            </div>
-            <div class="columnClear" />
-        </div>
-        <div>
-            <div class="mainColumn">
-                <div>
-                    <h2>Queue</h2>
-                    <div id="statuspanel" class="paneBody playlistQueue" />
-                </div>
-                <div class="columnClear" />
-            </div>
-            <div class="leftColumn">
-                <div>
-                    <h2>History</h2>
-                    <div class="paneBody">
-                        <div class="history" id="history" />
-                        <form onsubmit="send_chat(); return false;">
-                            <input id="chatMessage" name="chatMessage" type="text" value="" />
-                            <button onclick="send_chat(); return false;">Chat</button>
-                        </form>
+                <div class="progress" data-bind="visible: track.hasTrack, style: { width: progress.progress }">
+                    <div class="status">
+                        <span data-bind="text: status">?</span>
+                        <span data-bind="with: progress">
+                            <span data-bind="text: elapsedTimeText">?</span> /
+                            <span data-bind="text: totalTimeText">?</span>
+                        </span>
                     </div>
                 </div>
-                <div class="columnClear" />
-            </div>
-            <div class="columnClear" />
-        </div>
-        <div id="searchResultsContainer">
-            <h2>Search Results</h2>
-            <div class="paneBody">
-                <div id="searchResults" class="searchResults" />
-            </div>
-        </div>
-        <a href="/config">(configuration)</a>
-        <br />
-        <a href="/admin">Admin</a>
-        <div class="version">
-            <a href="">This version</a>
-            published on
-            <span class="timestamp" />
-        </div>
-        <script>Event.observe(window, 'load', initClient);</script>
+                <div class="contents">
+                    <div class="track" data-bind="with: track">
+                        <img class="art" data-bind="attr:{src: artUrl}" />
+                        <div class="title" data-bind="text: trackName">?</div>
+                        <div class="metadata">
+                            <div class="album" data-bind="visible: albumTitle">
+                                Track <span data-bind="text: trackNumber" />
+                                from <span class="albumTitle" data-bind="text: albumTitle" />
+                            </div>
+                            <div class="artist" data-bind="visible: artistName">
+                                by <span class="artistName" data-bind="text: artistName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="volume" data-bind="with: volume">
+                        <img class="label" src="static/icons/volume.png" alt="Volume" />
+                        <div style="margin: 4px 0 0 26px;">
+                            <input type="range" min="0" max="100" step="1" data-bind="value: volume" /> 
+                            <span data-bind="visible: volumeChanged">
+                                (<span data-bind="text: who"></span>
+                                 <span data-bind="text: direction"></span>)
+                            </span>
+                        </div>
+                    </div>
 
-        <div id="modal">
-            <div class="modalbox" id="edit-username">  
-                <h2>Change username</h2>  
-                <form onsubmit="return false;">
-                    <p><input name="username" type="text" value="?" /></p>
-                    <div class="dialog-buttons"><div>
-                        <button onclick="finish_editing_username(true);">Save</button>
-                        <button onclick="finish_editing_username(false);">Cancel</button>
-                    </div></div>
+                    <div class="controls">
+                        <button class="play">
+                            <img src="static/icons/play.png" alt="Play" />
+                        </button>
+                        <button class="pause">
+                            <img src="static/icons/pause.png" alt="Pause" />
+                        </button>
+                        <button class="skip">
+                            <img src="static/icons/skip.png" alt="Skip" />
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="username" data-bind="with: user">
+                Username: <span class="name" data-bind="text: name" />
+            </div>
+
+            <ul id="tabs">                
+                <li class="queue selected" data-content="#queue">
+                    Queue (<span data-bind="text: queue.count" />)
+                </li>
+                <li class="search" data-content="#search-results">
+                    Search <input id="search-box" type="text"
+                        data-bind="value: search.queryString, valueUpdate: 'afterkeydown'" />
+                    (<span data-bind="text: search.count" />)
+                </li>
+            </ul>
+
+            <div id="search-results" data-bind="with: search" style="display: none;">
+                <div data-bind="foreach: groups">
+                    <div class="folder">
+                        <div class="header">
+                            <div class="name">
+                                <span data-bind="text: folder" />
+                                (<span data-bind="text: count" />)
+                            </div>
+                            <div class="folder-metadata">
+                                <a class="path" data-bind="text: path, attr: { href: url }" />
+                                (<span class="host" data-bind="text: host" />)
+                            </div>
+                        </div>                
+                        <ol data-bind="foreach: items">
+                            <li class="item" data-bind="with: metadata">
+                                <div class="trackName" data-bind="text: trackName" />
+                                <div class="metadata">     
+                                    <span data-bind="visible: trackNumber">                       
+                                        Track <span data-bind="text: trackNumber" />
+                                    </span>
+                                    <span data-bind="visible: albumTitle">
+                                        from <span data-bind="text: albumTitle" />
+                                    </span>
+                                    <span data-bind="visible: artistName">
+                                        by <span data-bind="text: artistName" />
+                                    </span>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <div id="queue" data-bind="with: queue">
+                <ol data-bind="foreach: items">
+                    <li class="item">
+                        <div data-bind="with: metadata">
+                            <div class="trackName" data-bind="text: trackName" />
+                            <div class="metadata">     
+                                <span data-bind="visible: trackNumber">                       
+                                    Track <span data-bind="text: trackNumber" />
+                                </span>
+                                <span data-bind="visible: albumTitle">
+                                    from <span data-bind="text: albumTitle" />
+                                </span>
+                                <span data-bind="visible: artistName">
+                                    by <span data-bind="text: artistName" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="controls">
+                            <span class="who" data-bind="text: who" />
+                            <a href="#" class="remove">
+                                <img src="static/icons/largeX.png" alt="x" />
+                            </a>
+                        </div>                        
+                    </li> 
+                </ol>
+            </div>
+        </div>
+    
+        <div id="clicktrap">
+            <div id="edit-username" class="modalbox" data-bind="with: user">
+                <div class="title">Enter a new username</div>
+                <form onSubmit="$(this).siblings('.save').click(); return false;">
+                    <input type="text" data-bind="value: newName" />
                 </form>
+                <button class="save">Save</button>
+                <button>Cancel</button>
             </div>
         </div>
     </body>

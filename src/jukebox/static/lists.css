@@ -1,0 +1,62 @@
+ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+ol li {
+    position: relative;
+    background-color: #A88C0F;
+    border-top: 1px solid #6E5D15;
+    border-bottom: 1px solid #6E5D15;
+    padding: 8px;
+    height: 30px;
+}
+#queue ol li {
+    cursor: move;
+}
+#search-results ol li {
+    cursor: pointer;
+}
+#search-results ol li:not(.selected) {
+    transition: background-color 1s;
+}
+#search-results ol li.selected {
+    background-color: #0F2BA8;
+}
+
+ol li .trackName {
+    font-size: 12pt;    
+    color: white;
+}
+ol li .metadata {
+    font-size: 8pt;
+    color: #ccc;
+}
+ol li .controls {
+    display: table;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    height: 20px;
+    margin-top: -10px;
+    font-size: 10pt;
+    color: white;
+}
+ol li .controls .who {
+    display: table-cell;
+    vertical-align: middle;
+    padding-right: 10px;
+}
+ol li .controls a, ol li .controls a:hover, ol li .controls a:visited {
+    color: white;
+    text-decoration: none;
+}
+ol li .controls .remove {
+    display: table-cell;
+    vertical-align: middle;
+    opacity: 0.3;
+}
+ol li:hover .controls .remove {
+    opacity: 1;
+}

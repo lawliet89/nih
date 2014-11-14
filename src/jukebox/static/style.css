@@ -1,7 +1,18 @@
+/* Colour palette:
+ * Dark blue: #0F2BA8
+ * Darker yellow: #6E5D15
+ * Lighter yellow: #A88C0F
+ * White & black
+ */
+
 body {
     margin: 0;
     font-family: "Times New Roman", "Georgia", serif;
     font-size: 12pt;
+}
+
+a, a:visited, a:hover {
+    color: inherit;
 }
 
 .jukebox {
@@ -11,6 +22,9 @@ body {
     padding: 20px;
     position: relative;
     height: 100%;
+}
+.hover {
+    border-bottom: 1px dotted;
 }
 
 #tabs {
@@ -64,6 +78,39 @@ body {
     font-size: 8pt;
     margin-right: 5px;
     float: left;
+}
+
+#footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-top: 2px solid #6E5D15;
+    background-color: #0F2BA8;
+    color: white;
+    font-size: 10pt;
+    padding: 3px 5px 3px 5px;
+}
+#footer .version {
+    display: inline-block;
+}
+#footer .controls {
+    float: right;
+    list-style-type: none;
+    margin: 0;
+}
+#footer .controls li {
+    display: inline-block;
+    float: right;
+    margin-right: 5px;
+}
+#footer .controls li:not(:first-child):after {
+    content: "|";
+    margin-left: 5px;
+    color: #A88C0F;
+}
+#footer .controls li a {
+    text-decoration: none;
 }
 
 #clicktrap {

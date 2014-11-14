@@ -3,6 +3,10 @@ function SearchItem(url, info) {
     this.metadata = new Metadata(url, info);
     this.folder = this.metadata.folder;
 }
+SearchItem.prototype.enqueue = function(who) {
+    var tracks = [{ url: this.url()}];
+    rpc("enqueue", [who.name(), tracks, false], updateJukebox);
+}
 
 // For grouping the results by folder
 function ResultsGroup(url) {
@@ -20,6 +24,13 @@ function ResultsGroup(url) {
 ResultsGroup.prototype.add = function(item) {
     this.items.push(item);
 }
+ResultsGroup.prototype.enqueue = function(who) {
+    var tracks = [];
+    this.items().forEach(function(item) {
+        tracks.push({ url: item.url() })
+    });
+    rpc("enqueue", [who.name(), tracks, false], updateJukebox);
+}
 
 function SearchViewModel(user) {
     var me = this;
@@ -27,12 +38,16 @@ function SearchViewModel(user) {
     this.groups = ko.observableArray();
     this.groupLookup = {};
     this.user = user;
-    this.currentQuery = null;
+    this.currentQuery = ko.observable(null);
 
     this.count = ko.computed(function() {
         var number = 0;
         this.groups().forEach(function(g) { number += g.count(); });
         return number;
+    }, this);
+    this.isSearching = ko.computed(function() {
+        return this.currentQuery() != null
+            && this.currentQuery().alive();
     }, this);
 
     this.searchTerms = ko.computed(function() {
@@ -49,12 +64,12 @@ function SearchViewModel(user) {
     });    
 }
 SearchViewModel.prototype.setQuery = function(newQuery) {
-    if (!newQuery.equals(this.currentQuery)) {
+    if (!newQuery.equals(this.currentQuery())) {
         this.clear();
-        if (this.currentQuery) {
-            this.currentQuery.kill();
+        if (this.currentQuery()) {
+            this.currentQuery().kill();
         }
-        this.currentQuery = newQuery;
+        this.currentQuery(newQuery);
         newQuery.start();
     }
 }
@@ -73,6 +88,7 @@ SearchViewModel.prototype.getGroup = function(item) {
 }
 SearchViewModel.prototype.setup = function() {    
     var me = this;
+    // Clicking on the search tab
     $("#tabs li.search").click(function() {
         $("#search-box").focus();
         if (me.queryString()) {
@@ -87,9 +103,14 @@ SearchViewModel.prototype.setup = function() {
         setTimeout(function() { $(li).removeClass("selected") }, 10);
 
         var item = ko.dataFor(li);
-        var tracks = [{ url: item.url()}];
-        rpc("enqueue", [me.user.name(), tracks, false], updateJukebox);
+        item.enqueue(me.user);
 
         event.preventDefault();        
+    });
+    // Enqueue folder button
+    $("#search-results").on("click", ".folder button.enqueue", function(event) {
+        var group = ko.dataFor(this);
+        group.enqueue(me.user);
+        event.preventDefault();
     });
 }

@@ -3,10 +3,10 @@
 // chunks in order to gain a more responsive UI.
 //
 // It does this in two ways. Firstly, it makes three
-// requests to the server, each time requesting more
-// results: First 10, then 11 - 100, then 101 - 1000.
-// This means that the first few results come back 
-// more quickly.
+// requests to the server, each time requesting 
+// exponentially more results. First 10, then 11 
+// - 100, then 101 - 1000. This means that the first 
+// few results come back more quickly.
 //
 // Secondly, when we receive the largest result set,
 // it adds them to the view model in slices of 100
@@ -17,18 +17,23 @@
 function Query(terms, searcher) {
     this.terms = terms;
     this.searcher = searcher;
-    this.alive = true;
     this.maxResults = 1000;
+    this.alive = ko.observable(true);
+    // We get the results in three increasing sets,
+    // so take the 1/3rd root of the number of results
+    // we want, and use this as the starting count and
+    // the factor to increase by every time. 
+    this.fetchFactor = Math.round(Math.pow(this.maxResults, 1 / 3));
 }
 
 Query.prototype.start = function() {
-    this.search(10, 0);
+    this.search(this.fetchFactor, 0);
 }
 // Stops the ongoing query both from making more
 // requests to the server, and from adding any more
 // received results to the UI.
 Query.prototype.kill = function() {
-    this.alive = false;
+    this.alive(false);
 }
 // Fetches 'count' results from the server, starting
 // from 'skip'. e.g. Get 11 - 100.
@@ -36,9 +41,11 @@ Query.prototype.search = function(count, skip) {
     var me = this;
     rpc("search", [this.terms, count, skip], function(results) {
         me.handleSearchResults(results, function() {
-            if (count < me.maxResults && me.alive) {
+            if (count < me.maxResults && me.alive()) {
                 // Fetch a larger result set from the server
-                me.search(count * 10, count);
+                me.search(count * me.fetchFactor, count);
+            } else {
+                me.alive(false); // Have finished searching naturally
             }
         });
     });
@@ -50,7 +57,7 @@ Query.prototype.handleSearchResults = function(results, onFinish) {
     var i = 0;
     var step = 100;
     var handle = function() {
-        if (i < results.length && me.alive) {
+        if (i < results.length && me.alive()) {
             var target = Math.min(results.length, i + step);
             while (i < target) {
                 var r = results[i];

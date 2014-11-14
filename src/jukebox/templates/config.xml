@@ -1,12 +1,12 @@
 <html>
   <head>
     <title>Django Jukebox - Config</title>
-    <script type="text/javascript" src="/static/prototype-1.4.0.js"></script>
+    <script type="text/javascript" src="/static/old/prototype-1.4.0.js"></script>
     <script type="text/javascript" src="/static/json.js"></script>
-    <script type="text/javascript" src="/static/jsonrpc.js"></script>
+    <script type="text/javascript" src="/static/old/jsonrpc.js"></script>
     <script type="text/javascript" src="/static/configclient.js"></script>
-    <link rel="stylesheet" href="/static/style.css" type="text/css"/>
-    <link rel="icon" href="/static/favicon.png" type="image/png" />
+    <link rel="stylesheet" href="/static/old/style.css" type="text/css"/>
+    <link rel="icon" href="/static/old/favicon.png" type="image/png" />
   </head>
   <body>
     <h1>Configuration</h1>

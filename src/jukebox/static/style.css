@@ -127,7 +127,7 @@ a, a:visited, a:hover {
 .modalbox {
     display: none;
     position: fixed;
-    top: 200px;
+    top: 100px;
     left: 50%;
     width: 300px;
     background-color: White;
@@ -138,6 +138,8 @@ a, a:visited, a:hover {
 
 .modalbox .contents {
     padding: 10px;
+    max-height: 600px;
+    overflow: auto;
 }
 
 .modalbox .title {
@@ -152,9 +154,13 @@ a, a:visited, a:hover {
 .modalbox .dialog-buttons button {
     display: inline-block;
     font-size: 14pt;
+    font-family: inherit;
+    width: 100%;
+    margin-top: 5px;
+}
+.modalbox > .dialog-buttons button {
     margin: 5px 10px;
     width: calc(100% - 20px);
-    font-family: inherit;
 }
 
 .modalbox form input, .modalbox form button {
@@ -170,6 +176,7 @@ a, a:visited, a:hover {
 }
 #roots ol {
     text-align: left;
+    margin: 0 -10px;
 }
 #roots li .controls button {
     margin-left: 5px;

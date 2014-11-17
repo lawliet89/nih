@@ -3,6 +3,7 @@ function VolumeViewModel(user) {
     this.who = ko.observable("");
     this.direction = ko.observable("");
 
+    this.volume.extend({ rateLimit: 1000 });
     this.volume.subscribe(function(newVolume) {
         var value = parseInt(newVolume);
         if (!isNaN(value)) {

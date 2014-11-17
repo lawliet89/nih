@@ -12,13 +12,13 @@ UserViewModel.prototype.setup = function() {
     var me = this;
     $("#username .name").click(function(e) {
         var modal = $("#edit-username");
-        var closeModal = showModal(modal);
+        showModal(modal);
         modal.find("input").focus().select();
-        modal.find("button").click(closeModal);
         e.preventDefault();
     });
-    $("#edit-username button.save").click(function() {
+    $("#edit-username form").submit(function(e) {
         me.name(me.newName());
+        e.preventDefault();
     });
     rpc("get_username", [], function(newName) {
         me.name(newName);

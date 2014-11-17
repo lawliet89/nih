@@ -4,6 +4,7 @@ function JukeboxViewModel() {
     this.queue = new QueueViewModel(this.user);
     this.search = new SearchViewModel(this.user);
     this.version = new VersionViewModel();
+    this.roots = new RootsViewModel();
 }
 JukeboxViewModel.prototype.setup = function() {
     ko.applyBindings(this);
@@ -12,6 +13,7 @@ JukeboxViewModel.prototype.setup = function() {
     this.queue.setup();
     this.search.setup();
     this.version.setup();
+    this.roots.setup();
 }
 JukeboxViewModel.prototype.update = function(status) {
     this.player.update(status);

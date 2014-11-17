@@ -12,7 +12,7 @@ def all_roots(request):
     ret = []
     for root in WebPath.get_root_nodes():
         ret.append({"url":root.url, "count":MusicFile.objects.filter(url__startswith=root.url).count()})
-    return ret
+    return sorted(ret, key=lambda x: x['url'])
 
 @jsonrpc_method("current_rescans", site=site)
 def current_rescans(request):
@@ -20,7 +20,7 @@ def current_rescans(request):
     for root in WebPath.get_root_nodes():
         if WebPath.objects.filter(checked = False, failed=False,url__startswith=root.url).count()>0:
             ret.append(root.url)
-    return ret
+    return sorted(ret)
 
 @jsonrpc_method("rescan_root", site=site)
 def rescan_root(request, root):

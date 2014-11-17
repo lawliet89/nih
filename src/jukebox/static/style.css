@@ -127,18 +127,21 @@ a, a:visited, a:hover {
 .modalbox {
     display: none;
     position: fixed;
-    top: 50%;
+    top: 200px;
     left: 50%;
     width: 300px;
     background-color: White;
     border: 1px solid black;
     z-index: 20;
-    padding: 10px;
     text-align: center;
 }
 
+.modalbox .contents {
+    padding: 10px;
+}
+
 .modalbox .title {
-    margin: -10px -10px 10px -10px;
+    margin: 0 0 10px 0;
     padding: 5px;
     font-size: 14pt;
     color: white;
@@ -146,15 +149,32 @@ a, a:visited, a:hover {
     border-bottom: 1px solid #A88C0F;
 }
 
-.modalbox button {
+.modalbox .dialog-buttons button {
+    display: inline-block;
     font-size: 14pt;
-    margin: 5px 0;
-    width: 100%;
+    margin: 5px 10px;
+    width: calc(100% - 20px);
     font-family: inherit;
 }
 
-#edit-username input {
+.modalbox form input, .modalbox form button {
     font-size: 14pt;
-    width: 100%;
     font-family: inherit;
+}
+.modalbox form input {
+    width: 100%;
+}
+
+#roots {
+    width: 600px;
+}
+#roots ol {
+    text-align: left;
+}
+#roots li .controls button {
+    margin-left: 5px;
+}
+#roots p {
+    font-size: 10pt;
+    text-align: left;
 }

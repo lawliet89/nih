@@ -9,14 +9,17 @@ $(function() {
 });
 
 var jsonRpcRequestId = 1;
-function rpc(method, params, callback) {
+function rpc(method, params, callback, target) {
+    if (!target) {
+        target = "jukebox";
+    }
     data = {
         method: method,
         params: params,
         id: jsonRpcRequestId++,
         version: "1.1",
     };
-    $.ajax("/rpc/jukebox", {
+    $.ajax("/rpc/" + target, {
         data: JSON.stringify(data),
         contentType: "application/json; charset=utf-8",
         dataType: 'json',
@@ -32,23 +35,29 @@ function rpc(method, params, callback) {
 function refresh() {
     rpc('get_queue', [], updateJukebox);
     rpc('get_volume', [], updateVolume);
+    if (jukebox.roots.open) {
+        refreshRoots();
+    }
     setTimeout(refresh, 3000);
 }
 
-function showModal(modal) {
+function showModal(modal, onClose) {
     $('.modalbox').each(function() {
-        $(this).hide()
-               .css({
-            'margin-left': -$(this).width() / 2,
-            'margin-top': -$(this).height() / 2,
-        });
+        $(this).hide();
     });
-    modal.show();
+    var closeModal = function() {
+        $("#clicktrap").fadeOut();
+        if (onClose) {
+            onClose();
+        }
+    };
+    modal
+        .show()
+        .css({ 'margin-left': -$(modal).width()  / 2 })
+        .find(".dialog-buttons button").click(closeModal);
     $("#clicktrap").fadeIn();
 
-    return function() {
-        $("#clicktrap").fadeOut();
-    }
+    return closeModal;
 }
 
 function TabManager() {

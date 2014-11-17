@@ -32,13 +32,14 @@ ol li {
     background-color: #0F2BA8;
 }
 
-ol li .trackName {
+ol li .name {
     font-size: 12pt;    
     color: white;
 }
 ol li .metadata {
     font-size: 8pt;
-    color: #ccc;
+    color: rgb(210, 210, 210);
+    padding-top: 1px;
 }
 ol li .controls {
     display: table;
@@ -50,20 +51,11 @@ ol li .controls {
     font-size: 10pt;
     color: white;
 }
-ol li .controls .who {
-    display: table-cell;
-    vertical-align: middle;
-    padding-right: 10px;
-}
 ol li .controls a, ol li .controls a:hover, ol li .controls a:visited {
     color: white;
     text-decoration: none;
-}
-ol li .controls .remove {
     display: table-cell;
     vertical-align: middle;
-    opacity: 0.3;
-}
-ol li:hover .controls .remove {
-    opacity: 1;
+    float: right;
+    margin-left: 10px;
 }

@@ -18,8 +18,8 @@ function QueueViewModel(user) {
     }, this);
 }
 QueueViewModel.prototype.remove = function(item) {
-    rpc("dequeue", [this.user.name(), item.id()], updateJukebox);
     this.items.remove(item);
+    rpc("dequeue", [this.user.name(), item.id()], updateJukebox);
 }
 QueueViewModel.prototype.update = function(items, infos) {
     if (!this.busy) {
@@ -29,13 +29,23 @@ QueueViewModel.prototype.update = function(items, infos) {
         }
     }
 }
+QueueViewModel.prototype.clear = function() {
+    this.items.removeAll();
+    rpc('clear_queue', [this.user.name()], updateJukebox);
+}
 QueueViewModel.prototype.setup = function() {
     var me = this;
+    // Individual dequeue button
     $("#queue").on("click", "li.item .remove", function(event) {
         var item = ko.dataFor(this);
         item.queue.remove(item);
         event.preventDefault();
     });
+    $("#queue .clear-queue").click(function(event) {
+        me.clear();
+        event.preventDefault();
+    });
+    // Drag and drop queue re-ordering
     $("#queue ol").sortable({
         revert: true,
         axis: "y",

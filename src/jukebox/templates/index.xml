@@ -139,6 +139,8 @@
             </div>
 
             <div id="queue" data-bind="with: queue">
+                <button class="clear-queue" data-bind="visible: count">Clear queue</button>
+                <div style="clear: right;" />
                 <ol data-bind="foreach: items">
                     <li class="item">
                         <div data-bind="with: metadata">

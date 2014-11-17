@@ -15,6 +15,13 @@ ol li {
 #queue ol li {
     cursor: move;
 }
+#queue button.clear-queue {
+    margin: 5px;
+    font-size: 8pt;
+    float: right;
+    display: block;
+}
+
 #search-results ol li {
     cursor: pointer;
 }

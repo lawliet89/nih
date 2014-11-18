@@ -4,7 +4,7 @@ site = JSONRPCSite()
 import jukebox.audioscrobbler
 from django.conf import settings
 from jukebox.models import QueueItem, ChatItem
-from simple_player import Player
+from simple_player import Player, Status
 from helpers import reindex_queue
 from jukebox.cache import cached
 from time import strftime, gmtime

@@ -17,7 +17,8 @@ class Downloader(BackgroundTask):
             item.save()
 
     def postProcessItem(self, item):
-        from jsonfuncs import next_track, play_current, get_status
+        from rpc.globals import next_track
+        from rpc.player_rpc import play_current, get_status
         current = QueueItem.current().what
         if item.failed:
             print "item failed", item

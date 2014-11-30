@@ -17,6 +17,7 @@ function PlayerViewModel(user) {
 }
 PlayerViewModel.prototype.setup = function() {
     incrementPlayer();
+    this.volume.setup();
 }
 PlayerViewModel.prototype.update = function(status) {
     if (status.info) {

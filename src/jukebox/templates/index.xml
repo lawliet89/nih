@@ -12,6 +12,7 @@
         <script type="text/javascript" src="static/json.js" />
         <script type="text/javascript" src="static/parseUri.js" />
         <script type="text/javascript" src="static/moment.js" />
+        <script type="text/javascript" src="static/notify.js" />
 
         <script type="text/javascript" src="static/client.js" />
         <script type="text/javascript" src="static/viewmodels/volume.js" />
@@ -25,6 +26,7 @@
         <script type="text/javascript" src="static/viewmodels/search.js" />
         <script type="text/javascript" src="static/viewmodels/version.js" />
         <script type="text/javascript" src="static/viewmodels/roots.js" />
+        <script type="text/javascript" src="static/viewmodels/notification.js" />
         <script type="text/javascript" src="static/viewmodels/jukebox.js" />
     </head>
     <body>
@@ -91,7 +93,7 @@
                 Username: <span class="name" data-bind="text: name" />
             </div>
 
-            <ul id="tabs">                
+            <ul id="tabs">
                 <li class="queue selected" data-content="#queue">
                     Queue (<span data-bind="text: queue.count" />)
                 </li>
@@ -119,12 +121,12 @@
                                 <a class="path" data-bind="text: path, attr: { href: url }" />
                                 (<span class="host" data-bind="text: host" />)
                             </div>
-                        </div>                
+                        </div>
                         <ol data-bind="foreach: items">
                             <li class="item" data-bind="with: metadata">
                                 <div class="trackName name" data-bind="text: trackName" />
-                                <div class="metadata">     
-                                    <span data-bind="visible: trackNumber">                       
+                                <div class="metadata">
+                                    <span data-bind="visible: trackNumber">
                                         Track <span data-bind="text: trackNumber" />
                                     </span>
                                     <span data-bind="visible: albumTitle">
@@ -147,8 +149,8 @@
                     <li class="item">
                         <div data-bind="with: metadata">
                             <div class="trackName name" data-bind="text: trackName" />
-                            <div class="metadata">     
-                                <span data-bind="visible: trackNumber">                       
+                            <div class="metadata">
+                                <span data-bind="visible: trackNumber">
                                     Track <span data-bind="text: trackNumber" />
                                 </span>
                                 <span data-bind="visible: albumTitle">
@@ -164,8 +166,8 @@
                             <a href="#" class="remove">
                                 <img src="static/icons/largeX.png" alt="x" />
                             </a>
-                        </div>                        
-                    </li> 
+                        </div>
+                    </li>
                 </ol>
             </div>
         </div>
@@ -180,9 +182,14 @@
                 <li><a href="${repo_url}/issues">Report a bug</a></li>
                 <li><a href="/oldui">Old UI</a></li>
                 <li><a href="#" id="manage-roots">Manage music sources</a></li>
+                <li data-bind="with: notification, visible: notification.permission() === 'default'">
+                    <a href="#" data-bind="click: getPermission">
+                        Show Notifications
+                    </a>
+                </li>
             </ul>
         </div>
-    
+
         <div id="clicktrap">
             <div id="edit-username" class="modalbox" data-bind="with: user">
                 <div class="title">Enter a new username</div>
@@ -206,9 +213,9 @@
                         <button class="save" style="width: 150px;">Add new source</button>
                         <p>You can add your own music to the Jukebox by exposing your music files
                         with a web server on your computer. So long as the Jukebox can spider links
-                        from the root URL your music should get added. 
+                        from the root URL your music should get added.
                         Once you have set it up, add the full url of your server here.</p>
-                    </form>   
+                    </form>
                     <div data-bind="visible: rescan_count">
                         <span data-bind="text: rescan_count" /> rescans
                     </div>
@@ -218,7 +225,7 @@
                                 <a data-bind="text: $$data" />
                             </div>
                         </li>
-                    </ol> 
+                    </ol>
                     <div>
                        <span data-bind="text: count" /> sources
                     </div>

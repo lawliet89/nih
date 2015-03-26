@@ -7,19 +7,25 @@ function NotificationViewModel() {
 	// Number of seconds to show the notification
 	this.timeout = 5;
 
+	this.status = ko.observable("");
 	this.artistName = ko.observable(null);
 	this.trackTitle = ko.observable(null);
-	this.notificationBody = ko.computed(function() {
+
+	this.notificationState = ko.computed(function() {
+		var body = "";
 		if (self.artistName() !== null && self.trackTitle() !== null) {
-			return self.artistName() + " – " + self.trackTitle();
+			body = self.artistName() + " – " + self.trackTitle();
 		}
-		return "";
+		return {
+			body: body,
+			status: self.status()
+		}
 	});
 
-	this.notificationBody.extend({ rateLimit: 500 });
-	this.notificationBody.subscribe(function(newValue){
-		if (newValue !== "") {
-			self.notify(newValue);
+	this.notificationState.extend({ rateLimit: 500 });
+	this.notificationState.subscribe(function(newValue){
+		if (newValue.body !== "" && newValue.status === "playing") {
+			self.notify(newValue.body);
 		}
 	});
 	this.updatePermission();
@@ -44,6 +50,12 @@ NotificationViewModel.prototype.updatePermission = function() {
 }
 
 NotificationViewModel.prototype.update = function(status) {
+	if (status.status) {
+		this.status(status.status);
+	} else {
+		this.status("");
+	}
+
     if (status.info) {
     	if (status.info.trackName) {
 	        this.trackTitle(status.info.trackName);

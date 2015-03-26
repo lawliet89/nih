@@ -7,15 +7,16 @@ function NotificationViewModel() {
 	// Number of seconds to show the notification
 	this.timeout = 5;
 
-	this.artistName = ko.observable("");
-	this.trackTitle = ko.observable("");
+	this.artistName = ko.observable(null);
+	this.trackTitle = ko.observable(null);
 	this.notificationBody = ko.computed(function() {
-		if (self.artistName() !== "" || self.trackTitle() !== "") {
-			return self.artistName() + " - " + self.trackTitle();
+		if (self.artistName() !== null && self.trackTitle() !== null) {
+			return self.artistName() + " – " + self.trackTitle();
 		}
 		return "";
 	});
 
+	this.notificationBody.extend({ rateLimit: 500 });
 	this.notificationBody.subscribe(function(newValue){
 		if (newValue !== "") {
 			self.notify(newValue);
@@ -51,8 +52,8 @@ NotificationViewModel.prototype.update = function(status) {
 	    }
 	    this.artistName(status.info.artistName);
     } else {
-    	this.trackTitle("");
-    	this.artistName("");
+    	this.trackTitle(null);
+    	this.artistName(null);
     }
 }
 
@@ -62,7 +63,7 @@ NotificationViewModel.prototype.notify = function(body) {
 	    tag: this.id,
 	    timeout: this.timeout
 	});
-
+	notification.show();
 	++this.id;
 	return notification;
 }

@@ -30,7 +30,7 @@ function NotificationViewModel() {
 			self.notify(newValue.body, artUrl(newValue.artCacheHash));
 		}
 	});
-	this.updatePermission();
+	this.updatePermission(this);
 }
 
 NotificationViewModel.prototype.setup = function() {
@@ -41,14 +41,17 @@ NotificationViewModel.prototype.setup = function() {
 // Needs to function as a KO click handler as well
 NotificationViewModel.prototype.getPermission = function(self) {
 	if (self.permission() === "default") {
-		Notify.requestPermission(self.updatePermission,
-			self.updatePermission);
+		Notify.requestPermission(function() {
+			self.updatePermission(self);
+		},function() {
+			self.updatePermission(self);
+		});
 	}
 }
 
-NotificationViewModel.prototype.updatePermission = function() {
+NotificationViewModel.prototype.updatePermission = function(self) {
 	// Possible values are: default, granted, denied, or null (if unsupported)
-	this.permission(Notify.permissionLevel);
+	self.permission(Notify.permissionLevel);
 }
 
 NotificationViewModel.prototype.update = function(status) {

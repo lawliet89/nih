@@ -42,9 +42,9 @@ NotificationViewModel.prototype.setup = function() {
 NotificationViewModel.prototype.getPermission = function(self) {
 	if (self.permission() === "default") {
 		Notify.requestPermission(function() {
-			self.updatePermission(self);
+			self.permission("granted");
 		},function() {
-			self.updatePermission(self);
+			self.permission("denied");
 		});
 	}
 }

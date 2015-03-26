@@ -35,7 +35,7 @@ TrackViewModel.prototype.clear = function() {
 }
 
 function artUrl(cacheHash) {
-    if (cacheHash !== null) {
+    if (typeof cacheHash !== "undefined" && cacheHash !== null) {
         return "cache/" + cacheHash + ".jpeg";
     } else {
         return "static/no-art.png";

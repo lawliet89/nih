@@ -73,6 +73,9 @@ NotificationViewModel.prototype.update = function(status) {
 }
 
 NotificationViewModel.prototype.notify = function(body, icon) {
+	if (this.permission() !== "granted")
+		return null;
+
 	var notification = new Notify("Jukebox", {
 	    body: body,
 	    icon: icon,

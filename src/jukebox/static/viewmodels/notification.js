@@ -10,6 +10,7 @@ function NotificationViewModel() {
 	this.status = ko.observable("");
 	this.artistName = ko.observable(null);
 	this.trackTitle = ko.observable(null);
+	this.artCacheHash = ko.observable(null);
 
 	this.notificationState = ko.computed(function() {
 		var body = "";
@@ -18,14 +19,15 @@ function NotificationViewModel() {
 		}
 		return {
 			body: body,
-			status: self.status()
+			status: self.status(),
+			artCacheHash: self.artCacheHash()
 		}
 	});
 
 	this.notificationState.extend({ rateLimit: 500 });
 	this.notificationState.subscribe(function(newValue){
 		if (newValue.body !== "" && newValue.status === "playing") {
-			self.notify(newValue.body);
+			self.notify(newValue.body, artUrl(newValue.artCacheHash));
 		}
 	});
 	this.updatePermission();
@@ -63,18 +65,21 @@ NotificationViewModel.prototype.update = function(status) {
 	        this.trackTitle(splitPath(status.entry.url).name);
 	    }
 	    this.artistName(status.info.artistName);
+	    this.artCacheHash(status.info.cacheHash);
     } else {
     	this.trackTitle(null);
     	this.artistName(null);
     }
 }
 
-NotificationViewModel.prototype.notify = function(body) {
+NotificationViewModel.prototype.notify = function(body, icon) {
 	var notification = new Notify("Jukebox", {
 	    body: body,
+	    icon: icon,
 	    tag: this.id,
 	    timeout: this.timeout
 	});
+
 	notification.show();
 	++this.id;
 	return notification;

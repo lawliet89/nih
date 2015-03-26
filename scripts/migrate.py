@@ -40,7 +40,7 @@ def setup_db():
     else:
         username = raw_input("Enter your mysql user name (default: root): ") or "root"
         sql = "CREATE DATABASE IF NOT EXISTS %(name)s " \
-            "DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci; " \
+            "DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_bin; " \
             "GRANT ALL ON %(name)s.* TO '%(user)s' IDENTIFIED BY '%(password)s';" % db.__dict__
         print "Now you will be prompted for the password that goes with that mysql account"
         sh('mysql', '-u', username, '-p', '-f', '-e', sql)

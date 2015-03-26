@@ -10,11 +10,7 @@ function TrackViewModel() {
         return this.artCacheHash() != null;
     }, this);
     this.artUrl = ko.computed(function() {
-        if (this.hasArt()) {
-            return "cache/" + this.artCacheHash() + ".jpeg";
-        } else {
-            return "static/no-art.png";
-        }
+        return artUrl(this.artCacheHash());
     }, this);
 }
 TrackViewModel.prototype.update = function(url, metadata) {
@@ -36,4 +32,12 @@ TrackViewModel.prototype.clear = function() {
     this.trackNumber("");
     this.artCacheHash(null);
     this.hasTrack(false);
+}
+
+function artUrl(cacheHash) {
+    if (typeof cacheHash !== "undefined" && cacheHash !== null) {
+        return "cache/" + cacheHash + ".jpeg";
+    } else {
+        return "static/no-art.png";
+    }
 }

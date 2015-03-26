@@ -20,6 +20,7 @@ JukeboxViewModel.prototype.setup = function() {
 JukeboxViewModel.prototype.update = function(status) {
     this.player.update(status);
     this.queue.update(status.queue, status.queueInfo);
+    this.notification.update(status);
 }
 
 function updateJukebox(status) {

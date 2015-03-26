@@ -1,5 +1,26 @@
 function NotificationViewModel() {
+	var self = this;
+
 	this.permission = ko.observable();
+	// Just a bunch of ID numbers to track notifications. Not really used now.
+	this.id = 0;
+	// Number of seconds to show the notification
+	this.timeout = 5;
+
+	this.artistName = ko.observable("");
+	this.trackTitle = ko.observable("");
+	this.notificationBody = ko.computed(function() {
+		if (self.artistName() !== "" || self.trackTitle() !== "") {
+			return self.artistName() + " - " + self.trackTitle();
+		}
+		return "";
+	});
+
+	this.notificationBody.subscribe(function(newValue){
+		if (newValue !== "") {
+			self.notify(newValue);
+		}
+	});
 	this.updatePermission();
 }
 
@@ -19,4 +40,29 @@ NotificationViewModel.prototype.getPermission = function(self) {
 NotificationViewModel.prototype.updatePermission = function() {
 	// Possible values are: default, granted, denied, or null (if unsupported)
 	this.permission(Notify.permissionLevel);
+}
+
+NotificationViewModel.prototype.update = function(status) {
+    if (status.info) {
+    	if (status.info.trackName) {
+	        this.trackTitle(status.info.trackName);
+	    } else {
+	        this.trackTitle(splitPath(status.entry.url).name);
+	    }
+	    this.artistName(status.info.artistName);
+    } else {
+    	this.trackTitle("");
+    	this.artistName("");
+    }
+}
+
+NotificationViewModel.prototype.notify = function(body) {
+	var notification = new Notify("Jukebox", {
+	    body: body,
+	    tag: this.id,
+	    timeout: this.timeout
+	});
+
+	++this.id;
+	return notification;
 }

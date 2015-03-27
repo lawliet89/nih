@@ -5,6 +5,7 @@ function TrackViewModel() {
     this.trackNumber = ko.observable();
     this.artCacheHash = ko.observable();
     this.hasTrack = ko.observable(false);
+    this.username = ko.observable("Unknown");
 
     this.hasArt = ko.computed(function() {
         return this.artCacheHash() != null;
@@ -13,7 +14,7 @@ function TrackViewModel() {
         return artUrl(this.artCacheHash());
     }, this);
 }
-TrackViewModel.prototype.update = function(url, metadata) {
+TrackViewModel.prototype.update = function(url, metadata, username) {
     if (metadata.trackName) {
         this.trackName(metadata.trackName);
     } else {
@@ -23,6 +24,7 @@ TrackViewModel.prototype.update = function(url, metadata) {
     this.albumTitle(metadata.albumTitle);
     this.trackNumber(metadata.trackNumber);
     this.artCacheHash(metadata.cacheHash);
+    this.username(username);
     this.hasTrack(true);
 }
 TrackViewModel.prototype.clear = function() {
@@ -31,6 +33,7 @@ TrackViewModel.prototype.clear = function() {
     this.albumTitle("");
     this.trackNumber("");
     this.artCacheHash(null);
+    this.username("Unknown");
     this.hasTrack(false);
 }
 

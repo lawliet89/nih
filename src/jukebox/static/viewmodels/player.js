@@ -21,7 +21,7 @@ PlayerViewModel.prototype.setup = function() {
 }
 PlayerViewModel.prototype.update = function(status) {
     if (status.info) {
-        this.track.update(status.entry.url, status.info);
+        this.track.update(status.entry.url, status.info, status.entry.username);
         this.progress.update(status.elapsedTime, status.info.totalTime);
     } else {
         this.track.clear();
@@ -30,13 +30,13 @@ PlayerViewModel.prototype.update = function(status) {
     this.status(status.status);
 }
 PlayerViewModel.prototype.play = function() {
-    rpc("pause", [false, this.user.name()], updateJukebox); 
+    rpc("pause", [false, this.user.name()], updateJukebox);
 }
 PlayerViewModel.prototype.pause = function() {
     rpc("pause", [true, this.user.name()], updateJukebox);
 }
 PlayerViewModel.prototype.skip = function() {
-    rpc("skip", [this.user.name()], updateJukebox); 
+    rpc("skip", [this.user.name()], updateJukebox);
 }
 
 function incrementPlayer() {

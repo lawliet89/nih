@@ -63,6 +63,9 @@
                                 by <span class="artistName" data-bind="text: artistName" />
                             </div>
                         </div>
+                        <div class="username" data-bind="visible: hasTrack">
+                            Enqueued by <span class="username" data-bind="text: username"></span>
+                        </div>
                     </div>
                     <div class="volume" data-bind="with: volume">
                         <img class="label" src="static/icons/volume.png" alt="Volume" />

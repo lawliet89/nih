@@ -17,8 +17,8 @@ class Downloader(BackgroundTask):
             item.save()
 
     def postProcessItem(self, item):
-        from rpc.globals import next_track
-        from rpc.player_rpc import play_current, get_status
+        from rpc.globals import next_track, player
+        from rpc.player import play_current, get_status
         current = QueueItem.current().what
         if item.failed:
             print "item failed", item
@@ -27,7 +27,7 @@ class Downloader(BackgroundTask):
             if current == item:
                 next_track()
         elif current == item and get_status() == Status.idle:
-            play_current()
+            play_current(player)
     
     def downloads(self):
         with self.queueCondition:

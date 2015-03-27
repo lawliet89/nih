@@ -33,6 +33,14 @@
 #player .album .albumTitle {
     color: #A88C0F;
 }
+#player div.username {
+    display: inline-block;
+    font-size: small;
+}
+#player div.username span.username {
+    color: #A88C0F;
+}
+
 #player .art {
     height: 120px;
     float: left;
